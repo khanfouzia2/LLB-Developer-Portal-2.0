@@ -1,7 +1,7 @@
 # LLB-Developer-Portal-2.0
 [This is draft README file]
 
-## Project Sturcture ##
+## Project Structure ##
 This repository contains two main folder
 1. app-backend
 2. app-frontend
