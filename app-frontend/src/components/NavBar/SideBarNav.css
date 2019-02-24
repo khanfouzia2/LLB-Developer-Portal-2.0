@@ -1,0 +1,15 @@
+.user-avatar {
+  max-width: 8em;
+  max-height: 8em;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+}
+
+.accordion-item {
+  background-color: white !important;
+  padding-left: 30px;  
+}
+
+.overridde-list-group-item{
+    text-align: left;
+}
