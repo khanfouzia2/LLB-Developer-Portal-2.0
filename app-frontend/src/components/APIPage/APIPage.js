@@ -6,7 +6,8 @@ class APIPage extends Component {
   componentDidMount() {
     SwaggerUi({
       dom_id: '#swaggerContainer',
-      url: `http://petstore.swagger.io/v2/swagger.json`,
+      // url: `http://petstore.swagger.io/v2/swagger.json`,
+      url: this.props.URL,
       presets: [presets.apis],
     });
   }

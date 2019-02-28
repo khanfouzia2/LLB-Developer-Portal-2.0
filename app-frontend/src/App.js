@@ -16,7 +16,7 @@ class App extends Component {
            <div>
               <SideNavBar>
                 <Route exact path="/news" component={NewsCardList} />
-                <Route exact path="/api" component={APIPage} />
+                <Route exact path="/api" render={props => <APIPage URL="http://petstore.swagger.io/v2/swagger.json" {...props} />} />
               </SideNavBar>
            </div>
               
