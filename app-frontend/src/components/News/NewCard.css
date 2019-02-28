@@ -1,0 +1,45 @@
+.card-background-header {
+  background-image: url('/img/LLB_Bus.png');
+  min-height:160px;
+  background-size:cover;
+  min-width:100%;
+  background-repeat: no-repeat;
+  padding: 0px 0px 0px 0px;
+}
+
+.grey-filter {
+  min-height:160px;
+  background-color:rgba(19, 19, 19, 0.6);
+  text-align:center;
+  color: white;
+  padding: 30px 10px 10px 10px;
+}
+
+.news-card {
+  max-width: 40rem !important;
+}
+
+@media (min-width: 48em) {
+  .card-columns {
+      -webkit-column-count: 1;
+      -moz-column-count: 1;
+      column-count: 1;
+  }
+}
+
+@media (min-width: 60em) {
+  .card-columns {
+      -webkit-column-count: 2;
+      -moz-column-count: 2;
+      column-count: 2;
+  }
+}
+
+@media (min-width: 100em) {
+  .card-columns {
+      -webkit-column-count: 3;
+      -moz-column-count: 3;
+      column-count: 3;
+  }
+}
+

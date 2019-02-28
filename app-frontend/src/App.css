@@ -19,7 +19,18 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #131516;
+}
+
+.App-custom-nav {
+  background: #F8F9FA;
+  min-height: 13%;
+  text-align: left;
+  padding: 10px 10px 10px 10px;
+}
+
+.App-custom-page-content {
+  padding: 2% ;
 }
 
 @keyframes App-logo-spin {
