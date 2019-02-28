@@ -36,6 +36,7 @@ sequelize.authenticate().then(() => {
     console.log('Connection has been established successfully.');
   }).catch(err => {
     console.error('Unable to connect to the database:', err);
+    throw new ConnectionRefusedError();
   }
 );
 
@@ -52,7 +53,8 @@ const User = sequelize.define('user',
     },
     password: {
       type: Sequelize.STRING(255),
-      allowNull: false,
+      allowNull: true,
+      defaultValue: "***" // is it a bad idea to have a null password hash?
     },
     email: {
       type: Sequelize.STRING(255),
@@ -161,7 +163,7 @@ const ForumCategory = sequelize.define('forum_category',
       type: Sequelize.STRING(30),
       allowNull: false
     },
-    topic_description: {
+    description: {
       type: Sequelize.STRING(200),
       allowNull: false
     }
@@ -172,6 +174,12 @@ const ForumCategory = sequelize.define('forum_category',
     freezeTableName: true,
     deleted_at: 'deleted_at',
     paranoid: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ['name']
+      }
+    ]
   }
 );
 
@@ -376,9 +384,21 @@ User.hasMany(Apikey, {
 Service.hasMany(Apikey, {
   foreignKey: 'service_name',
   sourceKey: 'name'
-}); // sourceKey not neccessary, but is clearer
+});
 
 
 // http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
 // Sync all models that aren't already in the database
-sequelize.sync({force:true}); // param: {force:true} to drop and re-create
+//sequelize.sync({force:true}); // param: {force:true} to drop and re-create
+
+
+module.exports = {
+  User,
+  News,
+  Apikey,
+  Service,
+  ForumCategory,
+  Thread,
+  Comment,
+  BugFeedback
+}
