@@ -12,9 +12,8 @@
 
 /*
   TODO:
-    # Other models
     # Integrity constraints
-    #
+    # Testing
 */
 
 const Sequelize = require('sequelize');
@@ -103,13 +102,282 @@ const User = sequelize.define('user',
   }
 );
 
-const Apikey;
-const Comment;
-const Thread;
-const ForumCategory;
-const BugFeedback;
-const News;
-const Service;
+const Apikey = sequelize.define('api_key',
+  {
+    // id
+    // user_id
+    service_name: {
+      type: Sequelize.STRING(10),
+      allowNull: false
+    },
+    api_key: {
+      type: Sequelize.STRING(255),
+      allowNull: false,
+
+    }
+  },
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ['api_key']
+      }
+    ]
+  }
+);
+
+const Comment = sequelize.define('comment',
+  {
+    // id
+    // thread_id
+    // author_id
+    content: {
+      type: Sequelize.TEXT,
+      allowNull: false,
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+  }
+);
+
+const ForumCategory = sequelize.define('forum_category',
+  {
+    // id is automatic
+    name: {
+      type: Sequelize.STRING(30),
+      allowNull: false
+    },
+    topic_description: {
+      type: Sequelize.STRING(200),
+      allowNull: false
+    }
+  },
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+  }
+);
+
+const Thread = sequelize.define('thread',
+  {
+    first_name: {
+      type: Sequelize.STRING(255),
+      allowNull: false,
+    },
+    forum_category_id: {
+      // References forum_category.id
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    author_id: {
+      // References users.id
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    title: {
+      type: Sequelize.STRING(100),
+      allowNull: false,
+      validate: {
+        len: [3, 100]
+      }
+    },
+    content: {
+      type: Sequelize.TEXT,
+      allowNull: false,
+      validate: {
+        len: [5, Number.POSITIVE_INFINITY]
+      }
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  // options
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+  }
+);
+
+const BugFeedback = sequelize.define('bug_feedback',
+  {
+    // id
+    // author id references user.id
+    title: {
+      type: Sequelize.STRING(100),
+      allowNull: false
+    },
+    description: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    status: {
+      type: Sequelize.ENUM,
+      values: ['ACTIVE', 'pending', 'deleted', 'something...'],
+      defaultValue: 'ACTIVE',
+      allowNull: false
+    },
+    is_approved: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    type: {
+      type: Sequelize.ENUM,
+      values: ['BUG', 'FEEDBACK'],
+      defaultValue: 'BUG',
+      allowNull: false
+    },
+    attachment_filename: {
+      type: Sequelize.STRING(255),
+      allowNull: true
+    },
+    expected_result: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    actual_result: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+  }
+)
+
+const News = sequelize.define('news',
+  {
+    // id
+    user_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    title: {
+      type: Sequelize.STRING(255),
+      allowNull: false
+    },
+    content: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    header_picture_filename: {
+      type: Sequelize.STRING(255),
+      allowNull: true
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+  }
+);
+
+const Service = sequelize.define('service',
+  {
+    name: {
+      type: Sequelize.STRING(10),
+      primaryKey: true
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  {
+    timestamps: false,
+    underscored: true,
+    freezeTableName: true,
+  }
+);
+
+/* Associations
+
+  Model-1.hasMany(Model-2, {foreignKey, sourceKey})
+  will create column and/or create foreign key which name will be foreignKey. It IS NOT
+  the name of the foreign key identifier used by DB-system.
+  Source key is the 'mother tables' column where this fk-field will refer
+
+  Setters and Getters are created automatically for target model
+
+
+
+*/
+
+User.hasMany(News, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
+User.hasMany(BugFeedback, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
+Thread.hasMany(Comment, {
+  foreignKey: 'thread_id',
+  sourceKey: 'id'
+});
+
+User.hasMany(Comment, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
+User.hasMany(Thread, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
+ForumCategory.hasMany(Thread, {
+  foreignKey: 'forum_category_id',
+  sourceKey: 'id'
+});
+
+User.hasMany(Apikey, {
+  foreignKey: 'user_id',
+  sourceKey: 'id',
+});
+
+Service.hasMany(Apikey, {
+  foreignKey: 'service_name',
+  sourceKey: 'name'
+}); // sourceKey not neccessary, but is clearer
+
 
 // http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
 // Sync all models that aren't already in the database
