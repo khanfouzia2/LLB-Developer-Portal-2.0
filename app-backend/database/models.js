@@ -297,6 +297,11 @@ const News = sequelize.define('news',
       type: Sequelize.TEXT,
       allowNull: false
     },
+    is_visible: {
+      type: Sequelize.BOOELAN,
+      allowNull: false,
+      defaultValue: false
+    },
     header_picture_filename: {
       type: Sequelize.STRING(255),
       allowNull: true
