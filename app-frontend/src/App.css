@@ -30,7 +30,10 @@
 }
 
 .App-custom-page-content {
-  padding: 2% ;
+  padding-top: 2% ;
+  padding-bottom: 2%;
+  padding-right: 7% ;
+  padding-left: 7% ;
 }
 
 @keyframes App-logo-spin {
