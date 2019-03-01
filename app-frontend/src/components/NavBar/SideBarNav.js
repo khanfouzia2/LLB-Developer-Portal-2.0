@@ -15,18 +15,19 @@ class SideBarNav extends Component {
     onSetSidebarOpen(open) {
       this.setState({ sidebarOpen: open });
     }
-    
+
     render() {
       const renderSideBarContent =(
         <React.Fragment>
           <div className="bg-light border-right">
-            <div className="sidebar-heading"> 
+            <div className="sidebar-heading">
                 {/* <img className="img-thumbnail rounded-circle img-responsive user-avatar" alt="user-avatar" src="https://www.changingourworld.com/wp-content/uploads/2018/01/avatar-placeholder.png"></img> */}
                 <DefaultUserAvatar FirstName="Joe" LastName="Doe"></DefaultUserAvatar>
                 <p>JOE DOE</p>
             </div>
             <div className="list-group list-group-flush">
-              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news">NEWS</Link> 
+              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news">NEWS</Link>
+              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news/compose">Compose (admin only)</Link> 
             </div>
 
             <Accrodion header="UUSIMAA">
@@ -74,7 +75,7 @@ class SideBarNav extends Component {
       </React.Fragment>
       );
       const sideBarStyle = { minWidth: "17em", background: "#F8F9FA"}
-    
+
       return (
         <Sidebar
           sidebar={renderSideBarContent}
