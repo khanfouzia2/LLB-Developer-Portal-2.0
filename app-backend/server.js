@@ -15,8 +15,9 @@ app.use(bodyParser.json());
 // Middleware
 app.use(cors());
 
-app.use('/', authentication, routeName);
 app.use('/users', usersRoute);
+app.use('/', authentication, routeName);
+
 app.listen(port, () => {
     console.log(`Express app started on port ${port}`);
 });
