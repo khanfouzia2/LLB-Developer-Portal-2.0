@@ -10,12 +10,6 @@
   Names will be written in snake_case.
 */
 
-/*
-  TODO:
-    # Integrity constraints
-    # Testing
-*/
-
 const Sequelize = require('sequelize');
 const config = require('./config.js');
 /*
@@ -31,7 +25,9 @@ Do NOT push your config.js to git.
 */
 
 const sequelize = new Sequelize('postgres://'+config.user+':'+config.passwd+'@'+config.host+':'+config.port+'/'+config.dbname);
+console.log(`Sequelize-object constructor ==> \n\tuser: ${config.user}\n\thost: ${config.host}\n\tport: ${config.port}\n\tdb: ${config.dbname} `);
 
+// This part is NOT mandatory
 sequelize.authenticate().then(() => {
     console.log('Connection has been established successfully.');
   }).catch(err => {
@@ -185,10 +181,7 @@ const ForumCategory = sequelize.define('forum_category',
 
 const Thread = sequelize.define('thread',
   {
-    first_name: {
-      type: Sequelize.STRING(255),
-      allowNull: false,
-    },
+    // thread id
     forum_category_id: {
       // References forum_category.id
       type: Sequelize.INTEGER,
@@ -285,7 +278,7 @@ const BugFeedback = sequelize.define('bug_feedback',
 const News = sequelize.define('news',
   {
     // id
-    user_id: {
+    author_id: {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
@@ -298,7 +291,7 @@ const News = sequelize.define('news',
       allowNull: false
     },
     is_visible: {
-      type: Sequelize.BOOELAN,
+      type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
     },
@@ -323,7 +316,7 @@ const News = sequelize.define('news',
 const Service = sequelize.define('service',
   {
     name: {
-      type: Sequelize.STRING(10),
+      type: Sequelize.STRING(15),
       primaryKey: true
     },
     created_at: {
@@ -394,6 +387,7 @@ Service.hasMany(Apikey, {
 
 // http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
 // Sync all models that aren't already in the database
+
 //sequelize.sync({force:true}); // param: {force:true} to drop and re-create
 
 
