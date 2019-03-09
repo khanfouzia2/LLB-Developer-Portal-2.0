@@ -348,47 +348,85 @@ User.hasMany(News, {
   foreignKey: 'author_id',
   sourceKey: 'id'
 });
+News.belongsTo(User, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
 
 User.hasMany(BugFeedback, {
   foreignKey: 'author_id',
   sourceKey: 'id'
 });
+BugFeedback.belongsTo(User, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
 
 Thread.hasMany(Comment, {
   foreignKey: 'thread_id',
   sourceKey: 'id'
 });
+Comment.belongsTo(Thread, {
+  foreignKey: 'thread_id',
+  sourceKey: 'id'
+});
+
 
 User.hasMany(Comment, {
   foreignKey: 'author_id',
   sourceKey: 'id'
 });
+Comment.belongsTo(User, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
 
 User.hasMany(Thread, {
   foreignKey: 'author_id',
   sourceKey: 'id'
 });
+Thread.belongsTo(User, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
 
 ForumCategory.hasMany(Thread, {
   foreignKey: 'forum_category_id',
   sourceKey: 'id'
 });
+Thread.belongsTo(ForumCategory, {
+  foreignKey: 'forum_category_id',
+  sourceKey: 'id'
+});
+
 
 User.hasMany(Apikey, {
   foreignKey: 'user_id',
   sourceKey: 'id',
 });
+Apikey.belongsTo(User, {
+  foreignKey: 'user_id',
+  sourceKey: 'id'
+});
+
 
 Service.hasMany(Apikey, {
   foreignKey: 'service_name',
   sourceKey: 'name'
 });
-
+Apikey.belongsTo(Service, {
+  foreignKey: 'service_name',
+  sourceKey: 'id'
+});
 
 // http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
 // Sync all models that aren't already in the database
 
-//sequelize.sync({force:true}); // param: {force:true} to drop and re-create
+sequelize.sync({force:true}); // param: {force:true} to drop and re-create
 
 
 module.exports = {
