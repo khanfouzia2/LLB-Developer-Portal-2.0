@@ -426,7 +426,7 @@ Apikey.belongsTo(Service, {
 // http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
 // Sync all models that aren't already in the database
 
-sequelize.sync({force:true}); // param: {force:true} to drop and re-create
+// sequelize.sync({force:true}); // param: {force:true} to drop and re-create
 
 
 module.exports = {

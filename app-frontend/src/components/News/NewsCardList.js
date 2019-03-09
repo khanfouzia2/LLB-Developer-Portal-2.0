@@ -1,65 +1,95 @@
 import React, {Component} from 'react';
 import NewsCard from './NewsCard';
+import { Link } from "react-router-dom"
+import  * as config from '../../config.js';
+import * as endpoints from '../../rest-endpoints.js';
+
+/*
+  List of news
+*/
 
 class NewsCardList extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      news: [] 
+      news: []
     }
   }
 
-  componentDidMount() {
-    //axios fetch data here, just hard code at the moment
-    this.setState({
-      news: [
-        {
-          Title: "23/11/17 - Junction 2017 Challenge!",
-          CreateDate: "10.10.2019",
-          Author: "Jane Doe",
-          Content: "Public transportation is a growing and transforming multi-billion euro business, influenced and disrupted currently by forces like digitalization, urbanization and environmentalism. In order to stay competitive and evolve, public transportation has to improve its ability to meet the varying needs and aspirations of the passengers. In Brilliant Bus Display -challenge we are looking for innovative public screen services/applications that will improve the travel experience of the bus passengers. We offer a unique set of bus-related data to be utilized in the created services, and a possibility to showcase your work among leading industry stakeholders in ITS World Congress in Copenhagen in September 2018. "
-        },
-        {
-          Title: "23/11/17 - Junction 2017 Challenge!",
-          CreateDate: "10.10.2019",
-          Author: "Jane Doe",
-          Content: "Public transportation is a growing and transforming multi-billion euro business, influenced and disrupted currently by forces like digitalization, urbanization and environmentalism. In order to stay competitive and evolve, public transportation has to improve its ability to meet the varying needs and aspirations of the passengers. In Brilliant Bus Display -challenge we are looking for innovative public screen services/applications that will improve the travel experience of the bus passengers. We offer a unique set of bus-related data to be utilized in the created services, and a possibility to showcase your work among leading industry stakeholders in ITS World Congress in Copenhagen in September 2018. "
-        },
-        {
-          Title: "23/11/17 - Junction 2017 Challenge!",
-          CreateDate: "10.10.2019",
-          Author: "Jane Doe",
-          Content: "Public transportation is a growing and transforming multi-billion euro business, influenced and disrupted currently by forces like digitalization, urbanization and environmentalism. In order to stay competitive and evolve, public transportation has to improve its ability to meet the varying needs and aspirations of the passengers. In Brilliant Bus Display -challenge we are looking for innovative public screen services/applications that will improve the travel experience of the bus passengers. We offer a unique set of bus-related data to be utilized in the created services, and a possibility to showcase your work among leading industry stakeholders in ITS World Congress in Copenhagen in September 2018. "
-        },
-        {
-          Title: "23/11/17 - Junction 2017 Challenge!",
-          CreateDate: "10.10.2019",
-          Author: "Jane Doe",
-          Content: "Public transportation is a growing and transforming multi-billion euro business, influenced and disrupted currently by forces like digitalization, urbanization and environmentalism. In order to stay competitive and evolve, public transportation has to improve its ability to meet the varying needs and aspirations of the passengers. In Brilliant Bus Display -challenge we are looking for innovative public screen services/applications that will improve the travel experience of the bus passengers. We offer a unique set of bus-related data to be utilized in the created services, and a possibility to showcase your work among leading industry stakeholders in ITS World Congress in Copenhagen in September 2018. "
-        },
-        {
-          Title: "23/11/17 - Junction 2017 Challenge!",
-          CreateDate: "10.10.2019",
-          Author: "Jane Doe",
-          Content: "Public transportation is a growing and transforming multi-billion euro business, influenced and disrupted currently by forces like digitalization, urbanization and environmentalism. In order to stay competitive and evolve, public transportation has to improve its ability to meet the varying needs and aspirations of the passengers. In Brilliant Bus Display -challenge we are looking for innovative public screen services/applications that will improve the travel experience of the bus passengers. We offer a unique set of bus-related data to be utilized in the created services, and a possibility to showcase your work among leading industry stakeholders in ITS World Congress in Copenhagen in September 2018. "
-        },
-      ]
-    })
+  /*
+    When props change, usually URL page number
+  */
+  componentWillReceiveProps(nextProps) {
+    this.loadNewsAndUpdateComponent(nextProps.match.params.page);
   }
 
+  componentWillMount() {
+    this.loadNewsAndUpdateComponent();
+  }
+
+  /*
+    Load news from DB.
+
+    @param page :: page will define offset value. Default is 1
+  */
+  loadNewsAndUpdateComponent(page=1) {
+
+    console.log("News component will mount " + endpoints.NEWS_GET_ALL)
+
+    /* Get posts */
+
+    fetch(endpoints.NEWS_GET_ALL+"/"+page).then(data => {
+      return data.json();
+    }).then(data => {
+      console.log( data )
+
+      this.setState({news: data});
+
+    }).catch(err => {
+      throw new err;
+      console.log("GET failed");
+    });
+  }
+
+
+
+
+
   render() {
-    let rows = this.state.news.map(a => <NewsCard Title={a.Title} CreateDate={a.CreateDate}
-                                        Author={a.Author} Content={a.Content} >
-                                        </NewsCard>);
+
+    var zero_posts_alert = null;
+    if(this.state.news.length > 0) {
+      var rows = this.state.news.map(news =>
+        // pass the entire object...
+        <NewsCard newsObj={news} key={news.id} />
+      );
+    } else {
+      zero_posts_alert = <div className="container-fluid "><div className='alert alert-info mt-md-3'>No news to show!</div></div>
+    }
+
     return(
         <div>
           <nav className="App-custom-nav">
-              <span className="navbar-brand mb-0 h1">NEWS</span>
+              <span className="navbar-brand mb-0 h1">News</span>
           </nav>
-          <div className="App-custom-page-content">
+          {zero_posts_alert}
+          <div className="App-custom-page-content" id="news">
             <div className="card-columns">
                {rows}
             </div>
+            <hr/>
+
+            {/* Nav. Under consturction! */}
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li className="page-item" disabled="true"><Link to="/news/1" className="page-link">Newer</Link></li>
+                <li className="page-item"><Link to="/news/3" className="page-link">Older</Link></li>
+              </ul>
+            </nav>
+            <small>Current page {this.props.match.params.page}</small>
+
+
           </div>
         </div>
     );

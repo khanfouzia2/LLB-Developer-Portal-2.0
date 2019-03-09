@@ -14,4 +14,8 @@ const NEWS_DELETE = BASE_URL + "news";
 
 module.exports = {
   NEWS_POST,
+  NEWS_GET_ALL,
+  NEWS_GET_ONE,
+  NEWS_PATCH,
+  NEWS_DELETE
 }
