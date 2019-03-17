@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import Example from './components/Example/Example';
-//import APIPage from './components/APIPage/APIPage';
+import APIPage from './components/APIPage/APIPage';
 
 import NewsCardList from './components/News/NewsCardList';
 import NewsCompose from './components/News/NewsCompose';
@@ -22,12 +22,12 @@ class App extends Component {
       <div className="App">
         <Router>
            <div>
-              <SideNavBar>
+              <SideNavBar>  
                 <div id="main-content" className="container">
                   <Route exact path="/news/:page/" component={NewsCardList} />
                   <Route exact path="/news" component={NewsCardList} />
                   <Route exact path="/news/compose" component={NewsCompose} />
-                  {/* <Route exact path="/api" render={props => {<APIPage URL="http://petstore.swagger.io/v2/swagger.json" {...props} />} } /> */}
+                  <Route exact path="/api" render={props => <APIPage URL="http://petstore.swagger.io/v2/swagger.json" {...props} />} />
                   <Route exact path="/tools" component={ToolsHome} />
                   <Route exact path="/tools/designGuidelines" component={DesignGuidelines} />
                   <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />
