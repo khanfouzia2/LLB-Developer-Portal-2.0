@@ -47,7 +47,7 @@ class NewsCardList extends Component {
       this.setState({news: data});
 
     }).catch(err => {
-      throw new err;
+      throw new Error(err);
       console.log("GET failed");
     });
   }

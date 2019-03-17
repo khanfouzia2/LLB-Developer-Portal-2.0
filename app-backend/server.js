@@ -8,6 +8,7 @@ const cors = require('cors');
 const routeName = require('./routes/main.js');
 const usersRoute = require('./routes/user.js');
 const newsRoute = require('./routes/news.js');
+const toolsRoute = require('./routes/tools.js');
 
 const authentication = require('./services/authentication.js');
 const port = process.env.PORT || 8080;
@@ -21,6 +22,7 @@ app.use(cors());
 
 app.use('/users', usersRoute);
 app.use('/news', newsRoute);
+app.use('/tools', toolsRoute);
 app.use('/', authentication, routeName);
 
 app.listen(port, () => {

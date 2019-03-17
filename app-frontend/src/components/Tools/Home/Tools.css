@@ -1,0 +1,17 @@
+.title-text-shadow {
+    text-transform: capitalize;
+    text-shadow:2px 1px 5px #404040;
+  }
+
+.tools-page-content {
+    padding-top: 2% ;
+    padding-bottom: 2%;
+  }
+
+.button-selected {
+    background-color: darkslategrey;
+  }
+
+.button-unselected {
+    background-color: slategrey;
+  }
