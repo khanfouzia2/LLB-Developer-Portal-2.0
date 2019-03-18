@@ -13,11 +13,19 @@ const NEWS_PATCH = BASE_URL + "news";
 const NEWS_DELETE = BASE_URL + "news";
 const TOOLS_GET = BASE_URL + "tools";
 
+// Users
+const USER_FORM_REGISTER = BASE_URL + 'users/register';
+const USER_LOGIN =  BASE_URL + 'user/login';
+const USER_LOGOUT = BASE_URL + 'user/logout';
+
 module.exports = {
   NEWS_POST,
   NEWS_GET_ALL,
   NEWS_GET_ONE,
   NEWS_PATCH,
   NEWS_DELETE,
-  TOOLS_GET
+  TOOLS_GET,
+  USER_FORM_REGISTER,
+  USER_LOGIN,
+  USER_LOGOUT,
 }

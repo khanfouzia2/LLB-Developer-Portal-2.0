@@ -12,7 +12,7 @@ generateToken = async (user) => {
    return token;
 }
 
-router.post('/regiser', async function(req, res){
+router.post('/register', async function(req, res){
    try {
       const payload = req.body;
       var user = await User.create({
@@ -36,7 +36,7 @@ router.post('/regiser', async function(req, res){
    }   
 })
 
-router.get('/login', async function(req, res){
+router.post('/login', async function(req, res){
    try {
       const payload = req.body;
       let user = await User.find(
