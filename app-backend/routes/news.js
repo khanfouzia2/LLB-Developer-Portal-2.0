@@ -11,15 +11,15 @@ router.get('/test', (req, res) => {
   res.end();
 });
 
-router.get('/:page', (req, res) => {
+router.get('/page/:page', (req, res) => {
 
   // http://docs.sequelizejs.com/manual/tutorial/querying.html#relations-associations
   // https://stackoverflow.com/questions/40360431/get-children-from-parent-sequelize
 
   var page = req.params.page; // page number is string (at this point)!
-  console.log(page)
+  console.log("Page/offset: "+page)
   try {
-    page = parseInt(page)
+    page = parseInt(page, 10)
     if(isNan(page) || page <= 0) {
       page = 1;
     }
