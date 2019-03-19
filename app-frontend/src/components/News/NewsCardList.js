@@ -12,16 +12,31 @@ class NewsCardList extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
+      page: 1,
       news: []
     }
+
   }
 
   /*
-    When props change, usually URL page number
+    When props change, usually URL page number.
+    Make sure it is an INTEGER and store it in state.page
   */
   componentWillReceiveProps(nextProps) {
-    this.loadNewsAndUpdateComponent(nextProps.match.params.page);
+    var page = parseInt(nextProps.match.params.page, 10); // base 10
+    if( !isNaN(page) && page >= 1) {
+      this.setState({page: page})
+    }
+    else {
+      console.log("Invalid :page in URL. Setting to 1")
+      this.setState({page: 1})
+    }
+
+    // Load and re-render component
+    console.log(this.state.page)
+    this.loadNewsAndUpdateComponent(this.state.page);
   }
 
   componentWillMount() {
@@ -47,13 +62,34 @@ class NewsCardList extends Component {
       this.setState({news: data});
 
     }).catch(err => {
-      throw new Error(err);
+      // throw new Error(err);
       console.log("GET failed");
     });
   }
 
 
+  getNextPageLink() {
+    var nextPage = this.state.page + 1
+    return(
+      <li className="page-item" disabled="true"><Link to={`/news/page/${nextPage}`} className="page-link"> Older </Link></li>
+    )
+  }
 
+  getPrevPageLink() {
+
+    var prevPage = this.state.page - 1;
+    var disabled = false;
+
+    if(prevPage <= 1) {
+      prevPage = 1;
+      return( <li className="page-item" disabled> <a href="#" className="page-link" aria-disabled="true"> Newer </a> </li> );
+    }
+    // else
+
+    return (
+       <li className="page-item" > <Link to={`/news/page/${prevPage}`} className="page-link"> Newer </Link> </li>
+    );
+  }
 
 
   render() {
@@ -83,8 +119,8 @@ class NewsCardList extends Component {
             {/* Nav. Under consturction! */}
             <nav aria-label="Page navigation example">
               <ul class="pagination">
-                <li className="page-item" disabled="true"><Link to="/news/1" className="page-link">Newer</Link></li>
-                <li className="page-item"><Link to="/news/3" className="page-link">Older</Link></li>
+                { this.getPrevPageLink() }
+                { this.getNextPageLink() }
               </ul>
             </nav>
             <small>Current page {this.props.match.params.page}</small>

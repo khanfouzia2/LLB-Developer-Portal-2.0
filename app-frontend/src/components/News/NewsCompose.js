@@ -207,7 +207,7 @@ class NewsCompose extends Component {
     this.setState({
       title: "",
       content: "",
-      author_id: 1,
+      author_id: -1,
       is_visible: true,
     })
   }

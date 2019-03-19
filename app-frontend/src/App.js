@@ -17,12 +17,12 @@ import SideNavBar from './components/NavBar/SideBarNav';
 import './App.css';
 
 class App extends Component {
-  renderPortalContent = () => ( 
-    <SideNavBar>  
+  renderPortalContent = () => (
+    <SideNavBar>
       <div id="main-content" className="container">
-        <Route exact path="/news/:page/" component={NewsCardList} />
-        <Route exact path="/news" component={NewsCardList} />
         <Route exact path="/news/compose" component={NewsCompose} />
+        <Route exact path="/news/page/:page" component={NewsCardList} />
+        <Route exact path="/news" component={NewsCardList} />
         <Route exact path="/api" render={props => <APIPage URL="http://petstore.swagger.io/v2/swagger.json" {...props} />} />
         <Route exact path="/tools" component={ToolsHome} />
         <Route exact path="/tools/designGuidelines" component={DesignGuidelines} />
@@ -42,7 +42,7 @@ class App extends Component {
             <Route render={this.renderPortalContent} />
           </Switch>
         </Router>
-       
+
       </div>
     );
   }

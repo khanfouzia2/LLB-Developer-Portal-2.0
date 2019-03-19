@@ -26,8 +26,8 @@ class SideBarNav extends Component {
                 <p className="text-center">JOE DOE</p>
             </div>
             <div className="list-group list-group-flush">
-              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news/1">NEWS</Link>
-              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news/compose">Compose (admin only)</Link>
+              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news/page/1">NEWS</Link>
+              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news/compose">Compose</Link>
             </div>
 
             <Accrodion header="UUSIMAA">
