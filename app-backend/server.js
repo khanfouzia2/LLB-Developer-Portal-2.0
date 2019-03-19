@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
 const cors = require('cors');
+var cookieParser = require('cookie-parser')
 
 // Routes
 const routeName = require('./routes/main.js');
@@ -16,9 +17,9 @@ const port = process.env.PORT || 8080;
 var app = express();
 
 app.use(bodyParser.json());
-
+app.use(cookieParser());
 // Middleware
-app.use(cors());
+app.use(cors({credentials: true, origin: true}))
 
 app.use('/users', usersRoute);
 app.use('/news', newsRoute);

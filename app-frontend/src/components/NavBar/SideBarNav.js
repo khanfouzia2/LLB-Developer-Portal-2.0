@@ -3,6 +3,8 @@ import Sidebar from "react-sidebar";
 import Accrodion from './Accordion';
 import './SideBarNav.css';
 import DefaultUserAvatar from './DefaultUserAvatar';
+import {Logout} from '../../services/UserApi';
+
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 class SideBarNav extends Component {
     constructor(props) {
@@ -11,10 +13,23 @@ class SideBarNav extends Component {
         sidebarOpen: true
       };
       this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
+      this.handleLogout = this.handleLogout.bind(this);
     }
     onSetSidebarOpen(open) {
       this.setState({ sidebarOpen: open });
     }
+
+    handleLogout = async (e) => {
+      try 
+      {   e.preventDefault();
+          await Logout();
+          document.cookie = `Authorization=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+      } 
+      catch(err) {
+        console.log("Something wrong when logout ")
+      }
+    }
+    
 
     render() {
       const renderSideBarContent =(
@@ -71,6 +86,9 @@ class SideBarNav extends Component {
               </Link>
             </Accrodion>
             <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item " to="/">FORUM</Link>
+            <a onClick={this.handleLogout} className="list-group-item list-group-item-action bg-light overridde-list-group-item logout-btn" href="/">
+            LOG OUT  <i className="fas fa-sign-out-alt"></i> 
+            </a>
           </div>
       </React.Fragment>
       );

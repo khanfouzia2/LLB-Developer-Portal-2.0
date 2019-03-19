@@ -3,23 +3,22 @@ const jwt = require('jsonwebtoken');
 const {User} = require('./../database/models');
 
 authentication = async function(req, res, next) {
-	let frontend_token = req.header('Authorization');
-	let token = frontend_token.split(' ')[1];
+	let frontend_token = req.cookies["Authorization"];
 	let decoded;
 	
   try { 
-			console.log(token);
-			decoded = jwt.verify(token, "saltkeyyessz123");
+			console.log(frontend_token);
+			decoded = jwt.verify(frontend_token, "saltkeyyessz123");
 			let user = await User.findOne(
 				{ where: 
 					 {
 							id : decoded.id,
-							token: token
+							token: frontend_token
 					 } 
 				});
 			if(user == null) return res.status(401).send();
 			req.user = user;
-      req.token = token;
+      req.frontend_token = frontend_token;
       next(); 
     }
     catch(e) {

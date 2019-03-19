@@ -39,42 +39,41 @@ router.post('/register', async function(req, res){
 router.post('/login', async function(req, res){
    try {
       const payload = req.body;
-      let user = await User.find(
+      console.log(payload);
+      let user = await User.findOne(
          { where: 
             {
                email : payload.email,
-               password: bycrypt.hashSync(payload.password, 11)
             } 
          });
-      if(user == null) res.status(401).send();
+
+      if(user == null) return res.status(404).send();
+      if(!bycrypt.compare(payload.password , user.password)) return res.status(401).send();
+   
       let token = await generateToken(user);
       if(token == null) throw "Something wrong when creating token";
-      res.setHeader("Authorization", token);
+   
+      res.cookie('Authorization', token);
       res.status(200).send();
    }
    catch(e) {
       console.log(`Error while trying to login. error = ${e}`);
-      res.sendStatus(500).send();
+      res.status(500).send();
    }
 });
 
 router.get('/logout', authentication , async function(req, res){
    try {
       req.user.token = "";
-      await req.user.save({fields: ['token']}).save();
+      await req.user.save({fields: ['token']});
       res.status(200).send();
    }
    catch(e) {
       console.log(`Error while trying to logout. error = ${e}`);
-      res.sendStatus(500).send();
+      res.status(500).send();
    }
 });
 
-
-
-router.post('/logout', function(req, res){
-
-});
 
 router.get('/:id',function(req, res){
    res.send('id user route');
