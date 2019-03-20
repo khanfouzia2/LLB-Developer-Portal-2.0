@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './UserLoginForm.css'
+import './Form.css'
 import {CredentialLogin} from '../../services/UserApi';
 import { Redirect } from 'react-router-dom'
 
@@ -53,9 +53,9 @@ class UserLoginForm extends Component {
     }
     else {
       return (
-        <div className="main-form" >
-              <div className="login-grey-filter">
-                <div className="login-form">
+        <div className="login-form-wrapper" >
+              <div className="user-form-grey-filter">
+                <div className="user-register-login-form">
                   <div className="form-header">
                     <img src={process.env.PUBLIC_URL + 'img/LLBlogo.png'} alt="LLB logo" className="img-fluid"></img>
                     <br></br>
@@ -74,7 +74,7 @@ class UserLoginForm extends Component {
                         <input className="form-control" placeholder="Password" name="password" type="password" onChange={this.handleChange}/>
                     </div>
                     <button type="submit" className="btn btn-md btn-primary" >LOG IN</button>
-                    <a href="/"><small className="form-text text-muted">Doesn't have an account? Click here to register.</small></a>
+                    <a href="/register"><small className="form-text text-muted">Doesn't have an account? Click here to register.</small></a>
                     <a href="/"><small className="form-text text-muted">Forget password?</small></a>
                   </form>
                   <p className="form-header"> - OR -</p>

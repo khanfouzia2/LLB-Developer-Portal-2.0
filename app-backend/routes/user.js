@@ -27,7 +27,7 @@ router.post('/register', async function(req, res){
       let token = await generateToken(user);
       if(token == null) throw "Something wrong with generate token";
 
-      res.setHeader("Authorization", token);
+      res.cookie('Authorization', token);
       res.status(201).send();
    }
    catch(e) {

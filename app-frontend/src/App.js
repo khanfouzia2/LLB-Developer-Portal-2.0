@@ -10,7 +10,9 @@ import DesignGuidelines from './components/Tools/Guidelines/DesignGuidelines';
 import DeveloperGuidelines from './components/Tools/Guidelines/DeveloperGuidelines';
 import InspirationGuidelines from './components/Tools/Guidelines/InspirationGuidelines';
 import Reittiopas from './components/Tools/ExampleApplications/Reittiopas';
-import UserForm from './components/User/UserLoginForm';
+import LoginForm from './components/User/UserLoginForm';
+import RegisterForm from './components/User/UserRegisterForm';
+import InfoPage from './components/InfoPage/Info';
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import SideNavBar from './components/NavBar/SideBarNav';
@@ -20,6 +22,7 @@ class App extends Component {
   renderPortalContent = () => (
     <SideNavBar>
       <div id="main-content" className="container">
+        <Route exact path="/info" component={InfoPage} />
         <Route exact path="/news/compose" component={NewsCompose} />
         <Route exact path="/news/page/:page" component={NewsCardList} />
         <Route exact path="/news" component={NewsCardList} />
@@ -38,7 +41,8 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route exact path="/login" component={UserForm} />
+            <Route exact path="/login" component={LoginForm} />
+            <Route exact path="/register" component={RegisterForm} />
             <Route render={this.renderPortalContent} />
           </Switch>
         </Router>
