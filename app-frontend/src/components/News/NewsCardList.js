@@ -53,6 +53,9 @@ class NewsCardList extends Component {
     console.log("News component will mount " + endpoints.NEWS_GET_ALL)
 
     /* Get posts */
+    const options = {
+      credentials: 'include'
+    }
 
     fetch(endpoints.NEWS_GET_ALL+"/"+page).then(data => {
       return data.json();
@@ -63,7 +66,7 @@ class NewsCardList extends Component {
 
     }).catch(err => {
       // throw new Error(err);
-      console.log("GET failed");
+      console.log("GET news failed");
     });
   }
 
@@ -80,7 +83,7 @@ class NewsCardList extends Component {
     var prevPage = this.state.page - 1;
     var disabled = false;
 
-    if(prevPage <= 1) {
+    if(prevPage < 1) {
       prevPage = 1;
       return( <li className="page-item" disabled> <a href="#" className="page-link" aria-disabled="true"> Newer </a> </li> );
     }

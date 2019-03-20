@@ -4,12 +4,9 @@ var router = express.Router();
 const models = require('../database/models.js');
 const Sequelize = require('sequelize');
 const config = require('../config.js');
+const authentication = require('../services/authentication.js');
 // Under construction
 
-router.get('/test', (req, res) => {
-  console.log("routing test OK!");
-  res.end();
-});
 
 router.get('/page/:page', (req, res) => {
 
@@ -19,13 +16,15 @@ router.get('/page/:page', (req, res) => {
   var page = req.params.page; // page number is string (at this point)!
   console.log("Page/offset: "+page)
   try {
-    page = parseInt(page, 10)
-    if(isNan(page) || page <= 0) {
+    page = parseInt(page, 10) // base 10
+    if(isNaN(page) || page <= 0) {
       page = 1;
     }
   } catch(err) {
+    console.log( err );
     page = 1;
   }
+  console.log("Page after checks: "+page)
 
   // Pagination. How many news are skipped. on page 2, skip 2-1*X [for example get 11-20]
   var offset_ = (page-1) * config.NUM_OF_NEWS_SHOWN_PAGE;
@@ -62,17 +61,22 @@ router.get('/page/:page', (req, res) => {
 });
 
 // For posting new News
-router.post('/', (req, res) => {
-
+router.post('/', authentication, (req, res) => {
 
   console.log( req.body );
-  var title               = req.body.title;
-  var cont                = req.body.content;
+
+  // Check user role. Deny if no admin role
+  if(req.user.role != config.ADMIN_ROLE_NAME) {
+    res.status(403).end(); // 403 = permission denied | 403 (Forbidden)
+  }
+
+  var title               = req.body.title.trim();
+  var cont                = req.body.content.substr(0, );
   var attachment_file     = req.body.attachment_file;
 
   var pr = models.News.create({
     title: title,
-    author_id: 1,
+    author_id: req.user.id,
     content: cont,
     is_visible: true
   });

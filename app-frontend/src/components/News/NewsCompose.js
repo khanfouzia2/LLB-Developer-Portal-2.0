@@ -141,6 +141,7 @@ class NewsCompose extends Component {
 
     const req = new Request(NEWS_POST, {
       method: 'POST',
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

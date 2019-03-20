@@ -19,8 +19,7 @@ class NewsCard extends Component {
                 <div className="card-header card-background-header">
                   <div className="grey-filter">
                     <h3 className="card-title title-text-shadow">{this.props.newsObj.title}</h3>
-                    <i>By {this.getAuthorFullName()} | 
-                    <span title="Published">{this.getDateFormatted()} </span></i>
+                    <i>By {this.getAuthorFullName()} / <span title="Published">{this.getDateFormatted()} </span></i>
                   </div>
                 </div>
                 <div className="card-body">
@@ -28,7 +27,7 @@ class NewsCard extends Component {
 
                 </div>
                 <div className="card-footer">
-                  <Link to="news/-99999">Click to read more</Link>
+                  <Link to={`/news/${this.props.newsObj.id}`}>Read more...</Link>
                 </div>
             </div>
         </div>

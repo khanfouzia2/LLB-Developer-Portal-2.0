@@ -287,7 +287,7 @@ const News = sequelize.define('news',
       allowNull: false
     },
     content: {
-      type: Sequelize.TEXT,
+      type: Sequelize.STRING(config.NEWS_CONTENT_MAXLEN),
       allowNull: false
     },
     is_visible: {
