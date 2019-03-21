@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
 import './Tools.css';
-import * as endpoints from '../../../rest-endpoints.js';
+import { FileService } from '../../../services/FileService.js';
 import { saveAs } from 'file-saver';
 
 /*
@@ -10,23 +10,23 @@ import { saveAs } from 'file-saver';
 
 class MobileApp extends Component {
 
-    downloadReittiopas() {
+    constructor() {
+        super();
+        this.fileService = new FileService();
+    }
 
-        console.log("News component will mount ")
-    
-        /* Get posts */
-    
-        fetch(endpoints.TOOLS_GET+"/download/reittiopas_fi_app.zip").then(res => {
-            console.log(res.data + "I am here");
-            saveAs(res.data, "reittiopas_fi_app.zip");
-        }).then(res => {
-          console.log( res )
-    
-        }).catch(err => {
-            console.log("GET failed");
-          throw new Error(err);
-        });
-      }
+   downloadReittiopas = () => {
+       this.fileService.getFileForTools("reittiopas_fi_app.zip").then((response) => {
+           var filename = "reittiopas_fi_app.zip";
+           saveAs(response.data, filename);
+       }).catch(function (error) {
+           if (error.response) {
+               console.log('Error', error.response.status);
+           } else {
+               console.log('Error', error.message);
+           }
+       });
+   };
 
   render() {
 
@@ -66,7 +66,7 @@ class MobileApp extends Component {
                             <div className="card-body">
                             <div className="row">
                                 <div className="col-sm-8 col-md-8 col-lg-8 col-xs-8">A good example of integrating already made webapps into the system. Uses jQuery.</div>
-                                <div className="col-sm-4 col-md-4 col-lg-4 col-xs-4"><button className="btn btn-primary" onClick={()=>this.downloadReittiopas()} target="_blank" rel="noopener noreferrer">Reittiopas.fi Example</button></div>
+                                <div className="col-sm-4 col-md-4 col-lg-4 col-xs-4"><button className="btn btn-primary" onClick={()=>this.downloadReittiopas()}>Reittiopas.fi Example</button></div>
                             </div>
                             </div>
                         </div>

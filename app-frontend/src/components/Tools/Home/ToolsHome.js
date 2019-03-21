@@ -12,30 +12,8 @@ class ToolsHome extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mobileApp: true,
-      publicDisplayApp: false,
-      mobileAppStyle: "darkslategrey",
-      publicDisplayAppStyle: "slategrey"
+      mobileApp: true
     }
-  }
-
-  mobileAppSelect() {
-    this.setState({
-      mobileApp: true,
-      publicDisplayApp: false,
-      mobileAppStyle: "darkslategrey",
-      publicDisplayAppStyle: "slategrey"
-
-    })
-  }
-
-  publicDisplayAppSelect() {
-    this.setState({
-      mobileApp: false,
-      publicDisplayApp: true,
-      mobileAppStyle: "slategrey",
-      publicDisplayAppStyle: "darkslategrey"
-    })
   }
 
   render() {
@@ -47,29 +25,19 @@ class ToolsHome extends Component {
             </nav>
             <div className="tools-page-content" id="tools">
             
-                <nav className="navbar navbar-expand-sm bg-light">
-
-                    <ul className="navbar-nav">
-                        <li className="nav-item">
-                            <button type="button" onClick={()=>this.mobileAppSelect()} className="btn text-white" style={{backgroundColor: this.state.mobileAppStyle}}>Mobile App</button>
-                        </li>
-                        <li className="nav-item">
-                            <button type="button" onClick={()=>this.publicDisplayAppSelect()} className="btn text-white" style={{backgroundColor: this.state.publicDisplayAppStyle}}>Public Display App</button>
-                        </li>
-                    </ul>
-
-                </nav>
-                {
-                  this.state.mobileApp?
-                  <div>
-                    <MobileApp />
-                  </div>
-                  :this.state.publicDisplayApp?
-                  <div>
-                    <PublicDisplayApp />
-                  </div>
-                  :null
-                }
+              <ul className="nav nav-tabs" id="toolsTab" role="tablist">
+                <li className="nav-item">
+                  <a className="nav-link active" id="mobileApp-tab" data-toggle="tab" href="#mobileApp" role="tab" aria-controls="mobileApp" aria-selected="true">mobileApp</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" id="publicDisplayApp-tab" data-toggle="tab" href="#publicDisplayApp" role="tab" aria-controls="publicDisplayApp" aria-selected="false">publicDisplayApp</a>
+                </li>
+              </ul>
+              
+              <div className="tab-content">
+                <div className="tab-pane active" id="mobileApp" role="tabpanel" aria-labelledby="mobileApp-tab"><MobileApp /></div>
+                <div className="tab-pane" id="publicDisplayApp" role="tabpanel" aria-labelledby="publicDisplayApp-tab"><PublicDisplayApp /></div>
+              </div>
 
             </div>
         </div>

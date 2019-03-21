@@ -1,8 +1,8 @@
 import service from './Restapi.js';
 
 export class FileService {
-    getFileFromServer(fileName){
+    getFileForTools(fileName){
         //returns Promise object
-        return service.getRestClientTools().get('/download/'+fileName,{ responseType:"arraybuffer" });
+        return service.getRestClientTools().get('/download/'+fileName,{ responseType:"blob" });
     }
 }
