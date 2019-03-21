@@ -13,7 +13,8 @@ router.get('/download/reittiopas_fi_app.zip', (req, res) => {
       if (exists) {
 
         res.writeHead(200, {
-          "Content-Type": "application/zip"
+          "Content-Type": "application/zip",
+          "Content-Disposition": "attachment; filename=\"reittiopas_fi_app.zip\""
         });
         fs.createReadStream(filePath).pipe(res);
       } else {
