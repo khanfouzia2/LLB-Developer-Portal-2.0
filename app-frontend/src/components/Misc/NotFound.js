@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 /*
 
-  Component for viewing one News
-
-  Route: <>/news/:id
-
+  Component for Not found error message
 
 */
 
