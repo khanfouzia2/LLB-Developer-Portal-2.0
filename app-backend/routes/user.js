@@ -28,7 +28,12 @@ router.post('/register', async function(req, res){
       if(token == null) throw "Something wrong with generate token";
 
       res.cookie('Authorization', token);
-      res.status(201).send();
+      res.status(201).send(JSON.stringify({
+         first_name: user.first_name,
+         last_name: user.last_name,
+         email: user.email,
+         role: user.role
+      }));
    }
    catch(e) {
       console.log(e);
@@ -54,7 +59,12 @@ router.post('/login', async function(req, res){
       if(token == null) throw "Something wrong when creating token";
    
       res.cookie('Authorization', token);
-      res.status(200).send();
+      res.status(200).send(JSON.stringify({
+         first_name: user.first_name,
+         last_name: user.last_name,
+         email: user.email,
+         role: user.role
+      }));
    }
    catch(e) {
       console.log(`Error while trying to login. error = ${e}`);
@@ -75,8 +85,19 @@ router.get('/logout', authentication , async function(req, res){
 });
 
 
-router.get('/:id',function(req, res){
-   res.send('id user route');
+router.get('/me',authentication,function(req, res){
+   try {
+      res.status(200).send(JSON.stringify({
+         first_name: req.user.first_name,
+         last_name: req.user.last_name,
+         email: req.user.email,
+         role: req.user.role
+      }));
+   }
+   catch(e) {
+      console.log(`Error while trying to login. error = ${e}`);
+      res.status(500).send();
+   }
 });
 
 

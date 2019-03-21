@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import Example from './components/Example/Example';
 import APIPage from './components/APIPage/APIPage';
-
+import {AuthProvider} from './context/authContext';
 import NewsCardList from './components/News/NewsCardList';
 import NewsCompose from './components/News/NewsCompose';
 import ToolsHome from './components/Tools/Home/ToolsHome';
@@ -16,6 +16,7 @@ import InfoPage from './components/InfoPage/Info';
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import SideNavBar from './components/NavBar/SideBarNav';
+
 import './App.css';
 
 class App extends Component {
@@ -39,14 +40,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Router>
-          <Switch>
-            <Route exact path="/login" component={LoginForm} />
-            <Route exact path="/register" component={RegisterForm} />
-            <Route render={this.renderPortalContent} />
-          </Switch>
-        </Router>
-
+        <AuthProvider>
+          <Router>
+            <Switch>
+              <Route exact path="/login" component={LoginForm} />
+              <Route exact path="/register" component={RegisterForm} />
+              <Route render={this.renderPortalContent} />
+            </Switch>
+          </Router>
+        </AuthProvider>
       </div>
     );
   }

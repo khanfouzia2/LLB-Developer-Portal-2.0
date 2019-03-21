@@ -17,6 +17,7 @@ const TOOLS_GET = BASE_URL + "tools";
 const USER_FORM_REGISTER = BASE_URL + 'users/register';
 const USER_LOGIN =  BASE_URL + 'users/login';
 const USER_LOGOUT = BASE_URL + 'users/logout';
+const USER_ME = BASE_URL + 'users/me';
 
 module.exports = {
   NEWS_POST,
@@ -28,4 +29,5 @@ module.exports = {
   USER_FORM_REGISTER,
   USER_LOGIN,
   USER_LOGOUT,
+  USER_ME
 }

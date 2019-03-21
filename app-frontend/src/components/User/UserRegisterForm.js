@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './Form.css'
 import {FormRegister} from '../../services/UserApi';
 import { Redirect } from 'react-router-dom'
+import {AuthConsumer} from '../../context/authContext';
 
 
 class UserRegisterForm extends Component {
@@ -27,11 +28,13 @@ class UserRegisterForm extends Component {
     this.setState({[event.target.name]: event.target.value});
   }
 
-  handleSubmit = async (event) => {
+  handleSubmit = async (event, updateInfoFunction) => {
     event.preventDefault();
     try {
-      const {firstName, lastName, email, password} = this.state;
-      await FormRegister(firstName , lastName, email, password);
+      let result = await FormRegister(this.state.firstName , this.state.lastName, 
+                                      this.state.email, this.state.password);
+      const {first_name, last_name, email, role} = result.data;
+      updateInfoFunction(true, first_name, last_name, email, role);
       this.setState({redirect:true, redirectURL:"/"});            
     }
     catch(err) {
@@ -56,64 +59,68 @@ class UserRegisterForm extends Component {
     }
     else {
       return (
-        <div className="register-form-wrapper" >
-              <div className="user-form-grey-filter">
-                <div className="user-register-login-form">
-                  <div className="form-header">
-                    <img src={process.env.PUBLIC_URL + 'img/LLBlogo.png'} alt="LLB logo" className="img-fluid"></img>
-                    <br></br>
-                    <br></br>
-
-                    <h3>REGISTER</h3>  
-                    <br></br>
-                  </div>
-                  {this.renderMessage(isError, message)}
-                  <form onSubmit= {this.handleSubmit}>
-                    <div className="row">
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label>First Name</label>
-                          <input className="form-control" placeholder="First Name" name="firstName" type="text" onChange={this.handleChange} />
+        <AuthConsumer>
+          {context => (
+                      <div className="register-form-wrapper" >
+                      <div className="user-form-grey-filter">
+                        <div className="user-register-login-form">
+                          <div className="form-header">
+                            <img src={process.env.PUBLIC_URL + 'img/LLBlogo.png'} alt="LLB logo" className="img-fluid"></img>
+                            <br></br>
+                            <br></br>
+        
+                            <h3>REGISTER</h3>  
+                            <br></br>
+                          </div>
+                          {this.renderMessage(isError, message)}
+                          <form onSubmit= {event => this.handleSubmit(event, context.updateAuthInfo)}>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <div className="form-group">
+                                  <label>First Name</label>
+                                  <input className="form-control" placeholder="First Name" name="firstName" type="text" onChange={this.handleChange} />
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <div className="form-group">
+                                  <label>Last Name</label>
+                                  <input className="form-control" placeholder="Last Name" name="lastName" type="text" onChange={this.handleChange}/>
+                                </div>
+                              </div>
+                            </div>
+        
+                            <div className="form-group">
+                                <label>Email</label>
+                                <input className="form-control" placeholder="E-mail" name="email" type="text" onChange={this.handleChange} />
+                            </div>
+        
+                            <div className="row">
+                              <div className="col-md-6">
+                                <div className="form-group">
+                                  <label>Password</label>
+                                  <input className="form-control" placeholder="Password" name="password" type="password" onChange={this.handleChange}/>
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <div className="form-group">
+                                  <label>Confirm Password</label>
+                                  <input className="form-control" placeholder="Confirm Password" name="confirmPassword" type="password" onChange={this.handleChange}/>
+                                </div>
+                              </div>      
+                            </div>
+                            
+                            <button type="submit" className="btn btn-md btn-primary" >REGISTER</button>
+                            <a href="/login"><small className="form-text text-muted">Already have an account? Click here to login.</small></a>
+                          </form>
+                          <p className="form-header"> - OR -</p>
+                          <button id="google-button" className="btn btn-block btn-danger">
+                            <i className="fab fa-google"></i> Log in with Google
+                          </button>
                         </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label>Last Name</label>
-                          <input className="form-control" placeholder="Last Name" name="lastName" type="text" onChange={this.handleChange}/>
-                        </div>
-                      </div>
                     </div>
-
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input className="form-control" placeholder="E-mail" name="email" type="text" onChange={this.handleChange} />
-                    </div>
-
-                    <div className="row">
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label>Password</label>
-                          <input className="form-control" placeholder="Password" name="password" type="password" onChange={this.handleChange}/>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label>Confirm Password</label>
-                          <input className="form-control" placeholder="Confirm Password" name="confirmPassword" type="password" onChange={this.handleChange}/>
-                        </div>
-                      </div>      
-                    </div>
-                    
-                    <button type="submit" className="btn btn-md btn-primary" >REGISTER</button>
-                    <a href="/login"><small className="form-text text-muted">Already have an account? Click here to login.</small></a>
-                  </form>
-                  <p className="form-header"> - OR -</p>
-                  <button id="google-button" className="btn btn-block btn-danger">
-                    <i className="fab fa-google"></i> Log in with Google
-                  </button>
                 </div>
-            </div>
-        </div>
+          )}
+        </AuthConsumer>
       );
     }
   }
