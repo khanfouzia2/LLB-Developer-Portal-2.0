@@ -83,7 +83,7 @@ class NewsCompose extends Component {
 
               <hr/>
 
-              {/* Attachment */}
+              {/* Attachment
               <div className="form-group row">
                 <div className="col-md-3">
                   <label for="" class="col-form-label">Header Image</label>
@@ -92,7 +92,7 @@ class NewsCompose extends Component {
                   <input type="FILE" name="file" ref={this.attachment_file} onChange={this.handleAttachmentFileInputChange} className="form-control-file" />
                   <label for="" className="small">Max file size 20 MB. Allowed file formats: <code>.png, .jpeg, .gif</code></label>
 
-                  {/* Preview */}
+                  {/* Preview
                   {isPreview ? (
                     <img className="img img-thumbnail img-fluid" src={this.state.previewSrc} ref={this.imgPreview} />
                   ) : (
@@ -100,6 +100,7 @@ class NewsCompose extends Component {
                   )}
                 </div>
               </div>
+              */}
               <div className="form-group">
 
               </div>
@@ -205,12 +206,7 @@ class NewsCompose extends Component {
 
 
   componentDidMount() {
-    this.setState({
-      title: "",
-      content: "",
-      author_id: -1,
-      is_visible: true,
-    })
+    /**/
   }
 
 

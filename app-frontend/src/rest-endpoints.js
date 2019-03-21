@@ -8,7 +8,7 @@ const BASE_URL = "http://localhost:8080/"
 // News
 const NEWS_POST = BASE_URL + "news";
 const NEWS_GET_ALL = BASE_URL + "news/page"; // +id
-const NEWS_GET_ONE = BASE_URL + "news";
+const NEWS_GET_ONE = BASE_URL + "news/id"; // +id
 const NEWS_PATCH = BASE_URL + "news";
 const NEWS_DELETE = BASE_URL + "news";
 const TOOLS_GET = BASE_URL + "tools";

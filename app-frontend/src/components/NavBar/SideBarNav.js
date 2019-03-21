@@ -28,17 +28,17 @@ class SideBarNav extends Component {
     }
 
     handleLogout = async (e) => {
-      try 
+      try
       {   e.preventDefault();
           await Logout();
           document.cookie = `Authorization=;Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
-          window.location.reload(); 
-      } 
+          window.location.reload();
+      }
       catch(err) {
         console.log("Something wrong when logout ")
       }
     }
-    
+
     renderUserInfo = (userInfo) => {
        if(userInfo.isAuth) {
          console.log(userInfo)
@@ -56,14 +56,13 @@ class SideBarNav extends Component {
           <div className="list-group list-group-flush">
                         <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/info">INFO</Link>
                         <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news/page/1">NEWS</Link>
-          </div>  
+          </div>
         );
-    
+
     renderAuthenticateRequiredMenu = (userInfo) => {
       if(userInfo.isAuth) {
          return (
            <>
-              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item" to="/news/compose">Compose</Link>
               <Accrodion header="UUSIMAA">
                           <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/api">
                             API Documemtation
@@ -95,7 +94,7 @@ class SideBarNav extends Component {
               </Accrodion>
               <Accrodion className="list-group-item list-group-item-action bg-light" header="CONTACT US">
                         <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/">
-                            Report Bug
+                            Report a Bug
                         </Link>
                         <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/">
                           Feedback
@@ -112,7 +111,7 @@ class SideBarNav extends Component {
       if(userInfo.isAuth) {
         return (
           <a onClick={this.handleLogout} className="list-group-item list-group-item-action bg-light overridde-list-group-item logout-btn" href="/">
-                      LOG OUT  <i className="fas fa-sign-out-alt"></i> 
+                      LOG OUT  <i className="fas fa-sign-out-alt"></i>
           </a>
         );
       }
@@ -123,8 +122,8 @@ class SideBarNav extends Component {
         <AuthConsumer>
           { ({userInfo}) => (
                     <>
-                    <div className="bg-light border-right">      
-                      {this.renderUserInfo(userInfo)}              
+                    <div className="bg-light border-right">
+                      {this.renderUserInfo(userInfo)}
                       {this.renderGeneralMenu()}
                       {this.renderAuthenticateRequiredMenu(userInfo)}
                       {this.renderLogoutButton(userInfo)}

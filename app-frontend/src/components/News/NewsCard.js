@@ -27,7 +27,7 @@ class NewsCard extends Component {
 
                 </div>
                 <div className="card-footer">
-                  <Link to={`/news/${this.props.newsObj.id}`}>Read more...</Link>
+                  <Link to={`/news/id/${this.props.newsObj.id}`}>Read more...</Link>
                 </div>
             </div>
         </div>
