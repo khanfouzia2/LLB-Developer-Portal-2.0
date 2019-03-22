@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom"
+import { AuthConsumer } from '../../context/authContext';
 import  * as config from '../../config.js'
 import './NewCard.css';
 
@@ -23,15 +24,29 @@ class NewsCard extends Component {
                   </div>
                 </div>
                 <div className="card-body">
-                  <p className="card-text">{this.getContent()}</p>
+                  <p className="card-text">
+                    {this.getContent()}
+                    <hr/>
+                    <Link to={`/news/id/${this.props.newsObj.id}`}>Read more...</Link>
+                  </p>
 
                 </div>
-                <div className="card-footer">
-                  <Link to={`/news/id/${this.props.newsObj.id}`}>Read more...</Link>
-                </div>
+                <AuthConsumer>
+                  { ({userInfo}) => (<React.Fragment> { this.renderAdminToolsFooter(userInfo) } </React.Fragment>) }
+                </AuthConsumer>
+
             </div>
         </div>
       );
+    }
+
+
+    renderAdminToolsFooter(userInfo) {
+      return(
+        <div className="card-footer">
+          <Link to={`/news/compose?edit_id=${this.props.newsObj.id}`}>Edit</Link>
+        </div>
+      )
     }
 
     getAuthorFullName() {

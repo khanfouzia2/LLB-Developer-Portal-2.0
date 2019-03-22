@@ -11,6 +11,10 @@
 const DEFAULT_LOCALE = "fi-FI"
 
 
+const ADMIN_ROLE_NAME       = "admin";
+const BASIC_ROLE_NAME       = "basic";
+const MODERATOR_ROLE_NAME   = "moderator";
+
 // How long text is displayed
 const NUM_OF_NEWS_SHOWN_PAGE = 10; // max number of news per page. Page 1 => [1..x] and so on...
 const NEWS_SHOWN_CHARS = 300;
@@ -26,6 +30,7 @@ module.exports = {
   DEFAULT_LOCALE,
   TEXT_IF_POST_EMPTY,
   NUM_OF_NEWS_SHOWN_PAGE,
+  ADMIN_ROLE_NAME,
   NEWS_SHOWN_CHARS,
   NEWS_DEFAULT_BACKGROUND_FILENAME
 }

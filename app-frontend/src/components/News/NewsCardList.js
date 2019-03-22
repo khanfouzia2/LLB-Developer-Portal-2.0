@@ -85,7 +85,8 @@ class NewsCardList extends Component {
 
   /* Render this sub-component if auth. user is role=admin  */
   renderAdminPanel(userInfo) {
-      if(userInfo.isAuth) {
+      console.log( userInfo.role +", "+ config.ADMIN_ROLE_NAME )
+      if(userInfo.isAuth && userInfo.role === config.ADMIN_ROLE_NAME) {
         return(
             <React.Fragment>
               <div className="card mt-md-3">

@@ -8,6 +8,36 @@ const authentication = require('../services/authentication.js');
 // Under construction
 
 
+
+router.get('/id/:id', (req, res) => {
+  console.log("GET News ")
+  var id = req.params.id;
+  try {
+    id = parseInt(id, 10) // base 10
+    if(!isNaN(id) && id > 0) {
+
+      // Try to find News ID
+      var news = models.News.findByPk(id); // Promise
+
+      news.then(data => {
+        res.status(200);
+        res.json(data); // + send
+      }).catch(err => {
+        res.status(404).send();
+      });
+
+    } else {
+      res.status(500).send();
+    }
+  } catch(err) {
+    console.log("Error " + err);
+    res.status(500).send();
+  }
+
+});
+
+
+
 router.get('/page/:page', (req, res) => {
 
   // http://docs.sequelizejs.com/manual/tutorial/querying.html#relations-associations
@@ -63,32 +93,66 @@ router.get('/page/:page', (req, res) => {
 // For posting new News
 router.post('/', authentication, (req, res) => {
 
+  console.log("Making a new News!");
   console.log( req.body );
 
   // Check user role. Deny if no admin role
   if(req.user.role != config.ADMIN_ROLE_NAME) {
-    res.status(403).end(); // 403 = permission denied | 403 (Forbidden)
+    res.status(403).send(); // 403 = permission denied | 403 (Forbidden)
   }
 
-  var title               = req.body.title.trim();
-  var cont                = req.body.content.substr(0, );
-  var attachment_file     = req.body.attachment_file;
+  try {
+    var title               = req.body.title.trim();
+    var cont                = req.body.content.substr(0, 50000);
+    var is_visible          = req.body.is_visible;
+    //var attachment_file     = req.body.attachment_file;
+  } catch(err) {
+    res.status(500).send();
+  }
 
   var pr = models.News.create({
     title: title,
     author_id: req.user.id,
     content: cont,
-    is_visible: true
+    is_visible: is_visible
   });
 
   pr.then(data => {
     console.log(data);
   }).catch(err => {
-    console.log("Error :: create");
+    res.status(500).send();
   })
 
   // 201 = Resource created successfully
-  res.status(201).end();
+  res.status(201).send();
+
+});
+
+
+
+/* UNDER CONSTRUCTION */
+router.patch('/:id', authentication, (req, res) => {
+  console.log("PATCH Request received...");
+  console.log( req.body );
+
+
+  // Step 1 - Get the News
+  var pr = models.News.findByPk(req.body.id);
+  pr.then(data => {
+    console.log("  ID found. " + data)
+
+    data.update({
+      title: req.body.title,
+      content: req.body.content,
+      is_visible: req.body.is_visible,
+    }).then( ()=>{} )
+
+
+  }).catch(err => {
+    console.log("  ID NOT found. " + err)
+  });
+
+  res.send();
 
 });
 
