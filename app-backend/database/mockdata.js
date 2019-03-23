@@ -4,11 +4,16 @@
 
 const models = require('./models');
 
+const lorem = "Lorem ipsum dolor sit amet, consectetur  mattis. Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,"
 
-const lorem = "Lorem ipsum dolor sit amet, consectetur  mattis."
+// Real users with password="1234"
+models.User.create({first_name: "Admin", last_name: "Admin", role:"admin", password:"$2b$11$5YJvy8utZNDByhiLHFfrduLWB1TXwZ9FyRADqodzlzPeb07r5UZlW", email: "admin@admin.com", token: ""});
+models.User.create({first_name: "Test", last_name: "Test", password:"$2b$11$5YJvy8utZNDByhiLHFfrduLWB1TXwZ9FyRADqodzlzPeb07r5UZlW", email: "test@test.com", token: ""});
+
 
 models.User.create({id:1, first_name: "John", last_name: "Smith", email: Math.random()*1000+"_john@llb.com", token: "abc***"}); // id 1
 models.User.create({id:2, first_name: "Joe", last_name: "Doe", email: Math.random()*1000+"_joe@llb.com", token: "zzz***"}); // id 2
+
 
 models.Service.create({name: "TRE" }); // name is a key
 models.Service.create({name: "HEL" });
