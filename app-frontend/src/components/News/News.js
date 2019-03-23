@@ -23,7 +23,7 @@ class News extends React.Component {
 
   render() {
     console.log("Render");
-    return(<> NEWS! ### Under constructor ### </>);
+    return(<> NEWS! ### Under construction ### </>);
   }
 
 

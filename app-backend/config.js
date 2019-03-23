@@ -14,6 +14,7 @@ const BASIC_USER_ROLE_NAME = "basic";
 
 module.exports = {
   NUM_OF_NEWS_SHOWN_PAGE,
+  NEWS_CONTENT_MAXLEN,
   ADMIN_ROLE_NAME,
   BASIC_USER_ROLE_NAME
 }

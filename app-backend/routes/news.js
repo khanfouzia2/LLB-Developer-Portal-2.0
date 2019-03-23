@@ -44,7 +44,7 @@ router.get('/page/:page', (req, res) => {
   // https://stackoverflow.com/questions/40360431/get-children-from-parent-sequelize
 
   var page = req.params.page; // page number is string (at this point)!
-  console.log("Page/offset: "+page)
+  console.log("\n===\nPage received: "+page)
   try {
     page = parseInt(page, 10) // base 10
     if(isNaN(page) || page <= 0) {
@@ -132,24 +132,34 @@ router.post('/', authentication, (req, res) => {
 
 /* UNDER CONSTRUCTION */
 router.patch('/:id', authentication, (req, res) => {
-  console.log("PATCH Request received...");
+  console.log("\n===\nPATCH Request received...");
   console.log( req.body );
 
+  // Step 1 - Content check
+  if(!req.body.title || !req.body.content || !req.body.is_visible) {
+    console.log("Invalid content");
+    res.status(500).send();
+  }
 
-  // Step 1 - Get the News
+  // Step 2 - Get the News
   var pr = models.News.findByPk(req.body.id);
-  pr.then(data => {
-    console.log("  ID found. " + data)
 
-    data.update({
+  // Step 3 - If success. Update.
+  pr.then(obj => {
+    console.log(" ID found. " + obj)
+
+    obj.update({
       title: req.body.title,
       content: req.body.content,
       is_visible: req.body.is_visible,
-    }).then( ()=>{} )
+    }).catch((err) => {
+        res.status(500).send();
+    })
 
 
   }).catch(err => {
     console.log("  ID NOT found. " + err)
+    res.status(404).send();
   });
 
   res.send();

@@ -27,17 +27,16 @@ class NewsCardList extends Component {
   */
   componentWillReceiveProps(nextProps) {
     var page = parseInt(nextProps.match.params.page, 10); // base 10
-    if( !isNaN(page) && page >= 1) {
-      this.setState({page: page})
-    }
-    else {
+    if( isNaN(page) && page <= 0) {
       console.log("Invalid :page in URL. Setting to 1")
-      this.setState({page: 1})
+      page = 1;
     }
+    // Make call after state is successfully updated!
+    this.setState({page: page}, () => {
+      console.log("page: "+page)
+      this.loadNewsAndUpdateComponent(page=this.state.page);
+    })
 
-    // Load and re-render component
-    console.log(this.state.page)
-    this.loadNewsAndUpdateComponent(this.state.page);
   }
 
   componentWillMount() {
@@ -137,14 +136,14 @@ class NewsCardList extends Component {
             </div>
             <hr/>
 
-            {/* Nav. Under consturction! */}
+            {/* Nav. */}
             <nav aria-label="Page navigation example">
               <ul class="pagination">
                 { this.getPrevPageLink() }
                 { this.getNextPageLink() }
               </ul>
             </nav>
-            <small>Current page {this.props.match.params.page}</small>
+            <small>Current page {this.state.page}</small>
 
           </div>
         </div>

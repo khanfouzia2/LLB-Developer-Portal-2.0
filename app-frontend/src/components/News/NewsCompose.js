@@ -31,6 +31,7 @@ class NewsCompose extends Component {
 
 
     this.handleInputChange                   = this.handleInputChange.bind(this);
+    this.handleInputIsVisibleChange = this.handleInputIsVisibleChange.bind(this);
     this.handlePublish                              = this.handlePublish.bind(this);
     this.handleAttachmentFileInputChange          = this.handleAttachmentFileInputChange.bind(this);
   }
@@ -42,102 +43,119 @@ class NewsCompose extends Component {
     const isVisible = this.state.is_visible;
 
     return(
-      <React.Fragment>
-        <div className="card mt-md-5">
-          <div className="card-header">
-            <span className="far fa-newspaper"></span>
-            <h3 clasName="">News - { this.state.edit_mode ? "Edit" : "Compose" }</h3>
-          </div>
-          <div className="card-body">
+      <div className="row mt-md-5">
+        <div className="col-md-9">
 
-            { this.showEditModeAlert() }
-            { this.showNotPublicAlert() }
-
-            <form>
-
-              {/* ID - Cannot be modified */}
-              { this.showNewsId() }
-
-              {/* Title */}
-              <div className="form-group row">
-                <div className="col-md-3">
-                  <label for="" class="col-form-label">Title</label>
-                </div>
-                <div className="col-md-9">
-                  <input type="text" name="title" value={this.state.title} placeholder="Title" onChange={(event)=>this.handleInputChange(event)} maxlength="100" className="form-control" required />
-                  <span class="badge badge badge-danger">Required</span>
-                  <span className="small">{this.state.title.length}/{config.NEWS_TITLE_MAXLEN} chars</span>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="form-group row">
-                <div className="col-md-3">
-                  <label for="" class="col-form-label">Content</label>
-                </div>
-                <div className="col-md-9">
-                  <textarea rows="8" name="content" value={this.state.content} onChange={(event)=>this.handleInputChange(event)} className="form-control" maxlength={config.NEWS_CONTENT_MAXLEN} required></textarea>
-                  <span class="badge badge badge-danger">Required</span>
-                  <span className="small">{this.state.content.length}/{config.NEWS_CONTENT_MAXLEN}</span>
-                </div>
-              </div>
-
-              {/* Is visible */}
-              <div className="form-group row">
-
-                <div className="col-md-3">
-                  <label className="form-check-label">Is public?</label>
-                </div>
-
-                <div className="col-md-9">
-                  <input type="checkbox" id="inputState" className="" name="is_visible" onChange={(e)=>this.handleInputChange(e)} />
-                </div>
-
-              </div>
-
-
-              {/* Attachment
-              <hr/>
-              <div className="form-group row">
-                <div className="col-md-3">
-                  <label for="" class="col-form-label">Header Image</label>
-                </div>
-                <div className="col-md-9">
-                  <input type="FILE" name="file" ref={this.attachment_file} onChange={this.handleAttachmentFileInputChange} className="form-control-file" />
-                  <label for="" className="small">Max file size 20 MB. Allowed file formats: <code>.png, .jpeg, .gif</code></label>
-
-                  {/* Preview
-                  {isPreview ? (
-                    <img className="img img-thumbnail img-fluid" src={this.state.previewSrc} ref={this.imgPreview} />
-                  ) : (
-                    null
-                  )}
-                </div>
-              </div>
-              */}
-
-            </form>
-
-          </div>
-          <div className="card-footer">
-            <div className="row">
-
-              <div className="col-md-3">
-                { this.showDeleteOrDiscardButton() }
-              </div>
-              <div className="col-md-6">
-              </div>
-              <div className="col-md-3 ">
-                <input type="submit" value={ !this.state.edit_mode ? "Save" : "Update" } onClick={this.handlePublish} className="float-md-right btn btn-success btn-sm" />
-              </div>
+          <div className="card">
+            <div className="card-header">
+              <h3 clasName="">News - { this.state.edit_mode ? "Edit" : "Compose" }</h3>
             </div>
+            <div className="card-body">
 
+              { this.showEditModeAlert() }
+              { this.showNotPublicAlert() }
+
+              <form>
+
+                {/* Title */}
+                <div className="form-group row">
+                  <div className="col-md-3">
+                    <label for="" class="col-form-label">Title</label>
+                  </div>
+                  <div className="col-md-9">
+                    <input type="text" name="title" value={this.state.title} placeholder="Title" onChange={(event)=>this.handleInputChange(event)} maxlength="100" className="form-control" required />
+                    <span class="badge badge badge-danger">Required</span>
+                    <span className="small" style={{float:"right"}}>{this.state.title.length}/{config.NEWS_TITLE_MAXLEN} chars</span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="form-group row">
+                  <div className="col-md-3">
+                    <label for="" class="col-form-label">Content</label>
+                  </div>
+                  <div className="col-md-9">
+                    <textarea rows="8" name="content" value={this.state.content} onChange={(e)=>this.handleInputChange(e)}
+                     placeholder="..." className="form-control" maxlength={config.NEWS_CONTENT_MAXLEN} required></textarea>
+                    <span class="badge badge badge-danger">Required</span>
+                    <span className="small" style={{float:"right"}}>{this.state.content.length}/{config.NEWS_CONTENT_MAXLEN}</span>
+                  </div>
+                </div>
+
+                {/* Is visible */}
+                <div className="form-group row">
+
+                  <div className="col-md-3">
+                    <label className="form-check-label">Is public</label>
+                  </div>
+
+                  <div className="col-md-9">
+                    <select name="is_visible" className="form-control" value={this.state.is_visible} onChange={(e)=>this.handleInputIsVisibleChange(e)}>
+                      <option value="true" selected={this.state.is_visible ? "true" : "false"}>YES</option>
+                      <option value="false" selected={!this.state.is_visible ? "true" : "false"}>NO</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                {/* Attachment
+                <hr/>
+                <div className="form-group row">
+                  <div className="col-md-3">
+                    <label for="" class="col-form-label">Header Image</label>
+                  </div>
+                  <div className="col-md-9">
+                    <input type="FILE" name="file" ref={this.attachment_file} onChange={this.handleAttachmentFileInputChange} className="form-control-file" />
+                    <label for="" className="small">Max file size 20 MB. Allowed file formats: <code>.png, .jpeg, .gif</code></label>
+
+                    {/* Preview
+                    {isPreview ? (
+                      <img className="img img-thumbnail img-fluid" src={this.state.previewSrc} ref={this.imgPreview} />
+                    ) : (
+                      null
+                    )}
+                  </div>
+                </div>
+                */}
+
+              </form>
+
+            </div>
+            <div className="card-footer">
+              <div className="row">
+
+                <div className="col-md-6">
+                  { this.showDeleteOrDiscardButton() }
+
+                </div>
+                <div className="col-md-6 ">
+                  <input type="submit" value={ !this.state.edit_mode ? ((this.state.is_visible) ? "Publish" : "Save as draft") : "Update" } onClick={this.handlePublish} className="float-md-right btn btn-success btn-sm" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>{/* col */}
+
+        <div className="col-md-3">
+          {/* Under construction == Move this to its own component? */}
+          <div className="card">
+            <div className="card-header">
+              <h3>Drafts</h3>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                Cras justo odio
+                <small><span className="muted">{new Date().toString()}</span></small>
+              </li>
+              <li class="list-group-item">Dapibus ac facilisis in</li>
+              <li class="list-group-item">Vestibulum at eros</li>
+            </ul>
           </div>
         </div>
 
-        <h1>Not public News</h1>
-        # list here
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -160,14 +178,7 @@ class NewsCompose extends Component {
     if(this.state.edit_mode) {
       return(
         <React.Fragment>
-          <div className="form-group row">
-            <div className="col-md-3">
-              <label for="" class="col-form-label"> <code>#ID</code> </label>
-            </div>
-            <div className="col-md-9">
-              <input type="text" name="id" disabled value={this.state.id} placeholder="ID" className="form-control" required />
-            </div>
-          </div>
+           <code>#ID: {this.state.id}</code>
         </React.Fragment>
       )
     }
@@ -181,14 +192,14 @@ class NewsCompose extends Component {
       // Show 'Discard' button
       return(
         <React.Fragment>
-          <Link to="/news"><input type="submit" value="Discard changes" className=" btn btn-danger btn-sm mr-md-3" /></Link>
+          <Link to="/news/page/1"><input type="submit" value="Discard changes" className=" btn btn-danger btn-sm mr-md-3" /></Link>
           <input type="submit" value="Delete" className="btn btn-danger btn-sm" />
         </React.Fragment>
       )
     } else {
       // Show Delete button
       return(
-        <input type="submit" value="Cancel"  className="btn btn-danger btn-sm" />
+        <Link to="/news/page/1"><input type="submit" value="Cancel"  className="btn btn-danger btn-sm" /></Link>
       )
     }
   }
@@ -252,8 +263,6 @@ class NewsCompose extends Component {
 
 
 
-
-
   /*
     Get file from upload-form. Start reading its content (dataURL)
     with FileReader. After done, event "loadend" will trigger.
@@ -300,6 +309,17 @@ class NewsCompose extends Component {
     });
   }
 
+  /* Method for handling Select-elment */
+  handleInputIsVisibleChange(e) {
+    var val = e.target.value;
+    if(val === "true") {
+      this.setState({is_visible: true});
+    }
+    if(val === "false") {
+      this.setState({is_visible: false});
+    }
+  }
+
 
 
   componentWillReceiveProps(newProps) {
@@ -309,7 +329,7 @@ class NewsCompose extends Component {
         id: 0,
         title: "",
         content: "",
-        is_visible: false,
+        is_visible: true,
         edit_mode: false
       })
     }
@@ -322,8 +342,10 @@ class NewsCompose extends Component {
     TODO: Redirect to error page
   */
   componentWillMount(props) {
+
     var parsed = qs.parse(this.props.location.search);
     var id = parseInt(parsed.edit_id, 10); // base 10 integer
+
     if(!isNaN(id) && id >= 0) {
       //
       fetch(new Request(NEWS_GET_ONE+'/'+id)).then(data => {
