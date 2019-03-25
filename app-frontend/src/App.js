@@ -25,13 +25,13 @@ import './App.css';
 class App extends Component {
   renderPortalContent = () => (
     <SideNavBar>
-      <div id="main-content" className="container">
+      <div id="main-content">
         <Route exact path="/info" component={InfoPage} />
         <Route exact path="/news/compose" component={NewsCompose} />
         <Route exact path="/news/page/:page" component={NewsCardList} />
         <Route exact path="/news" component={NewsCardList} />
-        <Route exact path="/news/id/:id" component={News} />
-        <Route exact path="/api" render={props => <APIPage URL="http://petstore.swagger.io/v2/swagger.json" {...props} />} />
+        <Route exact path="/news/id/:id" component={News} /> 
+        <Route exact path="/api" render={props => <APIPage URL={process.env.PUBLIC_URL + 'swagger/swagger.json'} {...props} />} />
         <Route exact path="/tools" component={ToolsHome} />
         <Route exact path="/tools/designGuidelines" component={DesignGuidelines} />
         <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />
