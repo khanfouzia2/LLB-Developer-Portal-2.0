@@ -92,10 +92,10 @@ class News extends React.Component {
 
 
   getAuthorDetails() {
-    if(!this.state.authorObj.first_name || !this.state.authorObj.last_name) {
-      return "Unknown";
-    } else {
+    try {
       return this.state.authorObj.first_name +" " + this.state.authorObj.last_name;
+    } catch(err) {
+      return "Unknow author"
     }
   }
 
