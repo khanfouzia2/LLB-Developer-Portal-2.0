@@ -11,13 +11,17 @@ const authentication = require('../services/authentication.js');
 
 router.get('/id/:id', (req, res) => {
   console.log("GET News ")
-  var id = req.params.id;
+
   try {
-    id = parseInt(id, 10) // base 10
+    id = parseInt(req.params.id, 10) // base 10
     if(!isNaN(id) && id > 0) {
 
-      // Try to find News ID
-      var news = models.News.findByPk(id); // Promise
+      // Try to find News ID, second param is options
+      var news = models.News.findByPk(id, {
+        include: [{
+          model: models.User,
+        }]
+      }); // Promise
 
       news.then(data => {
         res.status(200);

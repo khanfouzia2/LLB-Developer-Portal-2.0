@@ -142,14 +142,14 @@ class NewsCompose extends Component {
           {/* Under construction == Move this to its own component? */}
           <div className="card">
             <div className="card-header">
-              <h3>Drafts</h3>
+              <h5>Not visible</h5>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
                 Cras justo odio
                 <small><span className="muted">{new Date().toString()}</span></small>
               </li>
-              <li class="list-group-item">Dapibus ac facilisis in</li>
+              <li class="list-group-item"># Under constrction</li>
               <li class="list-group-item">Vestibulum at eros</li>
             </ul>
           </div>
