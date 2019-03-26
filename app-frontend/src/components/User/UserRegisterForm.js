@@ -69,7 +69,7 @@ class UserRegisterForm extends Component {
                             <br></br>
                             <br></br>
         
-                            <h3>REGISTER</h3>  
+                            <h3>SIGN UP</h3>  
                             <br></br>
                           </div>
                           {this.renderMessage(isError, message)}
@@ -109,12 +109,12 @@ class UserRegisterForm extends Component {
                               </div>      
                             </div>
                             
-                            <button type="submit" className="btn btn-md btn-primary" >REGISTER</button>
+                            <button type="submit" className="btn btn-md btn-primary" >SIGN UP</button>
                             <a href="/login"><small className="form-text text-muted">Already have an account? Click here to login.</small></a>
                           </form>
                           <p className="form-header"> - OR -</p>
                           <button id="google-button" className="btn btn-block btn-danger">
-                            <i className="fab fa-google"></i> Log in with Google
+                            <i className="fab fa-google"></i> Sign up with Google
                           </button>
                         </div>
                     </div>
