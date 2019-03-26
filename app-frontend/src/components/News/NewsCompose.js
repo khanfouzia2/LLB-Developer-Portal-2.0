@@ -43,7 +43,7 @@ class NewsCompose extends Component {
     const isVisible = this.state.is_visible;
 
     return(
-      <div className="row mt-md-5">
+      <div className="row mt-md-5 App-custom-page-content">
         <div className="col-md-9">
 
           <div className="card">

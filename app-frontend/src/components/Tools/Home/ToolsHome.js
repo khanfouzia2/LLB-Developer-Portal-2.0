@@ -23,7 +23,7 @@ class ToolsHome extends Component {
             <nav className="App-custom-nav">
                 <span className="navbar-brand mb-0 h1">Development Tools</span>
             </nav>
-            <div className="tools-page-content" id="tools">
+            <div className="tools-page-content App-custom-page-content" id="tools">
             
               <ul className="nav nav-tabs" id="toolsTab" role="tablist">
                 <li className="nav-item">

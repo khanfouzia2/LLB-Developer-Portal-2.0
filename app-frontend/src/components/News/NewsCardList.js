@@ -123,9 +123,9 @@ class NewsCardList extends Component {
           </nav>
           <AuthConsumer>
             {({userInfo}) => (
-              <React.Fragment>
+              <div className="App-custom-page-content">
                 { this.renderAdminPanel(userInfo) }
-              </React.Fragment>
+              </div>
             )}
           </AuthConsumer>
 

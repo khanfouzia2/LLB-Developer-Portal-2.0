@@ -44,12 +44,17 @@ class NewsCard extends Component {
 
 
     renderAdminToolsFooter(userInfo) {
-      return(
-        <div className="card-footer">
-          Admin tools<br/>
-          <Link to={`/news/compose?edit_id=${this.props.newsObj.id}`}>Edit</Link>
-        </div>
-      )
+      if(userInfo.isAuth && userInfo.role === config.ADMIN_ROLE_NAME) {
+        return(
+          <div className="card-footer">
+            Admin tools<br/>
+            <Link to={`/news/compose?edit_id=${this.props.newsObj.id}`}>Edit</Link>
+          </div>
+        )
+      }
+      else {
+        return <></>
+      }
     }
 
     getAuthorFullName() {
