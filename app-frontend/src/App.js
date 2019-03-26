@@ -15,7 +15,8 @@ import InspirationGuidelines from './components/Tools/Guidelines/InspirationGuid
 import LoginForm from './components/User/UserLoginForm';
 import RegisterForm from './components/User/UserRegisterForm';
 import InfoPage from './components/InfoPage/Info';
-import NotFound from './components/Misc/NotFound'
+import NotFound from './components/Misc/NotFound';
+import APIKey from './components/APIPage/APIKey';
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import SideNavBar from './components/NavBar/SideBarNav';
@@ -32,6 +33,7 @@ class App extends Component {
         <Route exact path="/news" component={NewsCardList} />
         <Route exact path="/news/id/:id" component={News} /> 
         <Route exact path="/api" render={props => <APIPage URL={process.env.PUBLIC_URL + 'swagger/swagger.json'} {...props} />} />
+        <Route exact path="/apikey" component={APIKey} /> 
         <Route exact path="/tools" component={ToolsHome} />
         <Route exact path="/tools/designGuidelines" component={DesignGuidelines} />
         <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />

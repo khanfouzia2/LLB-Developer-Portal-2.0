@@ -67,7 +67,7 @@ class SideBarNav extends Component {
                           <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/api">
                             API Documemtation
                           </Link>
-                          <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/">
+                          <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/apikey">
                             API Key
                           </Link>
                           <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/tools">

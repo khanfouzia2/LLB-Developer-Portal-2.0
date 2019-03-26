@@ -2,7 +2,7 @@
   "swagger" : "2.0",
   "info" : {
     "description" : "Living Lab Bus API",
-    "version" : "1.0.0",
+    "version" : "0.2",
     "title" : "Living Lab Bus API",
     "contact" : {
       "email" : "you@your-company.com"
