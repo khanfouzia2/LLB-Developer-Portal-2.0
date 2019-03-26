@@ -1,3 +1,7 @@
 .api-card-content {
   margin:15px;
 }
+
+.response-col_status {
+  width: 50% !important;
+}

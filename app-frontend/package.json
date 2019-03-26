@@ -14,7 +14,7 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.8",
     "react-sidebar": "^3.0.2",
-    "swagger-ui": "^3.21.0"
+    "swagger-ui-react": "^3.22.0"
   },
   "scripts": {
     "start": "react-scripts start",
