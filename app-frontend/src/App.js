@@ -27,7 +27,7 @@ class App extends Component {
   renderPortalContent = () => (
     <SideNavBar>
       <div id="main-content">
-        <Route exact path="/info" component={InfoPage} />
+        <Route exact path="/" component={InfoPage} />
         <Route exact path="/news/compose" component={NewsCompose} />
         <Route exact path="/news/page/:page" component={NewsCardList} />
         <Route exact path="/news" component={NewsCardList} />
