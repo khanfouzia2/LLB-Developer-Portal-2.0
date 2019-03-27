@@ -92,8 +92,15 @@ class MobileApp extends Component {
             <div className="card">
                 <div className="card-body">
                     <h5 className="card-title">Extras</h5>
-                    <p className="card-text">The development kit is used to create applications that can be deployed to the Living Lab Bus Platform through the LLB Developer Portal.</p>
-                    <a href="https://github.com/llb-uta/development-kit" role="button" target="_blank" rel="noopener noreferrer" className="btn btn-primary ">Get Development Kit</a>
+                    <p className="card-text"></p>
+                    <div className="row">
+                        <div className="col-sm-6 col-md-6 col-lg-6 col-xs-6 text-center">
+                            <a href="https://dev.hsl.fi/" role="button" target="_blank" rel="noopener noreferrer" className="btn btn-primary">Travel related APIs and Applications by HSL</a>
+                        </div>
+                        <div className="col-sm-6 col-md-6 col-lg-6 col-xs-6 text-center">
+                            <a href="https://material.io/design/" role="button" target="_blank" rel="noopener noreferrer" className="btn btn-primary">Material design guidelines</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
