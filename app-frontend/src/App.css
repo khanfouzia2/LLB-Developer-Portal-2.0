@@ -1,5 +1,6 @@
 .App {
-  text-align: center;
+  /* text-align: center;
+  Commented out @OP */
 }
 
 .App-logo {
@@ -30,7 +31,10 @@
 }
 
 .App-custom-page-content {
-  padding: 2% ;
+  padding-top: 2% ;
+  padding-bottom: 2%;
+  padding-right: 5% ;
+  padding-left: 5% ;
 }
 
 @keyframes App-logo-spin {

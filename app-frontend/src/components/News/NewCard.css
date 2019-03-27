@@ -43,3 +43,9 @@
   }
 }
 
+/* In case the text and background have same color, add shadow so text can
+be read. Title is also always capitalized */
+.title-text-shadow {
+  text-transform: capitalize;
+  text-shadow:2px 1px 5px #404040;
+}

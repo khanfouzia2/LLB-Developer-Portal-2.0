@@ -1,0 +1,699 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Living Lab Bus API",
+    "version" : "0.2",
+    "title" : "Living Lab Bus API",
+    "contact" : {
+      "email" : "you@your-company.com"
+    },
+    "license" : {
+      "name" : "Data described in this document and available via the LLB early access APIs are licensed under Creative Commons Attribution 4.0 International license (CC BY 4.0)",
+      "url" : "https://creativecommons.org/licenses/by/4.0/deed.fi"
+    }
+  },
+  "host" : "llb.cloud.tyk.io",
+  "basePath" : "/llb-bus-api/",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/GetData" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "busId",
+          "in" : "query",
+          "description" : "BUSID == four digit bus number from (currently only 1612, 3008 and 3009 are in use)",
+          "required" : false,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Data from the bus that match BUSID",
+            "schema" : {
+              "$ref" : "#/definitions/BusItem"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        },
+        "security" : [ {
+          "Bearer" : [ ]
+        } ]
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "Bearer" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "BusItem" : {
+      "type" : "object",
+      "properties" : {
+        "16124" : {
+          "$ref" : "#/definitions/BusItem_16124"
+        },
+        "16124490" : {
+          "$ref" : "#/definitions/BusItem_16124490"
+        },
+        "16124491" : {
+          "$ref" : "#/definitions/BusItem_16124491"
+        },
+        "16124492" : {
+          "$ref" : "#/definitions/BusItem_16124492"
+        },
+        "BusId" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1612
+        },
+        "GwId" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 10
+        },
+        "tsl" : {
+          "type" : "string",
+          "example" : "2017-09-18T12:56:21.000Z"
+        },
+        "lat" : {
+          "type" : "number",
+          "example" : 60.203802542
+        },
+        "lon" : {
+          "type" : "number",
+          "example" : 24.918602306
+        },
+        "alt" : {
+          "type" : "number",
+          "example" : 29.121
+        },
+        "spd" : {
+          "type" : "number",
+          "example" : 8.656
+        },
+        "eps" : {
+          "type" : "number",
+          "example" : 0.54
+        },
+        "epx" : {
+          "type" : "number",
+          "example" : 0.005
+        },
+        "epv" : {
+          "type" : "number",
+          "example" : 37.03
+        },
+        "ept" : {
+          "type" : "number",
+          "example" : 12.22
+        },
+        "clm" : {
+          "type" : "number",
+          "example" : -0.081
+        },
+        "trc" : {
+          "type" : "number",
+          "example" : 151.4996
+        },
+        "mod" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 3
+        },
+        "tsp" : {
+          "type" : "string",
+          "example" : "2017-09-18T12:56:20.000Z"
+        },
+        "dro" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BusItem_dro"
+          }
+        },
+        "acc" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BusItem_acc"
+          }
+        },
+        "inc" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BusItem_inc"
+          }
+        },
+        "mgn" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BusItem_mgn"
+          }
+        },
+        "gyr" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BusItem_gyr"
+          }
+        },
+        "stt" : {
+          "type" : "string"
+        },
+        "tmp" : {
+          "type" : "number",
+          "example" : 26.8
+        },
+        "tmc" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 35
+        },
+        "tmh" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 33
+        },
+        "tms" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 36
+        },
+        "vol" : {
+          "type" : "string",
+          "example" : "in0:+0.71V(min=+1.20Vmax=+1.62V)ALARM in1:+1.36V(min=+3.01Vmax=+0.46V)ALARM in2:+2.00V(min=+2.45Vmax=+0.85V)ALARM +3.3V:+3.34V(min=+3.67Vmax=+2.23V)ALARM in4:+2.02V(min=+2.05Vmax=+3.05V)ALARM in5:+2.02V(min=+1.21Vmax=+2.47V)in6:+2.23V(min=+2.29Vmax=+1.16V)ALARM 3VSB:+3.31V(min=+2.76Vmax=+0.84V)ALARM Vbat:+3.19V"
+        },
+        "fan" : {
+          "type" : "string",
+          "example" : "fan1:0RPM(min=0RPM)fan2:0RPM(min=0RPM)fan3:0RPM(min=0RPM)"
+        },
+        "fil" : {
+          "type" : "string"
+        },
+        "mem" : {
+          "type" : "string",
+          "example" : "total;used;free;shared;buff/cache;availableMem:;1866;215;991;34;659;1453Swap:;1909;0;1 909ip_address=10.42.0.1;195.165.205.171;"
+        },
+        "tsc" : {
+          "type" : "string",
+          "example" : "2017/09/18 03:28:25z"
+        },
+        "fi/llb/bus/1612/10/can/" : {
+          "$ref" : "#/definitions/BusItem_fillbbus161210can"
+        }
+      }
+    },
+    "BusItem_16124" : {
+      "properties" : {
+        "sts_4" : {
+          "type" : "string",
+          "example" : "2017/09/18 12:56:20z"
+        },
+        "gid_4" : {
+          "type" : "string",
+          "example" : "10"
+        },
+        "sep_4" : {
+          "type" : "number",
+          "example" : 999.2
+        },
+        "set_4" : {
+          "type" : "number",
+          "example" : 18.7
+        },
+        "seb_4" : {
+          "type" : "number",
+          "example" : 2.8
+        },
+        "srs_4" : {
+          "type" : "number",
+          "example" : 70.6
+        },
+        "seh_4" : {
+          "type" : "number",
+          "example" : 49.8
+        }
+      }
+    },
+    "BusItem_16124490" : {
+      "properties" : {
+        "sts_4490" : {
+          "type" : "string",
+          "example" : "2017/06/15 12:48:30z"
+        },
+        "gid_4490" : {
+          "type" : "string",
+          "example" : "10"
+        },
+        "sep_4490" : {
+          "type" : "number",
+          "example" : 1016.6
+        },
+        "set_4490" : {
+          "type" : "number",
+          "example" : 29.75
+        },
+        "seb_4490" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 0
+        },
+        "srs_4490" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -41
+        },
+        "seh_4490" : {
+          "type" : "number",
+          "example" : 19.1
+        }
+      }
+    },
+    "BusItem_16124491" : {
+      "properties" : {
+        "sts_4491" : {
+          "type" : "string",
+          "example" : "2017/06/15 12:48:22z"
+        },
+        "gid_4491" : {
+          "type" : "string",
+          "example" : "10"
+        },
+        "sep_4491" : {
+          "type" : "number",
+          "example" : 1015.3
+        },
+        "set_4491" : {
+          "type" : "number",
+          "example" : 30.44
+        },
+        "seb_4491" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 0
+        },
+        "srs_4491" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -47
+        },
+        "seh_4491" : {
+          "type" : "number",
+          "example" : 17.44
+        }
+      }
+    },
+    "BusItem_16124492" : {
+      "properties" : {
+        "sts_4492" : {
+          "type" : "string",
+          "example" : "2017/06/15 12:48:06z"
+        },
+        "gid_4492" : {
+          "type" : "string",
+          "example" : "10"
+        },
+        "sep_4492" : {
+          "type" : "number",
+          "example" : 1013.5
+        },
+        "set_4492" : {
+          "type" : "number",
+          "example" : 29.11
+        },
+        "seb_4492" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 0
+        },
+        "srs_4492" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -45
+        },
+        "seh_4492" : {
+          "type" : "number",
+          "example" : 20.34
+        }
+      }
+    },
+    "BusItem_dro" : {
+      "properties" : {
+        "in_rot_quaternion" : {
+          "type" : "array",
+          "items" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 0
+          }
+        }
+      }
+    },
+    "BusItem_acc" : {
+      "properties" : {
+        "in_accel_z" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -1221
+        },
+        "in_accel_y" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -5
+        },
+        "in_accel_x" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -20
+        }
+      }
+    },
+    "BusItem_inc" : {
+      "properties" : {
+        "in_incli_x" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -103
+        },
+        "in_incli_y" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -415
+        },
+        "in_incli_z" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 35161
+        }
+      }
+    },
+    "BusItem_mgn" : {
+      "properties" : {
+        "in_rot_from_north_magnetic_tilt_comp" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 845
+        },
+        "in_magn_z" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -223360
+        },
+        "in_magn_x" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 160640
+        },
+        "in_magn_y" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 238400
+        }
+      }
+    },
+    "BusItem_gyr" : {
+      "properties" : {
+        "in_anglvel_y" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 2520
+        },
+        "in_anglvel_x" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -980
+        },
+        "in_anglvel_z" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : -1960
+        }
+      }
+    },
+    "BusItem_fillbbus161210can" : {
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "example" : "2017-09-18T06:28:25.763Z"
+        },
+        "AIR1_AirCompressorStatus" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "AIR1_AirSuspensionSupplyPress" : {
+          "type" : "string",
+          "example" : "808"
+        },
+        "AIR1_ParkingAnd_OrTrailerAirPress" : {
+          "type" : "string",
+          "example" : "808"
+        },
+        "AIR1_PneumaticSupplyPress" : {
+          "type" : "string",
+          "example" : "312"
+        },
+        "AIR1_ServiceBrakeAirPressCircuit1" : {
+          "type" : "string",
+          "example" : "808"
+        },
+        "AIR1_ServiceBrakeAirPressCircuit2" : {
+          "type" : "string",
+          "example" : "808"
+        },
+        "AMB_AmbientAirTemp" : {
+          "type" : "string",
+          "example" : "8"
+        },
+        "AMB_CabInteriorTemp" : {
+          "type" : "string",
+          "example" : "18"
+        },
+        "AS_Alt1Status" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "BATTERY_AverageCellTemp" : {
+          "type" : "string",
+          "example" : "24"
+        },
+        "BATTERY_BatteryCurrent" : {
+          "type" : "string",
+          "example" : "-2.9"
+        },
+        "BATTERY_BatteryPower" : {
+          "type" : "string",
+          "example" : "-2.1"
+        },
+        "BATTERY_BatteryVoltage" : {
+          "type" : "string",
+          "example" : "724.3"
+        },
+        "BATTERY_SOC" : {
+          "type" : "string",
+          "example" : "80"
+        },
+        "CCVS_BrakeSwitch" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "CCVS_ParkingBrakeSwitch" : {
+          "type" : "string",
+          "example" : "1"
+        },
+        "CCVS_WheelBasedVehicleSpeed" : {
+          "type" : "string",
+          "example" : "256"
+        },
+        "CVW_GrossCombinationVehicleWeight" : {
+          "type" : "string",
+          "example" : "12120"
+        },
+        "DC1_Ramp_WheelChairLiftPos" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "DC1_PosOfDoors" : {
+          "type" : "string",
+          "example" : "2"
+        },
+        "DD_BatteryLevel" : {
+          "type" : "string",
+          "example" : "80"
+        },
+        "DRIVER_AcceleratorPosition" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "DRIVER_BrakePedalPosition" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "DRIVER_DriverTorqueRequest" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "DRIVER_RegenControlPosition" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "DRIVER_SteeringWheelAngle" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "EEC1_DriversDemandMotorPercentTorque" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "EEC1_MotorSpeed" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "EEC2_AccelPedalPos1" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "EEC2_RoadSpeedLimitStatus" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "EEC2_VhclAccelerationRateLimitStatus" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "EFFICIENCY_Efficiency" : {
+          "type" : "string",
+          "example" : "-8"
+        },
+        "EFFICIENCY_EfficiencyAverage" : {
+          "type" : "string",
+          "example" : "-1009"
+        },
+        "ENE_AUX1_AirCompressor" : {
+          "type" : "string",
+          "example" : "1485"
+        },
+        "ENE_AUX1_DCDC" : {
+          "type" : "string",
+          "example" : "5139"
+        },
+        "ENE_AUX2_HeatPump" : {
+          "type" : "string",
+          "example" : "2238"
+        },
+        "ENE_AUX2_PowerSteering" : {
+          "type" : "string",
+          "example" : "408"
+        },
+        "ENE_MOT_DriveMotor" : {
+          "type" : "string",
+          "example" : "21128"
+        },
+        "ENERGY_TotalChargedEnergy" : {
+          "type" : "string",
+          "example" : "45827"
+        },
+        "ENERGY_TotalDischargedEnergy" : {
+          "type" : "string",
+          "example" : "42242"
+        },
+        "ENERGY2_TotalExternalCharge" : {
+          "type" : "string",
+          "example" : "32962"
+        },
+        "ENERGY2_TotalProcessedAmpHours" : {
+          "type" : "string",
+          "example" : "123777"
+        },
+        "ET1_MotorCoolantTemp" : {
+          "type" : "string",
+          "example" : "60"
+        },
+        "ETC2_TransCurrentGear" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "HOURS_MotorTotalHoursOfOperation" : {
+          "type" : "string",
+          "example" : "1353.1"
+        },
+        "MOTOR_AccelerationLimit" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "MOTOR_MotorTorque" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "MOTOR_MotorTorqueReference" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "MOTOR_SlipLimit" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "MOTOR_Power" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "MOTOR_SlipPercentage" : {
+          "type" : "string",
+          "example" : "-100"
+        },
+        "PWR_AUX_HeatPump" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "PWR_AUX_AirCompressor" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "PWR_AUX_PowerSteering" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "PWR_AUX_DCDC" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "STATUS_ChargingType" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "TCO1_DirectionIndicator" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "TCO1_TachographVehicleSpeed" : {
+          "type" : "string",
+          "example" : "256"
+        },
+        "TCO1_VehicleMotion" : {
+          "type" : "string",
+          "example" : "1"
+        },
+        "TEMPERATURE_DriveInverter" : {
+          "type" : "string",
+          "example" : "27"
+        },
+        "TEMPERATURE_DriveMotor" : {
+          "type" : "string",
+          "example" : "38"
+        },
+        "VDHR_HghRslutionTotalVehicleDistance" : {
+          "type" : "string",
+          "example" : "31134210"
+        },
+        "VI_VehicleIdentificationNu" : {
+          "type" : "string"
+        },
+        "seh_3" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 47
+        }
+      }
+    }
+  }
+}

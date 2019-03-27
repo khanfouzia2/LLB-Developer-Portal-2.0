@@ -10,12 +10,6 @@
   Names will be written in snake_case.
 */
 
-/*
-  TODO:
-    # Integrity constraints
-    # Testing
-*/
-
 const Sequelize = require('sequelize');
 const config = require('./config.js');
 /*
@@ -31,7 +25,9 @@ Do NOT push your config.js to git.
 */
 
 const sequelize = new Sequelize('postgres://'+config.user+':'+config.passwd+'@'+config.host+':'+config.port+'/'+config.dbname);
+console.log(`Sequelize-object constructor ==> \n\tuser: ${config.user}\n\thost: ${config.host}\n\tport: ${config.port}\n\tdb: ${config.dbname} `);
 
+// This part is NOT mandatory
 sequelize.authenticate().then(() => {
     console.log('Connection has been established successfully.');
   }).catch(err => {
@@ -69,9 +65,9 @@ const User = sequelize.define('user',
       defaultValue: 'basic',
     },
     status: {
-      type: Sequelize.ENUM('foo', 'bar'),
+      type: Sequelize.BOOLEAN,
       allowNull: false,
-      defaultValue: 'foo',
+      defaultValue: false,
     },
     is_finished_survey: {
       type: Sequelize.BOOLEAN,
@@ -185,10 +181,7 @@ const ForumCategory = sequelize.define('forum_category',
 
 const Thread = sequelize.define('thread',
   {
-    first_name: {
-      type: Sequelize.STRING(255),
-      allowNull: false,
-    },
+    // thread id
     forum_category_id: {
       // References forum_category.id
       type: Sequelize.INTEGER,
@@ -285,7 +278,7 @@ const BugFeedback = sequelize.define('bug_feedback',
 const News = sequelize.define('news',
   {
     // id
-    user_id: {
+    author_id: {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
@@ -296,6 +289,11 @@ const News = sequelize.define('news',
     content: {
       type: Sequelize.TEXT,
       allowNull: false
+    },
+    is_visible: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     header_picture_filename: {
       type: Sequelize.STRING(255),
@@ -318,7 +316,7 @@ const News = sequelize.define('news',
 const Service = sequelize.define('service',
   {
     name: {
-      type: Sequelize.STRING(10),
+      type: Sequelize.STRING(15),
       primaryKey: true
     },
     created_at: {
@@ -350,46 +348,85 @@ User.hasMany(News, {
   foreignKey: 'author_id',
   sourceKey: 'id'
 });
+News.belongsTo(User, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
 
 User.hasMany(BugFeedback, {
   foreignKey: 'author_id',
   sourceKey: 'id'
 });
+BugFeedback.belongsTo(User, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
 
 Thread.hasMany(Comment, {
   foreignKey: 'thread_id',
   sourceKey: 'id'
 });
+Comment.belongsTo(Thread, {
+  foreignKey: 'thread_id',
+  sourceKey: 'id'
+});
+
 
 User.hasMany(Comment, {
   foreignKey: 'author_id',
   sourceKey: 'id'
 });
+Comment.belongsTo(User, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
 
 User.hasMany(Thread, {
   foreignKey: 'author_id',
   sourceKey: 'id'
 });
+Thread.belongsTo(User, {
+  foreignKey: 'author_id',
+  sourceKey: 'id'
+});
+
 
 ForumCategory.hasMany(Thread, {
   foreignKey: 'forum_category_id',
   sourceKey: 'id'
 });
+Thread.belongsTo(ForumCategory, {
+  foreignKey: 'forum_category_id',
+  sourceKey: 'id'
+});
+
 
 User.hasMany(Apikey, {
   foreignKey: 'user_id',
   sourceKey: 'id',
 });
+Apikey.belongsTo(User, {
+  foreignKey: 'user_id',
+  sourceKey: 'id'
+});
+
 
 Service.hasMany(Apikey, {
   foreignKey: 'service_name',
   sourceKey: 'name'
 });
-
+Apikey.belongsTo(Service, {
+  foreignKey: 'service_name',
+  sourceKey: 'id'
+});
 
 // http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
 // Sync all models that aren't already in the database
-//sequelize.sync({force:true}); // param: {force:true} to drop and re-create
+
+ //sequelize.sync({force:true}); // param: {force:true} to drop and re-create
 
 
 module.exports = {
