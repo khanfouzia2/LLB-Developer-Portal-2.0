@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom"
-import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH } from '../../rest-endpoints.js';
+import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH, NEWS_DELETE } from '../../rest-endpoints.js';
 import { AuthConsumer } from '../../context/authContext';
+import NewsDraftsList from './NewsDraftsList.js'
 import  * as config from '../../config.js'
 const qs = require('query-string');
+const helpers = require('../../helpers');
 
 /*
 
@@ -34,6 +36,8 @@ class NewsCompose extends Component {
     this.handleInputIsVisibleChange = this.handleInputIsVisibleChange.bind(this);
     this.handlePublish                              = this.handlePublish.bind(this);
     this.handleAttachmentFileInputChange          = this.handleAttachmentFileInputChange.bind(this);
+    this.handleOnClickDelete            = this.handleOnClickDelete.bind(this);
+    this.loadAndUpdateComponentContent = this.loadAndUpdateComponentContent.bind(this);
   }
 
 
@@ -45,6 +49,7 @@ class NewsCompose extends Component {
     return(
       <div className="row mt-md-5 App-custom-page-content">
         <div className="col-md-9">
+
 
           <div className="card">
             <div className="card-header">
@@ -139,20 +144,7 @@ class NewsCompose extends Component {
         </div>{/* col */}
 
         <div className="col-md-3">
-          {/* Under construction == Move this to its own component? */}
-          <div className="card">
-            <div className="card-header">
-              <h5>Not visible</h5>
-            </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                Cras justo odio
-                <small><span className="muted">{new Date().toString()}</span></small>
-              </li>
-              <li class="list-group-item"># Under constrction</li>
-              <li class="list-group-item">Vestibulum at eros</li>
-            </ul>
-          </div>
+          <NewsDraftsList />
         </div>
 
       </div>
@@ -162,14 +154,14 @@ class NewsCompose extends Component {
 
   showEditModeAlert() {
     if(this.state.edit_mode) {
-      return(<div className="alert alert-info">You are now in edit mode! <Link to="/news/compose"> Make a new announcement instead. </Link></div>);
+      return(<div className="alert alert-info">You are now in edit mode</div>);
     }
   }
 
   /* Show an alert box if News is not public */
   showNotPublicAlert() {
     if(!this.state.is_visible) {
-      return(<div className="alert alert-warning"> Will not be visible to public! </div>);
+      return(<div className="alert alert-warning">Will not be visible to public! Will be saved as a draft.</div>);
     }
   }
 
@@ -193,7 +185,7 @@ class NewsCompose extends Component {
       return(
         <React.Fragment>
           <Link to="/news/page/1"><input type="submit" value="Discard changes" className=" btn btn-danger btn-sm mr-md-3" /></Link>
-          <input type="submit" value="Delete" className="btn btn-danger btn-sm" />
+          <input type="submit" value="Delete" onClick={(e)=>this.handleOnClickDelete(e)} className="btn btn-danger btn-sm" />
         </React.Fragment>
       )
     } else {
@@ -323,32 +315,49 @@ class NewsCompose extends Component {
 
 
   componentWillReceiveProps(newProps) {
-    var parsed = qs.parse(this.props.location.search);
-    if(parsed.id === undefined) {
-      this.setState({
-        id: 0,
-        title: "",
-        content: "",
-        is_visible: true,
-        edit_mode: false
-      })
+    var parsed = qs.parse(newProps.location.search);
+    var id = parsed.edit_id; // id is checked in helper method. NOTE: id string at this point!
+
+    if(helpers.isValidID(id)) {
+      this.loadAndUpdateComponentContent(id);
     }
   }
 
-
   /*
-    Load News object. If ID is valid, enter EDIT-mode
-
-    TODO: Redirect to error page
+    Delete button was pressed
   */
-  componentWillMount(props) {
+  handleOnClickDelete(event) {
 
-    var parsed = qs.parse(this.props.location.search);
-    var id = parseInt(parsed.edit_id, 10); // base 10 integer
+    console.log("DELETE button handler function triggered...");
+    const news_id = this.state.id;
+    if(!news_id) { return; }
 
-    if(!isNaN(id) && id >= 0) {
-      //
-      fetch(new Request(NEWS_GET_ONE+'/'+id)).then(data => {
+    var req = new Request(NEWS_DELETE+'/'+news_id, {
+      method: 'DELETE',
+      headers: {
+      },
+      credentials: 'include',
+      body: JSON.stringify(null)
+    });
+
+    // Make a HTTP call
+    fetch(req).then(data => {
+      return data.json()
+    }).then(data => {
+      console.log( data.message );
+    }).catch(err => {
+      alert(err);
+    })
+
+  }
+
+
+  loadAndUpdateComponentContent(news_id) {
+
+    console.log(news_id)
+    if(helpers.isValidID(news_id)) {
+
+      fetch(new Request(NEWS_GET_ONE+'/'+news_id)).then(data => {
         return data.json();
       }).then(data => {
         console.log(data);
@@ -371,7 +380,18 @@ class NewsCompose extends Component {
       // do nothing special
 
     }
+  }
 
+  /*
+    Load News object. If ID is valid, enter EDIT-mode
+
+    TODO: Redirect to error page
+  */
+
+  componentWillMount() {
+    var parsed = qs.parse(this.props.location.search);
+    var id = parseInt(parsed.edit_id, 10); // base 10 integer
+    this.loadAndUpdateComponentContent(id);
   }
 
 

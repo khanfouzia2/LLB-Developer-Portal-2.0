@@ -8,6 +8,8 @@
   config.SOME_VALUE
 */
 
+const BASE_URL = "http://localhost:8080/"
+
 const DEFAULT_LOCALE = "fi-FI"
 
 
@@ -29,6 +31,7 @@ const TEXT_IF_POST_EMPTY = "No content";
 
 
 module.exports = {
+  BASE_URL,
   DEFAULT_LOCALE,
   TEXT_IF_POST_EMPTY,
   NUM_OF_NEWS_SHOWN_PAGE,

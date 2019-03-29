@@ -1,16 +1,18 @@
 /*
   File for REST API Endpoints
 */
+//import { BASE_URL } from  './config.js';
+
 const BASE_URL = "http://localhost:8080/"
-
-
 
 // News
 const NEWS_POST = BASE_URL + "news";
 const NEWS_GET_ALL = BASE_URL + "news/page"; // +id
 const NEWS_GET_ONE = BASE_URL + "news/id"; // +id
 const NEWS_PATCH = BASE_URL + "news"; // +id
-const NEWS_DELETE = BASE_URL + "news";
+const NEWS_DELETE = BASE_URL + "news"; // +id
+const NEWS_GET_DRAFTS = BASE_URL + "news/drafts"
+
 const TOOLS_GET = BASE_URL + "tools";
 
 // Users
@@ -25,6 +27,7 @@ module.exports = {
   NEWS_GET_ONE,
   NEWS_PATCH,
   NEWS_DELETE,
+  NEWS_GET_DRAFTS,
   TOOLS_GET,
   USER_FORM_REGISTER,
   USER_LOGIN,
