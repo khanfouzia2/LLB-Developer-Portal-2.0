@@ -5,6 +5,10 @@ import  * as config from '../../config.js'
 import './NewCard.css';
 const helpers = require('../../helpers.js');
 
+
+/*
+  Compoenent for one News Card
+*/
 class NewsCard extends Component {
 
     // props has a news-object
@@ -48,8 +52,7 @@ class NewsCard extends Component {
       if(userInfo.isAuth && userInfo.role === config.ADMIN_ROLE_NAME) {
         return(
           <div className="card-footer">
-            Admin tools<br/>
-            <Link to={`/news/compose?edit_id=${this.props.newsObj.id}`}>Edit</Link>
+            <small><Link to={`/news/compose?edit_id=${this.props.newsObj.id}`}>Edit</Link></small>
           </div>
         )
       }

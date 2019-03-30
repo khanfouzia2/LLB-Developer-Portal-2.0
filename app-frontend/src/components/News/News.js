@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
+// TESTING MODAL WINDOW COMP.
+import Modal from '../Misc/Modal.js';
 import { NEWS_GET_ONE } from '../../rest-endpoints.js';
 import { Link } from "react-router-dom"
 import * as config from '../../config.js'
 const helpers = require('../../helpers.js');
+
+
 /*
 
   Component for viewing one News
@@ -21,8 +25,12 @@ class News extends React.Component {
       newsObj: {},
       authorObj: {
 
-      }
+      },
+      showModal: true
     }
+
+    //
+    this.closeModal = this.closeModal.bind(this);
   }
 
 
@@ -47,16 +55,24 @@ class News extends React.Component {
               <p className="" style={newsContStyle}>{this.state.newsObj.content}</p>
             </div>
           </div>
+
+          {/* Modal component. Hidden by default */}
+          <Modal onCloseFunction={()=>this.closeModal()} closeButtonStyle="warning" closeButtonText="Close me!" isShown={this.state.showModal} title="Foo foo" content="This is content" key={999} />
       </div>
     );
   }
 
+  closeModal() {
+    this.setState({
+      showModal: false
+    });
+  }
 
 
 
   componentDidMount() {
     let id = this.props.match.params.id;
-    if(helpers.isValidID(id)) {
+    if(!helpers.isValidID(id)) {
       console.log("ID seems to be invalid!");
       this.props.history.push('/news/page/1');
     }
