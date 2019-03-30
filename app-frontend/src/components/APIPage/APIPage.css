@@ -3,5 +3,9 @@
 }
 
 .response-col_status {
-  width: 50% !important;
+  width: 40% !important;
+}
+
+.parameters-col_name {
+  width: 40% !important;
 }

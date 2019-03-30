@@ -20,21 +20,34 @@ class APIPage extends Component {
           </ul>
           <a target="_blank" rel="noopener noreferrer" href={process.env.PUBLIC_URL + 'document/LLB Instructions-JUNCTION.pdf'}>Click here for the full API documentation (21 pages)</a>         
         </div>
-        <div className="App-custom-page-content" id="news">
-          <div className="row">
-            <div className=" col-md-7 ">
-              <div className="card">
-              <div class="card-header">
-                REST API
-              </div>
-              <div className="alert alert-primary api-card-content">
-               <a href="/apikey"> If you haven't created your own API key. Click here to generate one !</a> 
-              </div>              
-                <SwaggerUI url={this.props.URL} />
-              </div>
-            </div>
-            <div className="col-md-5">
-              <div className="card">
+        <div className="App-custom-page-content">
+          <div className="" id="tools">
+              <ul className="nav nav-tabs" id="toolsTab" role="tablist">
+                <li className="nav-item">
+                  <a className="nav-link active" data-toggle="tab" href="#restapi" role="tab" aria-controls="mobileApp" aria-selected="true">REST API</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" data-toggle="tab" href="#mqqtapi" role="tab" aria-controls="publicDisplayApp" aria-selected="false">MQQT API</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" data-toggle="tab" href="#blobapi" role="tab" aria-controls="publicDisplayApp" aria-selected="false">BLOB API</a>
+                </li>
+              </ul>
+              
+              <div className="tab-content">
+                <div className="tab-pane active" id="restapi" role="tabpanel" aria-labelledby="mobileApp-tab">
+                <div className="card">
+                  <div class="card-header">
+                    REST API
+                  </div>
+                  <div className="alert alert-primary api-card-content">
+                  <a href="/apikey"> If you haven't created your own API key. Click here to generate one !</a> 
+                  </div>              
+                    <SwaggerUI url={this.props.URL} />
+                  </div>
+                </div>
+                <div className="tab-pane" id="mqqtapi" role="tabpanel" aria-labelledby="publicDisplayApp-tab">
+                <div className="card">
               <div className="card-header">
                 MQQT API
               </div>
@@ -92,9 +105,9 @@ class APIPage extends Component {
                 </div>                    
               </div>             
               </div>
-  
-              <br></br>
-              <div className="card">
+                </div>
+                <div className="tab-pane" id="blobapi" role="tabpanel" aria-labelledby="publicDisplayApp-tab">
+                <div className="card">
                 <div className="card-header">
                   BLOB DATA API
                 </div>
@@ -121,8 +134,10 @@ class APIPage extends Component {
                   </div>
                 </div>
               </div>
+                </div>
+              </div>
+
             </div>
-          </div>
         </div>
       </>
       );
