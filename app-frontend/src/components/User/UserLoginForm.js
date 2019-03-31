@@ -3,6 +3,7 @@ import './Form.css'
 import {CredentialLogin} from '../../services/UserApi';
 import { Redirect } from 'react-router-dom'
 import {AuthConsumer} from '../../context/authContext';
+import {GOOGLE_LOGIN} from '../../rest-endpoints';
 
 class UserLoginForm extends Component {
   constructor(props) {
@@ -88,9 +89,9 @@ class UserLoginForm extends Component {
                      <a href="/"><small className="form-text text-muted">Forget password?</small></a>
                    </form>
                    <p className="form-header"> - OR -</p>
-                   <button id="google-button" className="btn btn-block btn-danger">
+                   <a href={GOOGLE_LOGIN} id="google-button" className="btn btn-block btn-danger">
                      <i className="fab fa-google"></i> Log in with Google
-                   </button>
+                   </a>
                  </div>
              </div>
           </div>

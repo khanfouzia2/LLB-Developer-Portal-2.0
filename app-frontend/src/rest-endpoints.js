@@ -21,6 +21,9 @@ const USER_LOGIN =  BASE_URL + 'users/login';
 const USER_LOGOUT = BASE_URL + 'users/logout';
 const USER_ME = BASE_URL + 'users/me';
 
+// Google Auth
+const GOOGLE_LOGIN = BASE_URL + 'auth/google';
+
 module.exports = {
   NEWS_POST,
   NEWS_GET_ALL,
@@ -32,5 +35,6 @@ module.exports = {
   USER_FORM_REGISTER,
   USER_LOGIN,
   USER_LOGOUT,
-  USER_ME
+  USER_ME,
+  GOOGLE_LOGIN
 }

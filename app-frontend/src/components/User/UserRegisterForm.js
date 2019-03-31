@@ -3,6 +3,7 @@ import './Form.css'
 import {FormRegister} from '../../services/UserApi';
 import { Redirect } from 'react-router-dom'
 import {AuthConsumer} from '../../context/authContext';
+import {GOOGLE_LOGIN} from '../../rest-endpoints';
 
 
 class UserRegisterForm extends Component {
@@ -113,9 +114,9 @@ class UserRegisterForm extends Component {
                             <a href="/login"><small className="form-text text-muted">Already have an account? Click here to login.</small></a>
                           </form>
                           <p className="form-header"> - OR -</p>
-                          <button id="google-button" className="btn btn-block btn-danger">
+                          <a href={GOOGLE_LOGIN} id="google-button" className="btn btn-block btn-danger">
                             <i className="fab fa-google"></i> Sign up with Google
-                          </button>
+                          </a>
                         </div>
                     </div>
                 </div>

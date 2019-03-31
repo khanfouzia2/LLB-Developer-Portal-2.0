@@ -50,7 +50,6 @@ const User = sequelize.define('user',
     password: {
       type: Sequelize.STRING(255),
       allowNull: true,
-      defaultValue: "***" // is it a bad idea to have a null password hash?
     },
     email: {
       type: Sequelize.STRING(255),
