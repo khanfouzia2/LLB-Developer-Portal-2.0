@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH, NEWS_DELETE } from '../../rest-endpoints.js';
+import PropTypes from 'prop-types';
+
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
+import NewsDraftsList from './NewsDraftsList.js';
 import { AuthConsumer } from '../../context/authContext';
-import NewsDraftsList from './NewsDraftsList.js'
-import  * as config from '../../config.js'
+import  * as config from '../../config.js';
 const qs = require('query-string');
 const helpers = require('../../helpers');
 
@@ -77,11 +82,34 @@ class NewsCompose extends Component {
                 {/* Content */}
                 <div className="form-group row">
                   <div className="col-md-3">
-                    <label for="" class="col-form-label">Content</label>
+                    <label for="content" class="col-form-label">Content</label>
                   </div>
                   <div className="col-md-9">
-                    <textarea rows="8" name="content" value={this.state.content} onChange={(e)=>this.handleInputChange(e)}
+                     {/*<textarea rows="8" name="content" value={this.state.content} onChange={(e)=>this.handleInputChange(e)}
                      placeholder="..." className="form-control" maxlength={config.NEWS_CONTENT_MAXLEN} required></textarea>
+                     */}
+                     <CKEditor
+                       editor={ ClassicEditor }
+                       data=""
+                       config={
+                        {toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList','undo','redo']}
+                       }
+                       onInit={ editor => {
+                           // You can store the "editor" and use when it is needed.
+                           console.log( 'Editor is ready to use!', editor );
+                       } }
+                       onChange={ ( event, editor ) => {
+                           const data = editor.getData();
+                           console.log( { event, editor, data } );
+                       } }
+                       onBlur={ editor => {
+                           console.log( 'Blur.', editor );
+                       } }
+                       onFocus={ editor => {
+                           console.log( 'Focus.', editor );
+                       } }
+                     />
+
                     <span class="badge badge badge-danger">Required</span>
                     <span className="small" style={{float:"right"}}>{this.state.content.length}/{config.NEWS_CONTENT_MAXLEN}</span>
                   </div>
@@ -245,7 +273,7 @@ class NewsCompose extends Component {
 
 
     fetch(req).then(res => {
-      alert(res.status);
+      //alert(res.status);
       console.log(res);
     }).catch(err => {
       console.log(err);
@@ -346,7 +374,7 @@ class NewsCompose extends Component {
     }).then(data => {
       console.log( data.message );
     }).catch(err => {
-      alert(err);
+      //alert(err);
     })
 
   }
@@ -398,4 +426,5 @@ class NewsCompose extends Component {
 
 
 }
+
 export default NewsCompose;

@@ -57,7 +57,7 @@ class News extends React.Component {
           </div>
 
           {/* Modal component. Hidden by default */}
-          <Modal onCloseFunction={()=>this.closeModal()} closeButtonStyle="warning" closeButtonText="Close me!" isShown={this.state.showModal} title="Foo foo" content="This is content" key={999} />
+          <Modal onCloseFunction={()=>this.closeModal()} closeButtonStyle="warning" closeButtonText="Close me!" isShown={this.state.showModal} title="Foo foo" content="This is content" />
       </div>
     );
   }
