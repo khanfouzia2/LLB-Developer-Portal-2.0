@@ -88,15 +88,22 @@ class Modal extends React.Component {
       return(null);
     }
 
+    // If there is some text content to be shown. Otherwise only print title
+    let content_;
+    if(this.props.content) {
+      content_ = <div className="" style={contentAreaStyle}><p>{this.props.content}</p></div>
+    } else {
+      content_ = null;
+    }
+
     return (
+
+
         <div className="backdrop" style={backdropStyle}>
           <div className="modal" style={modalStyle}>
             <div id="modal-content-container" style={content}>
               <h3>{this.props.title}</h3>
-              <hr/>
-              <div className="" style={contentAreaStyle}>
-                <p>{this.props.content}</p>
-              </div>
+              {content_}
             </div>
 
             <div className="footer" style={footerStyle}>
