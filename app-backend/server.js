@@ -14,7 +14,6 @@ const usersRoute = require('./routes/user.js');
 const newsRoute = require('./routes/news.js');
 const toolsRoute = require('./routes/tools.js');
 const googleAuthRoute = require('./routes/googleAuth.js')
-
 const authentication = require('./services/authentication.js');
 const port = process.env.PORT || 8080;
 

@@ -104,7 +104,7 @@ const Apikey = sequelize.define('api_key',
     // id
     // user_id
     service_name: {
-      type: Sequelize.STRING(10),
+      type: Sequelize.STRING(50),
       allowNull: false
     },
     api_key: {
@@ -312,23 +312,23 @@ const News = sequelize.define('news',
   }
 );
 
-const Service = sequelize.define('service',
-  {
-    name: {
-      type: Sequelize.STRING(15),
-      primaryKey: true
-    },
-    created_at: {
-      type: Sequelize.DATE,
-      defaultValue: sequelize.literal('NOW()')
-    }
-  },
-  {
-    timestamps: false,
-    underscored: true,
-    freezeTableName: true,
-  }
-);
+// const Service = sequelize.define('service',
+//   {
+//     name: {
+//       type: Sequelize.STRING(15),
+//       primaryKey: true
+//     },
+//     created_at: {
+//       type: Sequelize.DATE,
+//       defaultValue: sequelize.literal('NOW()')
+//     }
+//   },
+//   {
+//     timestamps: false,
+//     underscored: true,
+//     freezeTableName: true,
+//   }
+// );
 
 /* Associations
 
@@ -413,14 +413,14 @@ Apikey.belongsTo(User, {
 });
 
 
-Service.hasMany(Apikey, {
-  foreignKey: 'service_name',
-  sourceKey: 'name'
-});
-Apikey.belongsTo(Service, {
-  foreignKey: 'service_name',
-  sourceKey: 'id'
-});
+// Service.hasMany(Apikey, {
+//   foreignKey: 'service_name',
+//   sourceKey: 'name'
+// });
+// Apikey.belongsTo(Service, {
+//   foreignKey: 'service_name',
+//   sourceKey: 'id'
+// });
 
 // http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
 // Sync all models that aren't already in the database
@@ -432,7 +432,7 @@ module.exports = {
   User,
   News,
   Apikey,
-  Service,
+  //Service,
   ForumCategory,
   Thread,
   Comment,

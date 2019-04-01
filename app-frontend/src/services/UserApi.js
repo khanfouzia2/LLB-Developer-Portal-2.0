@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {USER_FORM_REGISTER, USER_LOGIN, USER_LOGOUT,USER_ME} from '../rest-endpoints';
+import {USER_FORM_REGISTER, USER_LOGIN, USER_LOGOUT,USER_ME, USER_GENERATE_API} from '../rest-endpoints';
 
 const CredentialLogin = (email, password) => {
   return axios.post(USER_LOGIN,
@@ -10,8 +10,6 @@ const CredentialLogin = (email, password) => {
       {withCredentials: true}
     );
 };
-
-const GmailLogin = () => {}
 
 const FormRegister =  (first_name, last_name, email, password) => {
   return axios.post(USER_FORM_REGISTER, 
@@ -30,4 +28,11 @@ const Logout =  () => {
 const GetInfo = () => {
   return axios.get(USER_ME, {withCredentials: true});
 }
-export {CredentialLogin, GmailLogin, FormRegister, Logout, GetInfo};
+
+const GenerateAPIKey = () => {
+  return axios.post(USER_GENERATE_API, {} ,{withCredentials: true});
+}
+const GetAPIKey = () => {
+  return axios.get(USER_GENERATE_API,{withCredentials: true});
+}
+export {CredentialLogin, FormRegister, Logout, GetInfo, GenerateAPIKey,GetAPIKey};

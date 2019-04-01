@@ -41,7 +41,6 @@ class SideBarNav extends Component {
 
     renderUserInfo = (userInfo) => {
        if(userInfo.isAuth) {
-         console.log(userInfo)
           return(
             <div className="sidebar-heading">
                           <DefaultUserAvatar FirstName={userInfo.firstName} LastName={userInfo.lastName}></DefaultUserAvatar>
