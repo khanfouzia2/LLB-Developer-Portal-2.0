@@ -42,8 +42,11 @@ router.post('/login', async function(req, res){
          });
 
       if(user == null) return res.status(404).send();
-      if(!bycrypt.compare(payload.password , user.password)) return res.status(401).send();
-   
+      const match = await bycrypt.compare(payload.password, user.password);
+      if(!match) {
+         return res.status(401).send();
+      }
+     
       let token = await util.GenerateJWT(user);
       if(token == null) throw "Something wrong when creating token";
    
@@ -79,6 +82,23 @@ router.get('/me',authentication,function(req, res){
    }
 });
 
+router.put('/me', authentication, async function(req, res) {
+   try {
+      const payload = req.body;
+      let user = req.user;
+      user.first_name = payload.first_name;
+      user.last_name = payload.last_name;
+      user.password = (payload.password !== null || payload.password !== "")
+                      ? bycrypt.hashSync(payload.password, 11) : user.password;
+
+      let newUser = await user.save();
+      return res.status(200).send(util.GenerateResponseConext(newUser));
+   }
+   catch(e) {
+      console.log(`Error while trying to login. error = ${e}`);
+      res.status(500).send();
+   }
+})
 
 router.post('/apikey', authentication ,async function(req, res){
    try {                 
