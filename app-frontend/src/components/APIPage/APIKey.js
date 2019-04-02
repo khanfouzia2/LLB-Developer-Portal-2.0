@@ -43,7 +43,7 @@ class APIKey extends Component {
   renderGenerateButton = () => {
     console.log(this.state.APIKey)
 
-    if(this.state.APIKey === null) {
+    if(this.state.APIKey === "" || this.state.APIKey === null ) {
       return (
         <>
           <button onClick={this.handleGenerateKey} className="btn btn-lg btn-primary">Generate your API key</button>
