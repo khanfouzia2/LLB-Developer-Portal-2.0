@@ -4,6 +4,7 @@
   min-width:100%;
   background-repeat: no-repeat;
   padding: 0px 0px 0px 0px;
+  
   color:white;
   text-align:center;
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
@@ -21,6 +22,11 @@
   padding:0 20px;
 }
 
+.card-no-bg {
+  background:none !important;
+  border:none !important;
+}
+
 .info-wrapper h1 {
     font-size: 55px;
     font-weight: 60px;
@@ -28,4 +34,20 @@
 }
 .info-wrapper p {
   font-size:20px;
+
+} 
+.front-page-icon {
+  width:5.5em;
+  height:5.5em;
+  display: inline;
 }
+
+
+
+
+h2{
+  margin-top: 2em;
+  font-weight: 700;
+  font-size: 2.5rem;
+}
+
