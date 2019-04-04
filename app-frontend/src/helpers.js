@@ -28,6 +28,26 @@ exports.niceSubstr = function(str, maxlen) {
   }
 }
 
+/* Generates some random text. For development */
+exports.getLorem = function(len) {
+
+  var s = "Lorem Ipsum ";
+  var possible = "aiaikkkststsuvaiaiabcdehijklmnoprstuv"; // len 52
+  var text = s;
+
+  var i = 12;
+  while(i <= len) {
+    text += possible.charAt( Math.floor(Math.random() * possible.length)  );
+    // Space
+    if(i % Math.floor(Math.random()*30) == 0 ) {
+      text += " ";
+    }
+    i++;
+  }
+  return text.substr(0,len);
+
+}
+
 exports.getDateFormatted = function(timestamp) {
 
   try {

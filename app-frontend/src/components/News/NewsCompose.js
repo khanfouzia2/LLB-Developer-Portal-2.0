@@ -70,11 +70,11 @@ class NewsCompose extends Component {
                 {/* Title */}
                 <div className="form-group row">
                   <div className="col-md-3">
-                    <label for="" class="col-form-label">Title</label>
+                    <label for="" className="col-form-label">Title</label>
                   </div>
                   <div className="col-md-9">
                     <input type="text" name="title" value={this.state.title} placeholder="Title" onChange={(event)=>this.handleInputChange(event)} maxlength="100" className="form-control" required />
-                    <span class="badge badge badge-danger">Required</span>
+                    <span className="badge badge badge-danger">Required</span>
                     <span className="small" style={{float:"right"}}>{this.state.title.length}/{config.NEWS_TITLE_MAXLEN} chars</span>
                   </div>
                 </div>

@@ -99,7 +99,9 @@ class SideBarNav extends Component {
                           Feedback
                         </Link>
               </Accrodion>
-              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item " to="/">FORUM</Link>
+              <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item " to="/forum">
+                FORUM
+              </Link>
            </>
          );
       }

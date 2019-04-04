@@ -26,7 +26,7 @@ class News extends React.Component {
       authorObj: {
 
       },
-      showModal: true
+      showModal: false
     }
 
     //

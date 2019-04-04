@@ -17,6 +17,7 @@ import RegisterForm from './components/User/UserRegisterForm';
 import InfoPage from './components/InfoPage/Info';
 import NotFound from './components/Misc/NotFound';
 import APIKey from './components/APIPage/APIKey';
+import ForumMain from './components/Forum/ForumMain';
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import SideNavBar from './components/NavBar/SideBarNav';
@@ -31,13 +32,14 @@ class App extends Component {
         <Route exact path="/news/compose" component={NewsCompose} />
         <Route exact path="/news/page/:page" component={NewsCardList} />
         <Route exact path="/news" component={NewsCardList} />
-        <Route exact path="/news/id/:id" component={News} /> 
+        <Route exact path="/news/id/:id" component={News} />
         <Route exact path="/api" render={props => <APIPage URL={process.env.PUBLIC_URL + 'swagger/swagger.json'} {...props} />} />
-        <Route exact path="/apikey" component={APIKey} /> 
+        <Route exact path="/apikey" component={APIKey} />
         <Route exact path="/tools" component={ToolsHome} />
         <Route exact path="/tools/designGuidelines" component={DesignGuidelines} />
         <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
+        <Route extac path="/forum/" component={ForumMain} />
       </div>
     </SideNavBar>
  );
