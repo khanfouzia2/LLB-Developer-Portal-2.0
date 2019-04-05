@@ -413,6 +413,24 @@ Apikey.belongsTo(User, {
 });
 
 
+/*
+  Default 'exclude' fields. Sensitive information that usually should not be send to the front-end
+  Example usage:
+
+  const options = {
+    attributes: {
+      exclude: models.secluded.user
+    }
+  }
+
+*/
+const secluded = {
+  user: ['token', 'password', 'updated_at', 'deleted_at']
+}
+
+
+//
+
 // Service.hasMany(Apikey, {
 //   foreignKey: 'service_name',
 //   sourceKey: 'name'
@@ -436,5 +454,6 @@ module.exports = {
   ForumCategory,
   Thread,
   Comment,
-  BugFeedback
+  BugFeedback,
+  secluded
 }

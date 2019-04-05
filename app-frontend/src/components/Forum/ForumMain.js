@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from '../Misc/Modal.js';
 import ForumThreadInfoBox from './ForumThreadInfoBox.js';
 import ThreadCompose from './ThreadCompose.js';
-//import { } from '../../rest-endpoints.js';
+import { FORUM_GET_RECENT } from '../../rest-endpoints.js';
 import { Link } from "react-router-dom"
 import * as config from '../../config.js'
 const helpers = require('../../helpers.js');
@@ -19,11 +19,14 @@ class ForumMain extends React.Component {
     super(props);
 
     this.state = {
+      page: 1,
+      threads: [],
       showComposeNewPost: false
     }
 
 
     this.handleClickCreateNewThread = this.handleClickCreateNewThread.bind(this);
+    this.handleLoadMoreThreads = this.handleLoadMoreThreads.bind(this);
   }
 
   render() {
@@ -36,6 +39,8 @@ class ForumMain extends React.Component {
     } else {
       composeNewPost = null;
     }
+
+
 
     return(
       <React.Fragment>
@@ -68,12 +73,12 @@ class ForumMain extends React.Component {
             </div>
 
             <span className="" style={metaText}>Most recent first</span>
-            <ForumThreadInfoBox threadObj={{title:"Oulu API will be available in 2020", content:"Just kidding!"}} key="123" />
-            <ForumThreadInfoBox threadObj={{title:"One trillion API Requests!", content: helpers.getLorem(600) }} key="12453" />
-            <ForumThreadInfoBox threadObj={{title:"One trillion API Requests!", content: helpers.getLorem(600) }} key="" />
-            <ForumThreadInfoBox threadObj={{title:"One trillion API Requests!", content: helpers.getLorem(100) }} key="" />
-            <ForumThreadInfoBox threadObj={{title:"One trillion API Requests!", content: helpers.getLorem(50) }} key="" />
-            <ForumThreadInfoBox threadObj={{title:"One trillion API Requests!", content: helpers.getLorem(600) }} key="" />
+            {this.state.threads.map((thr, index) => (
+              <ForumThreadInfoBox threadObj={thr} key={thr.id} />
+            ))}
+            <div className="mt-3">
+              <button onClick={(e)=>this.handleLoadMoreThreads(e)} type="button" className="btn btn-outline-primary btn-block">Load more threads</button>
+            </div>
           </div>
 
         </div>
@@ -82,6 +87,50 @@ class ForumMain extends React.Component {
 
   }
 
+  /*
+    After successfull mounting, fetch data from server
+  */
+  componentDidMount() {
+    this.fetchRecentThreads();
+  }
+
+  fetchRecentThreads(page=1) {
+
+    const options = {
+      method: "GET",
+      credentials: "include",
+    }
+
+    var r = new Request(FORUM_GET_RECENT+'?page='+page, options);
+
+    // Call
+    fetch(r).then(data => {
+      return data.json();
+      console.log(data);
+    }).then(threads => {
+
+      var extended = this.state.threads.concat(threads);
+
+      this.setState({
+        threads: extended
+      }, () => {
+        // update page count. Already raised by 1. see above.
+        this.setState({page: this.state.page+1});
+        console.log("State updated!")
+      } )
+
+    }).catch(err => {
+      console.log(err);
+    })
+
+  }
+
+
+  handleLoadMoreThreads(e) {
+      console.log("onClick event received!");
+      var p = this.state.page+1;
+      this.fetchRecentThreads(p);
+  }
 
   handleClickCreateNewThread(e) {
     console.log("User clicked New Thread -button");

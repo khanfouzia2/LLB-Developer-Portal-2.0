@@ -48,7 +48,7 @@ class News extends React.Component {
           <div clasName="card" id={`news-${this.state.newsObj.id}`} title={`ID: ${this.state.newsObj.id}`} >
             <div class="card-body">
               <h2>{this.state.newsObj.title}</h2>
-              <span className="" id="author" >Author: { this.getAuthorDetails() }</span><br/>
+              <span className="" id="author" >Author: { helpers.getAuthorDetails(this.state.authorObj) }</span><br/>
               <span className="em small muted" id="author" >First published: { helpers.getDateFormatted(this.state.newsObj.created_at) }</span>
               <hr/>
 
@@ -117,14 +117,6 @@ class News extends React.Component {
       )
     } else {
       return(null);
-    }
-  }
-
-  getAuthorDetails() {
-    try {
-      return this.state.authorObj.first_name +" " + this.state.authorObj.last_name;
-    } catch(err) {
-      return "Unknown author"
     }
   }
 

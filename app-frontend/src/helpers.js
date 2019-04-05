@@ -15,6 +15,14 @@ exports.isValidID = function(id) {
 
 }
 
+exports.getAuthorDetails = function(userObj) {
+  if(userObj.first_name && userObj.last_name) {
+    return userObj.first_name +" " + userObj.last_name;
+  } else{
+    return "Unknown author"
+  }
+}
+
 /*
   Adds tree dots at the end of the string if it is too long
 
