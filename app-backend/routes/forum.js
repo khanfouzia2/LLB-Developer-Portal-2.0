@@ -75,7 +75,20 @@ router.get('/', authentication, (req, res) => {
 
 });
 
+// Under construction!
+router.post('/', authentication, (req, res) => {
 
+  console.log("\n\nPOST forum / call received");
+  console.log("AUTH: " + req.user.email);
+  console.log(req);
+
+  // received data
+  console.log("\t" +req.body.title);
+  console.log("\t" +req.body.content);
+
+  res.send();
+
+});
 
 
 

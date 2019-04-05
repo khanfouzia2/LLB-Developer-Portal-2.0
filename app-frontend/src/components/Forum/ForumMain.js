@@ -27,6 +27,7 @@ class ForumMain extends React.Component {
 
     this.handleClickCreateNewThread = this.handleClickCreateNewThread.bind(this);
     this.handleLoadMoreThreads = this.handleLoadMoreThreads.bind(this);
+    this.handleCancelCompose = this.handleCancelCompose.bind(this);
   }
 
   render() {
@@ -35,7 +36,7 @@ class ForumMain extends React.Component {
 
     var composeNewPost;
     if(this.state.showComposeNewPost) {
-      composeNewPost = <ThreadCompose />;
+      composeNewPost = <ThreadCompose onCancelFunction={this.handleCancelCompose} />;
     } else {
       composeNewPost = null;
     }
@@ -54,7 +55,7 @@ class ForumMain extends React.Component {
 
             {/* Top row */}
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-12 mb-3">
                 {/* Show button if compose-component is not visible */}
                 {!this.state.showComposeNewPost &&
                   <button className="btn btn-primary" onClick={(e)=>this.handleClickCreateNewThread(e)}>Create new thread</button>
@@ -69,7 +70,7 @@ class ForumMain extends React.Component {
           <div className="container">
 
             <div>
-              <h2>Threads</h2>
+              <h2 style={{marginBottom:0,}}>Threads</h2>
             </div>
 
             <span className="" style={metaText}>Most recent first</span>
@@ -139,6 +140,12 @@ class ForumMain extends React.Component {
       showComposeNewPost: true
     });
 
+  }
+
+  handleCancelCompose() {
+    this.setState({
+      showComposeNewPost: false
+    });
   }
 
 }

@@ -25,6 +25,7 @@ const USER_GENERATE_API = BASE_URL + 'users/apikey';
 const GOOGLE_LOGIN = BASE_URL + 'auth/google';
 
 const FORUM_GET_RECENT = BASE_URL + 'forum/'
+const FORUM_POST_NEW = BASE_URL + 'forum/'
 
 //API KEY
 module.exports = {
@@ -39,6 +40,7 @@ module.exports = {
   USER_LOGIN,
   USER_LOGOUT,
   USER_ME,
+  FORUM_POST_NEW,
   GOOGLE_LOGIN,
   USER_GENERATE_API,
   FORUM_GET_RECENT
