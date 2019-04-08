@@ -15,8 +15,8 @@ models.User.create({id:1, first_name: "John", last_name: "Smith", email: Math.ra
 models.User.create({id:2, first_name: "Joe", last_name: "Doe", email: Math.random()*1000+"_joe@llb.com", token: "zzz***"}); // id 2
 
 
-models.Service.create({name: "TRE" }); // name is a key
-models.Service.create({name: "HEL" });
+//models.Service.create({name: "TRE" }); // name is a key
+//models.Service.create({name: "HEL" });
 
 models.ForumCategory.create({name: "General_"+Math.random(), description:"For general discussion"}); // id 1
 

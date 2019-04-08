@@ -21,13 +21,17 @@ const USER_LOGIN =  BASE_URL + 'users/login';
 const USER_LOGOUT = BASE_URL + 'users/logout';
 const USER_ME = BASE_URL + 'users/me';
 const USER_GENERATE_API = BASE_URL + 'users/apikey';
+
 // Google Auth
 const GOOGLE_LOGIN = BASE_URL + 'auth/google';
 
+// Forum and Threads
 const FORUM_GET_RECENT = BASE_URL + 'forum/'
 const FORUM_POST_NEW = BASE_URL + 'forum/'
+const GET_THREAD = BASE_URL + 'forum/thread' // +id
 
-//API KEY
+
+
 module.exports = {
   NEWS_POST,
   NEWS_GET_ALL,
@@ -40,8 +44,9 @@ module.exports = {
   USER_LOGIN,
   USER_LOGOUT,
   USER_ME,
+  FORUM_GET_RECENT,
   FORUM_POST_NEW,
+  GET_THREAD,
   GOOGLE_LOGIN,
   USER_GENERATE_API,
-  FORUM_GET_RECENT
 }

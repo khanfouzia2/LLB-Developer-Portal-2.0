@@ -75,18 +75,92 @@ router.get('/', authentication, (req, res) => {
 
 });
 
-// Under construction!
+/*
+  Gets Thread object and its comments and commnt's user obj.
+
+  For ordering 'includes', see: http://docs.sequelizejs.com/manual/models-usage.html#ordering-eager-loaded-associations
+*/
+router.get('/thread/:id', authentication, (req, res) => {
+
+  console.log("\n\nGET /thread/:id request received!")
+
+  var id = parseInt(req.params.id, 10);
+
+  prom = models.Thread.findByPk(id, {
+    include: [ {
+      model: models.Comment,
+      where: {
+        deleted_at: {
+          [Sequelize.Op.eq]: null
+        },
+      },
+      include: [
+        {
+          model: models.User,
+          attributes: {
+            exclude: models.secluded.user
+          }
+        }
+      ],
+      required:false
+    }],
+    order: [ [ models.Comment, 'created_at', 'ASC' ] ]
+  });
+
+  prom.then(data => {
+    if(data == null) { throw new Error("Not found"); }
+    res.json(data);
+    console.log(id + data )
+  }).catch(err => {
+    res.status(404).send();
+  });
+
+  //res.end();
+
+});
+
+
 router.post('/', authentication, (req, res) => {
 
   console.log("\n\nPOST forum / call received");
   console.log("AUTH: " + req.user.email);
   console.log(req);
 
-  // received data
-  console.log("\t" +req.body.title);
-  console.log("\t" +req.body.content);
+  // Permission check
+  if(!req.user) { res.status(403).send() }
 
-  res.send();
+  var title = req.body.title;
+  var cont = req.body.content;
+
+  if(!title || !cont) { console.log("Invalid content"); res.status(415).send(); }
+
+  // received data
+  console.log("\t" + title);
+  console.log("\t" + cont);
+
+  title = title.substr(0,100).trim();
+  cont = cont.substr(0,50000).trim();
+
+  var insertPromise = models.Thread.create({
+    title: title,
+    content: cont,
+    author_id: req.user.id
+  });
+
+  insertPromise.then(data => {
+    console.log("\nInserted successfully. ID " + data.id );
+    return data;
+
+  }).then(data => {
+    // Status 201 CREATED. Sets Content type json header
+    res.status(201).json(data);
+
+  }).catch(err => {
+    console.log(err);
+    res.status(500).send();
+  })
+
+
 
 });
 

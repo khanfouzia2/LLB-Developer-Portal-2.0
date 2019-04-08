@@ -184,7 +184,8 @@ const Thread = sequelize.define('thread',
     forum_category_id: {
       // References forum_category.id
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null
     },
     author_id: {
       // References users.id
@@ -425,7 +426,7 @@ Apikey.belongsTo(User, {
 
 */
 const secluded = {
-  user: ['token', 'password', 'updated_at', 'deleted_at']
+  user: ['token', 'password', 'updated_at', 'deleted_at', 'is_finished_survey']
 }
 
 

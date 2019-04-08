@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-// TESTING MODAL WINDOW COMP.
 import Modal from '../Misc/Modal.js';
 import { NEWS_GET_ONE } from '../../rest-endpoints.js';
 import { Link } from "react-router-dom"

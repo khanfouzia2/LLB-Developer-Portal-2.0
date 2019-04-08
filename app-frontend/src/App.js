@@ -18,6 +18,7 @@ import InfoPage from './components/InfoPage/Info';
 import NotFound from './components/Misc/NotFound';
 import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
+import ThreadMain from './components/Forum/ThreadMain';
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import SideNavBar from './components/NavBar/SideBarNav';
@@ -39,7 +40,10 @@ class App extends Component {
         <Route exact path="/tools/designGuidelines" component={DesignGuidelines} />
         <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
-        <Route extac path="/forum/" component={ForumMain} />
+        <Switch>
+          <Route extac path="/forum/thread/:id" component={ThreadMain} />
+          <Route extac path="/forum/" component={ForumMain} />
+        </Switch>
       </div>
     </SideNavBar>
  );

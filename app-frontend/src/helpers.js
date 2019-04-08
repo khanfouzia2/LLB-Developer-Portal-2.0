@@ -15,6 +15,10 @@ exports.isValidID = function(id) {
 
 }
 
+exports.redirectUser = function(url) {
+  window.location.href = url;
+}
+
 exports.getAuthorDetails = function(userObj) {
   if(userObj.first_name && userObj.last_name) {
     return userObj.first_name +" " + userObj.last_name;
