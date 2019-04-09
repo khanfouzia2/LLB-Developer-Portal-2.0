@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom"
-import { AuthConsumer } from '../../context/authContext';
 import { NEWS_GET_DRAFTS} from '../../rest-endpoints';
 import  * as config from '../../config.js';
 const helpers = require('../../helpers.js');

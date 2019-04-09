@@ -4,7 +4,6 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.min.js';
 import Example from './components/Example/Example';
 import APIPage from './components/APIPage/APIPage';
-import {AuthProvider} from './context/authContext';
 import NewsCardList from './components/News/NewsCardList';
 import NewsCompose from './components/News/NewsCompose';
 import News from './components/News/News';
@@ -20,6 +19,8 @@ import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
 import ThreadMain from './components/Forum/ThreadMain';
 
+//import EditProfile from './components/User/EditProfile';
+import GlobalState from './context/GlobalState';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import SideNavBar from './components/NavBar/SideBarNav';
 
@@ -44,6 +45,7 @@ class App extends Component {
           <Route extac path="/forum/thread/:id" component={ThreadMain} />
           <Route extac path="/forum/" component={ForumMain} />
         </Switch>
+        {/* <Route exact path="/profile/edit" component={EditProfile} /> */}
       </div>
     </SideNavBar>
  );
@@ -51,7 +53,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <AuthProvider>
+        <GlobalState>
           <Router>
             <Switch>
               <Route exact path="/login" component={LoginForm} />
@@ -59,7 +61,7 @@ class App extends Component {
               <Route render={this.renderPortalContent} />
             </Switch>
           </Router>
-        </AuthProvider>
+        </GlobalState>
       </div>
     );
   }

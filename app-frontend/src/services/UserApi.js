@@ -28,6 +28,9 @@ const Logout =  () => {
 const GetInfo = () => {
   return axios.get(USER_ME, {withCredentials: true});
 }
+const UpdateInfo = (first_name, last_name, password) => {
+  return axios.put(USER_ME, {first_name, last_name, password}, {withCredentials: true});
+}
 
 const GenerateAPIKey = () => {
   return axios.post(USER_GENERATE_API, {} ,{withCredentials: true});
@@ -35,4 +38,4 @@ const GenerateAPIKey = () => {
 const GetAPIKey = () => {
   return axios.get(USER_GENERATE_API,{withCredentials: true});
 }
-export {CredentialLogin, FormRegister, Logout, GetInfo, GenerateAPIKey,GetAPIKey};
+export {CredentialLogin, FormRegister, Logout, GetInfo, UpdateInfo, GenerateAPIKey,GetAPIKey};

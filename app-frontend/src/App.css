@@ -25,11 +25,14 @@
 
 .App-custom-nav {
   background: #F8F9FA;
-  min-height: 13%;
+  min-height: 6em;
   text-align: left;
-  padding: 10px 10px 10px 10px;
+  padding: 20px 20px 10px 25px;
 }
-
+.App-custom-nav span {
+  font-size: 2em;
+  font-family: smoolthanbold,Helvetica,Arial,sans-serif;
+}
 .App-custom-page-content {
   padding-top: 2% ;
   padding-bottom: 2%;

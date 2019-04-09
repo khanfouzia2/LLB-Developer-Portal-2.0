@@ -11,6 +11,7 @@ passport.use(new GoogleStrategy({
   async (token, tokenSecret, profile, done) => {
       try {
         const {given_name,family_name, email} = profile._json;
+  
         let user = await User.findOrCreate({where: { email: email }, defaults: {
           first_name: given_name,
           last_name: family_name,

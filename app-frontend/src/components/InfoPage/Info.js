@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { AuthConsumer } from '../../context/authContext';
+import AuthContext from '../../context/auth-context';
 import './Info.css';
 import {Link} from 'react-router-dom';
 import { create } from 'domain';
@@ -9,16 +9,16 @@ import { FRONT_PAGE_ICONTEXT_1 } from '../../config.js'
 import IconText from './IconText.js';
 
 class Info extends Component {
-
+  static contextType = AuthContext;
   constructor(props) {
     super(props);
   }
 
   renderInfoButton = (userInfo) => {
-
+    const { isAuth } = this.context;
     const orStyle = {margin:'0.5em',fontSize:'0.8em'};
 
-    if(userInfo.isAuth) {
+    if(isAuth) {
        return <></>
     }
     else {
@@ -39,14 +39,7 @@ class Info extends Component {
   }
   
   render() {
-    
-
-
-
-
     return(
-      <AuthConsumer>
-      { ({userInfo}) => (
          <>
               <div className="info-wrapper">
               <div className="App-custom-page-content">
@@ -54,8 +47,6 @@ class Info extends Component {
                   <br/>
                   <div className = "row">
                     <div className= "col-xl-10 mx-auto">
-                  
-                  
                       <p>The goal of the Living Lab Bus (LLB) project is to enable and support faster development and evaluation of 
                         mobility services through a concrete, 
                         open test environment in a real public transport context. 
@@ -68,14 +59,10 @@ class Info extends Component {
                   </div>
                  
                   <br/>
-
-                  {this.renderInfoButton(userInfo)}
-                  
+                  {this.renderInfoButton()}
                   <h2>3 in 1 database – many ways to use</h2>
-                  
                   <div className="row mt-5">
                     <div className="col-xl-4">
-                    
                       <IconText title="Create" content="Design and code your own application using our guides and APIs." imgSrc="img/create.png"/>
                     </div>
                     <div className="col-xl-4 ">
@@ -85,13 +72,9 @@ class Info extends Component {
                       <IconText title="Deploy" content="Release your app into the world and follow its progress with our feedback system." imgSrc="img/deploy.png"/>
                     </div>
                   </div>
-                  
-                 
                 </div>
             </div>
          </>
-      )}
-    </AuthConsumer>
     ) 
   }
 }

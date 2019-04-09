@@ -7,7 +7,6 @@ import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import NewsDraftsList from './NewsDraftsList.js';
-import { AuthConsumer } from '../../context/authContext';
 import  * as config from '../../config.js';
 const qs = require('query-string');
 const helpers = require('../../helpers');
@@ -85,10 +84,10 @@ class NewsCompose extends Component {
                     <label for="content" class="col-form-label">Content</label>
                   </div>
                   <div className="col-md-9">
-                     {/*<textarea rows="8" name="content" value={this.state.content} onChange={(e)=>this.handleInputChange(e)}
+                     <textarea rows="8" name="content" value={this.state.content} onChange={(e)=>this.handleInputChange(e)}
                      placeholder="..." className="form-control" maxlength={config.NEWS_CONTENT_MAXLEN} required></textarea>
-                     */}
-                     <CKEditor
+                    
+                     {/* <CKEditor
                        editor={ ClassicEditor }
                        data=""
                        config={
@@ -108,7 +107,7 @@ class NewsCompose extends Component {
                        onFocus={ editor => {
                            console.log( 'Focus.', editor );
                        } }
-                     />
+                     /> */}
 
                     <span class="badge badge badge-danger">Required</span>
                     <span className="small" style={{float:"right"}}>{this.state.content.length}/{config.NEWS_CONTENT_MAXLEN}</span>

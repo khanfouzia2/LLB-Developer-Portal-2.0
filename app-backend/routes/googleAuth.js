@@ -14,7 +14,9 @@ generateToken = async (user) => {
 }
 
 router.get('/google', function(req, res, next){
-  passport.authenticate('google',{ scope: ['email'] })(req, res, next);       
+  passport.authenticate('google',{ scope: 
+    ['https://www.googleapis.com/auth/userinfo.email', 
+    'https://www.googleapis.com/auth/userinfo.profile'] })(req, res, next);       
 });
 
 router.get('/google/callback', passport.authenticate('google', { session :false, failureRedirect: '/login' }),

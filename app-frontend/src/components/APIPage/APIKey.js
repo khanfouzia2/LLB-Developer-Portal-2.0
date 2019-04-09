@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
-import { AuthConsumer } from '../../context/authContext';
+import AuthContext from '../../context/auth-context';
+
 import { GenerateAPIKey, GetAPIKey } from '../../services/UserApi';
 
 class APIKey extends Component {
+  static contextType = AuthContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -56,8 +59,9 @@ class APIKey extends Component {
       return <></>
     }
   }
-  renderContain(userInfo){
-    if(userInfo.isAuth){
+  renderContain(){
+    const {isAuth} = this.context;
+    if(isAuth){
        return(
           <>
             <nav className="App-custom-nav">
@@ -115,13 +119,9 @@ class APIKey extends Component {
 
   render() {
     return (
-      <AuthConsumer>
-        { ({userInfo}) => (
-            <>
-              {this.renderContain(userInfo)}
-           </>
-        )}
-      </AuthConsumer>
+      <>
+        {this.renderContain()}
+      </>
     );
   }
 }

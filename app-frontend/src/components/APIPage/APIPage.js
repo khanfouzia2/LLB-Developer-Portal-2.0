@@ -2,12 +2,15 @@ import React, {Component} from 'react';
 import SwaggerUI from "swagger-ui-react"
 import "swagger-ui-react/swagger-ui.css"
 import './APIPage.css'
-import { AuthConsumer } from '../../context/authContext';
+import Context from '../../context/auth-context';
 
 class APIPage extends Component {
+  static contextType = Context;
 
-  renderContain = (userInfo) => {
-    if(userInfo.isAuth) {
+  renderContain = () => {
+    const { isAuth } = this.context;
+   
+    if(isAuth) {
       return(
         <>
         <div className="jumbotron">
@@ -147,17 +150,7 @@ class APIPage extends Component {
     }
   }
 
-  render() {
-    return (
-      <AuthConsumer>
-        { ({userInfo}) => (
-            <>
-              {this.renderContain(userInfo)}
-           </>
-        )}
-      </AuthConsumer>
-    );
-  }
+  render = () => this.renderContain()
 }
 
 export default APIPage;

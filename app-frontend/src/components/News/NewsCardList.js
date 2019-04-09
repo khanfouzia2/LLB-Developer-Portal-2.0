@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import NewsCard from './NewsCard';
 import { Link } from "react-router-dom"
-import {AuthConsumer} from '../../context/authContext';
+import AuthContext from '../../context/auth-context';
 import  * as config from '../../config.js';
 import * as endpoints from '../../rest-endpoints.js';
 
@@ -10,7 +10,7 @@ import * as endpoints from '../../rest-endpoints.js';
 */
 
 class NewsCardList extends Component {
-
+  static contextType = AuthContext;
   constructor(props) {
     super(props);
 
@@ -83,9 +83,10 @@ class NewsCardList extends Component {
 
 
   /* Render this sub-component if auth. user is role=admin  */
-  renderAdminPanel(userInfo) {
-      console.log( userInfo.role +", "+ config.ADMIN_ROLE_NAME )
-      if(userInfo.isAuth && userInfo.role === config.ADMIN_ROLE_NAME) {
+  renderAdminPanel() {
+      const {isAuth, role} = this.context;
+      console.log( role +", "+ config.ADMIN_ROLE_NAME )
+      if(isAuth && role === config.ADMIN_ROLE_NAME) {
         return(
             <React.Fragment>
               <div className="card mt-md-3">
@@ -101,8 +102,9 @@ class NewsCardList extends Component {
       }
   }
 
-  renderAdminNotification(userInfo) {
-    if(userInfo.isAuth && userInfo.role === config.ADMIN_ROLE_NAME) {
+  renderAdminNotification() {
+    const {isAuth, role} = this.context;
+    if(isAuth && role === config.ADMIN_ROLE_NAME) {
       return(<div className="alert alert-success mt-md-3">[Admin notice] News shown below are public. Users will see News section as it's shown here.</div>);
     } else { return(null) }
   }
@@ -127,14 +129,10 @@ class NewsCardList extends Component {
           <nav className="App-custom-nav">
               <span className="navbar-brand mb-0 h1">News</span>
           </nav>
-          <AuthConsumer>
-            {({userInfo}) => (
-              <div className="App-custom-page-content">
-                { this.renderAdminPanel(userInfo) }
-                { this.renderAdminNotification(userInfo) }
-              </div>
-            )}
-          </AuthConsumer>
+          <div className="App-custom-page-content">
+            { this.renderAdminPanel() }
+            { this.renderAdminNotification() }
+          </div>
 
           <div className="App-custom-page-content" id="news">
             { zero_posts_alert }
