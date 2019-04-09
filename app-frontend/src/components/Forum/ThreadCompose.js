@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Modal from '../Misc/Modal.js';
 import { withRouter, Link } from "react-router-dom"
 import { FORUM_POST_NEW } from '../../rest-endpoints.js';
 import * as config from '../../config.js'
+import Modal from '../Misc/Modal.js';
 const helpers = require('../../helpers.js');
 
 
@@ -31,7 +31,7 @@ class ThreadCompose extends React.Component {
 
   render() {
 
-    const charCounter = { fontSize:'0.8em', color:'#aaa', float:'right' };
+    const charCounter = { float:'right' };
 
     return(
       <React.Fragment>
@@ -48,7 +48,7 @@ class ThreadCompose extends React.Component {
               </div>
               <div class="col-md-10">
                 <input className="form-control" name="title" value={this.state.title} onChange={(e)=>this.handleInputChange(e)} type="text" maxlength={config.THREAD_TITLE_MAXLEN} placeholder="Title" required/>
-                <span style={charCounter}>{this.state.title ? this.state.title.length : "0"} / { config.THREAD_TITLE_MAXLEN }</span>
+                <span className="metatext" style={charCounter}>{this.state.title ? this.state.title.length : "0"} / { config.THREAD_TITLE_MAXLEN }</span>
               </div>
             </div>{/* end of title row */}
 
@@ -57,7 +57,12 @@ class ThreadCompose extends React.Component {
                 <textarea className="form-control" name="content" onChange={(e)=>this.handleInputChange(e)} style={{minHeight:50, maxHeight:1000}}
                   rows="5" placeholder="Content" maxlength={config.THREAD_CONTENT_MAXLEN} value={this.state.content} required>
                 </textarea>
-                <span style={charCounter}>{this.state.content ? this.state.content.length : "0"} / { config.THREAD_CONTENT_MAXLEN }</span>
+                <span className="metatext" style={charCounter}>{this.state.content ? this.state.content.length : "0"} / { config.THREAD_CONTENT_MAXLEN }</span>
+                <span className="metatext" style={{lineHeight:'0.5em', fontSize:'0.7em',}}>
+                  Allowed tags are: { config.THREAD_CONTENT_ALLOWED_TAGS.join(", ") }.<br/>
+                  NOTE: Allowed iframe hosts: { config.THREAD_CONTENT_ALLOWED_IFRAME_HOSTS.join(", ") }.<br/>
+                  Allowed attributes: a [src, target], img [src, height, width]
+                </span>
               </div>
             </div>
 

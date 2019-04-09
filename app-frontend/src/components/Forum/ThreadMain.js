@@ -5,8 +5,9 @@ import Comment from './Comment.js';
 import CommentCompose from './CommentCompose.js';
 import { Link } from "react-router-dom"
 import { GET_THREAD } from '../../rest-endpoints.js';
-import * as config from '../../config.js'
+import * as config from '../../config.js';
 const helpers = require('../../helpers.js');
+var sanitizeHtml = require('sanitize-html');
 
 class ThreadMain extends React.Component {
 
@@ -20,11 +21,15 @@ class ThreadMain extends React.Component {
         comments: []
       }
     }
+
+    // Events:
+    this.afterSuccesfullCommenting = this.afterSuccesfullCommenting.bind(this);
   }
 
   render() {
 
 
+    const numComments = this.state.threadObj.comments.length;
     const u = { id: 123, first_name: "Test", last_name: "Testing", }
     const meta = { color:'#ccc', fontSize:'0.8em', }
     // TODO error handling for empty objects/lists
@@ -37,17 +42,21 @@ class ThreadMain extends React.Component {
 
         <div className="App-custom-page-content">
           <h3>{ this.state.threadObj.title }</h3>
-          { this.state.threadObj.content }
 
-          <div className="p-3" id="comments">
-            <span id="comment-count" style={meta}>{this.state.threadObj.comments.length} comments, oldest first</span>
+          <p style={{textBreak:'break-text',}} dangerouslySetInnerHTML={this.getSanitizedContent(this.state.threadObj.content)}></p>
+
+          <hr/>
+
+          {/* Comments */}
+          <div className="container" id="comments">
+            <span id="comment-count" style={meta}>{numComments} {helpers.getNumericBending(numComments, "comment", "comments")} - oldest first</span>
             { this.state.threadObj.comments.map((comment, i) => {
-                return(<Comment id={comment.id} content={comment.content} userObj={comment.user} created_at={comment.created_at} key={comment.id} />);
+                return(<Comment id={comment.id} content={comment.content} userObj={comment.user} created_at={comment.created_at} key={comment.id} index={i} />);
             }) }
           </div>
 
           {/* Write a comment */}
-          <CommentCompose thread_id={this.state.threadObj.id} />
+          <CommentCompose thread_id={this.state.threadObj.id} afterSuccesfullCommenting={this.afterSuccesfullCommenting}/>
 
         </div>
 
@@ -64,7 +73,7 @@ class ThreadMain extends React.Component {
   componentDidMount() {
     let id = this.props.match.params.id;
     if(!helpers.isValidID(id)) {
-      // Handle error!
+      helpers.redirectUser('/forum');
       return;
     }
 
@@ -88,6 +97,29 @@ class ThreadMain extends React.Component {
     })
 
     console.log("Did mount. Fetch Thread data from server... ID " + id)
+  }
+
+
+  getSanitizedContent(content) {
+    // see react docs for this return...
+    return {__html: sanitizeHtml(content, {
+        allowedTags: config.THREAD_CONTENT_ALLOWED_TAGS,
+        allowedAttributes: {
+          'iframe': [ 'src', 'width', 'height' ],
+          'img': ['src', 'width', 'height'],
+          'a': ['href', 'target']
+        },
+        allowedIframeHostnames: config.THREAD_CONTENT_ALLOWED_IFRAME_HOSTS
+      })
+    };
+  }
+
+  /*
+    Updates the UI.
+    Pass this function to CommentCompose -component
+  */
+  afterSuccesfullCommenting(commentObj) {
+    // ...
   }
 
 

@@ -29,7 +29,7 @@ const GOOGLE_LOGIN = BASE_URL + 'auth/google';
 const FORUM_GET_RECENT = BASE_URL + 'forum/'
 const FORUM_POST_NEW = BASE_URL + 'forum/'
 const GET_THREAD = BASE_URL + 'forum/thread' // +id
-
+const COMMENT_POST = BASE_URL + 'forum/comment'
 
 
 module.exports = {
@@ -46,6 +46,7 @@ module.exports = {
   USER_ME,
   FORUM_GET_RECENT,
   FORUM_POST_NEW,
+  COMMENT_POST,
   GET_THREAD,
   GOOGLE_LOGIN,
   USER_GENERATE_API,

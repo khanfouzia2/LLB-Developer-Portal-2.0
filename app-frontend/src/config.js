@@ -22,14 +22,18 @@ const NUM_OF_NEWS_SHOWN_PAGE = 10; // max number of news per page. Page 1 => [1.
 const NEWS_SHOWN_CHARS = 300;
 const NEWS_TITLE_MAXLEN = 100;
 const NEWS_CONTENT_MAXLEN = 50000;
-const NEWS_DEFAULT_BACKGROUND_FILENAME = "bus.png";
+const NEWS_DEFAULT_BACKGROUND_FILENAME = "./bus.png";
 // Should not happen, but better than nothing
 const TEXT_IF_POST_EMPTY = "No content";
 
 // Forum
 const THREAD_TITLE_MAXLEN = 100;
 const THREAD_CONTENT_MAXLEN = 50000;
+const THREAD_COMMENT_MANXLEN =  5000;
 
+// Thread content
+const THREAD_CONTENT_ALLOWED_TAGS = ['b', 'u', 'i', 'a', 'img', 'pre', 'code', 'iframe']
+const THREAD_CONTENT_ALLOWED_IFRAME_HOSTS = ['www.youtube.com', 'www.vimeo.com']
 
 module.exports = {
   BASE_URL,
@@ -38,6 +42,9 @@ module.exports = {
   NUM_OF_NEWS_SHOWN_PAGE,
   NEWS_TITLE_MAXLEN,
   NEWS_CONTENT_MAXLEN,
+  THREAD_COMMENT_MANXLEN,
+  THREAD_CONTENT_ALLOWED_TAGS,
+  THREAD_CONTENT_ALLOWED_IFRAME_HOSTS,
   ADMIN_ROLE_NAME,
   NEWS_SHOWN_CHARS,
   NEWS_DEFAULT_BACKGROUND_FILENAME,

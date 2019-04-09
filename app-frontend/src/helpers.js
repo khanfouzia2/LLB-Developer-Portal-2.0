@@ -15,7 +15,17 @@ exports.isValidID = function(id) {
 
 }
 
+/*
+  Returns singular or plural string based on amount
+*/
+exports.getNumericBending = function(amount, singular, plural) {
+  return amount == 1 ? singular : plural;
+}
+
 exports.redirectUser = function(url) {
+  if(!url) {
+    window.location.reload();
+  }
   window.location.href = url;
 }
 

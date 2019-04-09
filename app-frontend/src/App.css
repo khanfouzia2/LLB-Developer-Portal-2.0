@@ -45,3 +45,10 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Grey text, smaller that average text. */
+.metatext {
+  color:#959595;
+  font-size:0.9em;
+}

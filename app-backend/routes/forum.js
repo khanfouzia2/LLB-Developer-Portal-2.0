@@ -10,8 +10,13 @@ const authentication = require('../services/authentication.js');
 
   Routes for Forum
 
+  TODO: Auth.
+
   Routes are:
   # GET /
+  # GET /thread/:id
+  # POST /
+  # POST /comment
 
 */
 
@@ -164,7 +169,41 @@ router.post('/', authentication, (req, res) => {
 
 });
 
+router.post('/comment', authentication, (req, res) => {
 
+  console.log("\n\nPOST /comment request recieved.\tAuth: "+req.user.email);
+
+  var thread_id = parseInt(req.body.thread_id, 10);
+  var content = req.body.content;
+  console.log(thread_id +"\n"+ content)
+
+  // Validate content
+  if(!thread_id || !content) {
+    res.status(415).json({message: "Content not valid!"});
+    return;
+  }
+
+  prom = models.Comment.create({
+    content: content,
+    thread_id: thread_id,
+    author_id: req.user.id,
+  });
+
+  prom.then(data => {
+    // If inserted successfully
+    if(data != null) {
+      res.json( data );
+    } else {
+      throw new Error("An error occured");
+    }
+
+
+  }).catch(err =>{
+    console.log(err);
+    res.status(500).json({message: "An error occured"});
+  })
+
+});
 
 
 

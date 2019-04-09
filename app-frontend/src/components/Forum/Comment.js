@@ -13,6 +13,7 @@ class Comment extends React.Component {
 
     this.state = {
     }
+
   }
 
   render() {
@@ -20,10 +21,12 @@ class Comment extends React.Component {
     const profileLink = { fontWeight:600 };
     const cmt = {
       display:'bclock',
-      padding:'1.0em',
+      padding:'0.9em',
+      fontSize:'0.9em',
       backgroundColor:'rgb(229, 241, 252)',
       boxShadow:' 0.1em 0.1em 0.1em #9fb1c1',
       border:'1px solid rgb(175, 210, 226)',
+      borderRadius:5,
     }
     const meta = {
       color:'#aaa',
@@ -39,8 +42,7 @@ class Comment extends React.Component {
           <div className="col-md-3">
             <Link to={`/user/${this.props.userObj.id}`} style={profileLink}> {helpers.getAuthorDetails(this.props.userObj)} </Link>
             <br/>
-            <span style={meta} > { helpers.getDateFormatted(this.props.created_at) } </span>
-            <span></span>
+            <span className="metatext"> { helpers.getDateFormatted(this.props.created_at) } <span title="Comment ID" className="badge badge-info">#{this.props.id}</span> </span>
           </div>
           <div className="col-md-9" style={cmtCont}>
             <span>{this.props.content}</span>
@@ -63,6 +65,7 @@ class Comment extends React.Component {
 
 Comment.propTypes = {
   id: PropTypes.number,
+  index: PropTypes.number,
   content: PropTypes.string,
   authorObj: PropTypes.node
 }

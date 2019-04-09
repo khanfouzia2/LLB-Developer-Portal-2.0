@@ -43,8 +43,7 @@ class ForumThreadInfoBox extends React.Component {
           <br/>
           <Link id="author" class="" to={`/${this.props.threadObj.user.id}`} style={authorNameStyle}> { helpers.getAuthorDetails(this.props.threadObj.user) } </Link>
           <span clasName="" title={`ID: ${this.props.threadObj.id}`} style={metadataStyle}>{ helpers.getDateFormatted(this.props.threadObj.created_at) }</span>
-          <span clasName="" style={metadataStyle}>934 Comments</span>
-          <p style={contentStyle}>{ helpers.niceSubstr(this.props.threadObj.content, 400) }</p>
+          <p style={contentStyle}>{ helpers.niceSubstr(this.props.threadObj.content, 300) }</p>
 
 
         </div>
