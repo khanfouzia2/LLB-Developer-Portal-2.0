@@ -14,6 +14,8 @@ const config = require('../config.js');
   OR is user able to delete his own post
   OR is thread owner able to delete comments?
 
+  HTTP status code 403 should be sent. [403 access denied]
+
 */
 
 

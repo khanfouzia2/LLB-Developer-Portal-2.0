@@ -42,8 +42,8 @@ class App extends Component {
         <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
         <Switch>
-          <Route extac path="/forum/thread/:id" component={ThreadMain} />
-          <Route extac path="/forum/" component={ForumMain} />
+          <Route exact path="/forum/thread/:id" component={ThreadMain} />
+          <Route exact path="/forum/" component={ForumMain} />
         </Switch>
         {/* <Route exact path="/profile/edit" component={EditProfile} /> */}
       </div>

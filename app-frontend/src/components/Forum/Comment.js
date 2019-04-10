@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from '../Misc/Modal.js';
 import { Link } from "react-router-dom"
-import { } from '../../rest-endpoints.js';
+import { COMMENT_DELETE } from '../../rest-endpoints.js';
 import * as config from '../../config.js'
 const helpers = require('../../helpers.js');
 
@@ -14,6 +14,7 @@ class Comment extends React.Component {
     this.state = {
     }
 
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   render() {
@@ -46,6 +47,8 @@ class Comment extends React.Component {
           </div>
           <div className="col-md-9" style={cmtCont}>
             <span>{this.props.content}</span>
+            <br/>
+            <a href="#" className="text-danger" onClick={(e)=>this.handleDelete(e)}>Delete [make this visible only for admin / owner]</a>
           </div>
         </div>
       </React.Fragment>
@@ -58,7 +61,17 @@ class Comment extends React.Component {
     // ...
   }
 
+  handleDelete(e) {
+    console.log("User clicked Delete")
 
+    const options = {
+      method: "DELETE",
+      credentials: "include"
+    };
+
+    var r = new Request(COMMENT_DELETE+'/'+this.props.id, options);
+    fetch(r);
+  }
 
 
 }

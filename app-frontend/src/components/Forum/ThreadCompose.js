@@ -48,7 +48,7 @@ class ThreadCompose extends React.Component {
               </div>
               <div class="col-md-10">
                 <input className="form-control" name="title" value={this.state.title} onChange={(e)=>this.handleInputChange(e)} type="text" maxlength={config.THREAD_TITLE_MAXLEN} placeholder="Title" required/>
-                <span className="metatext" style={charCounter}>{this.state.title ? this.state.title.length : "0"} / { config.THREAD_TITLE_MAXLEN }</span>
+                <span className="metatext" style={charCounter}>Min length 3 chars. {this.state.title ? this.state.title.length : "0"} / { config.THREAD_TITLE_MAXLEN }</span>
               </div>
             </div>{/* end of title row */}
 

@@ -56,8 +56,10 @@ class ThreadMain extends React.Component {
           </div>
 
           {/* Write a comment */}
-          <CommentCompose thread_id={this.state.threadObj.id} afterSuccesfullCommenting={this.afterSuccesfullCommenting}/>
-
+          <div className="mt-3">
+            <CommentCompose thread_id={this.state.threadObj.id} afterSuccesfullCommenting={this.afterSuccesfullCommenting}/>
+          </div>
+          
         </div>
 
       </React.Fragment>

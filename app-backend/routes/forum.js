@@ -5,6 +5,7 @@ const Sequelize = require('sequelize');
 const config = require('../config.js');
 const querystring = require('querystring');
 const authentication = require('../services/authentication.js');
+const policies = require('../authorization/policies.js');
 
 /*
 
@@ -124,7 +125,6 @@ router.get('/thread/:id', authentication, (req, res) => {
 
 });
 
-
 router.post('/', authentication, (req, res) => {
 
   console.log("\n\nPOST forum / call received");
@@ -206,5 +206,39 @@ router.post('/comment', authentication, (req, res) => {
 });
 
 
+// Under construction!
+router.delete('/comment/:id', authentication, (req, res) => {
+
+  var comment_id = parseInt(req.params.id, 10)
+
+  var pr = models.Comment.findByPk(comment_id);
+
+  pr.then(cmt => {
+    var policyCheck = policies.deleteComment(cmt, req.user);
+    console.log("POLICY CHECK: " + policyCheck );
+
+    if(cmt != null && policyCheck) {
+      return pr2 = models.Comment.destroy({where: {id: 99}});  // soft delete [deleted_at is set at current timestamp]
+    } else {
+      res.status(403)
+      throw new Error("Comment was not deleted! : Permission denied");
+    }
+
+  }).then(result => {
+    console.log(result);
+    if(result==true) {
+      res.status(500);
+    } else {
+      console.log("#");
+      res.status(404).send();
+    }
+
+
+  }).catch(err => {
+    res.status(500);
+    return;
+  })
+
+});
 
 module.exports = router;
