@@ -42,14 +42,14 @@ class SideBarNav extends Component {
     }
 
     renderUserInfo = () => {
-      const { firstName, lastName, isAuth } = this.context;
+      const { first_name, last_name, isAuth } = this.context;
 
       if(isAuth) {
           return(
             <div className="sidebar-heading">
-                          <DefaultUserAvatar FirstName={firstName} LastName={lastName}></DefaultUserAvatar>
+                          <DefaultUserAvatar FirstName={first_name} LastName={last_name}></DefaultUserAvatar>
                           <p className="text-center">
-                            {`${firstName} ${lastName}`}
+                            {`${first_name} ${last_name}`}
                             <a href="/profile/edit" className="btn btn-default">
                               <i className="fas fa-user-edit fa-lg"></i>
                             </a>
@@ -69,6 +69,7 @@ class SideBarNav extends Component {
 
     renderAuthenticateRequiredMenu = () => {
       const { isAuth } = this.context;
+      console.log(isAuth)
       if(isAuth) {
          return (
            <>
@@ -115,7 +116,7 @@ class SideBarNav extends Component {
            </>
          );
       }
-      return <></>
+      return null;
     }
 
     renderLogoutButton = () => {

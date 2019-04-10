@@ -19,14 +19,16 @@ import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
 import ThreadMain from './components/Forum/ThreadMain';
 
-//import EditProfile from './components/User/EditProfile';
+import EditProfile from './components/User/EditProfile';
 import GlobalState from './context/GlobalState';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import SideNavBar from './components/NavBar/SideBarNav';
-
+import AuthContext from './context/auth-context'
 import './App.css';
 
 class App extends Component {
+  static contextType = AuthContext;
+  
   renderPortalContent = () => (
     <SideNavBar>
       <div id="main-content">
@@ -45,15 +47,17 @@ class App extends Component {
           <Route exact path="/forum/thread/:id" component={ThreadMain} />
           <Route exact path="/forum/" component={ForumMain} />
         </Switch>
-        {/* <Route exact path="/profile/edit" component={EditProfile} /> */}
+        <Route exact path="/profile/edit" component={EditProfile} />
       </div>
     </SideNavBar>
- );
+  );
 
   render() {
+    console.log(this.context.first_name);
+
     return (
-      <div className="App">
-        <GlobalState>
+      <GlobalState>
+        <div className="App">
           <Router>
             <Switch>
               <Route exact path="/login" component={LoginForm} />
@@ -61,8 +65,9 @@ class App extends Component {
               <Route render={this.renderPortalContent} />
             </Switch>
           </Router>
-        </GlobalState>
-      </div>
+        </div>
+      </GlobalState>
+
     );
   }
 

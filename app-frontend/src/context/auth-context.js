@@ -2,10 +2,10 @@ import { createContext } from 'react';
 
 const state = { 
   isAuth: false,
-  firstName: "",
-  lastName: "",
+  first_name: "",
+  last_name: "",
   email: "",
   role: "",
-  updateAuthInfo: (isAuth, firstName, lastName, email, role) => {},
+  updateAuthInfo: (isAuth, first_name, last_name, email, role) => {},
 };
 export default createContext(state);

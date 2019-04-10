@@ -88,14 +88,14 @@ router.put('/me', authentication, async function(req, res) {
       let user = req.user;
       user.first_name = payload.first_name;
       user.last_name = payload.last_name;
-      user.password = (payload.password !== null || payload.password !== "")
+      user.password = (payload.password !== null && payload.password !== "")
                       ? bycrypt.hashSync(payload.password, 11) : user.password;
 
       let newUser = await user.save();
       return res.status(200).send(util.GenerateResponseConext(newUser));
    }
    catch(e) {
-      console.log(`Error while trying to login. error = ${e}`);
+      console.log(`Error while trying to update user info. error = ${e}`);
       res.status(500).send();
    }
 })

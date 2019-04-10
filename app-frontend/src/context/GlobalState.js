@@ -8,37 +8,36 @@ class GlobalState extends Component {
       super(props);
       this.state = { 
         isAuth: false ,
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         email: "",
         role: "",
         updateAuthInfo: this.updateAuthInfo,
-      }
-      
-      this.fetchUser();
+      };
     }
 
-    updateAuthInfo = (isAuth, firstName, lastName, email, role) => {
-      this.setState(() => ({isAuth, firstName, lastName, email, role}));
-      console.log(this.state);
+    updateAuthInfo = (isAuth, first_name, last_name, email, role) => {
+      this.setState(() => ({isAuth, first_name, last_name, email, role}));
+    }
+
+    componentDidMount = async () => {
+      await this.fetchUser();
     }
 
     fetchUser = async () => {
       try{
         const { data } = await GetInfo();
-        console.log(data);
         this.setState(() => ({ 
           isAuth: true, 
-          firstName: data.first_name, 
-          lastName: data.last_name, 
-          email: data.email, 
-          role: data.role
+          ...data,
         }));
+        return data
       }
       catch(e) {
-
+        console.error('Error happens:', e);
       }        
     }
+
     render() {
       return (
         <Context.Provider value={this.state} >

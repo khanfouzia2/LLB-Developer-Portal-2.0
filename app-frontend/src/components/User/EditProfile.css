@@ -1,0 +1,15 @@
+.vertical-hr {
+  min-width: 100%;
+  min-height: 90%;
+  margin-top: 1em;
+  border-right: 1px solid black;
+}
+
+.edit-wrapper {
+  padding: 2em;
+}
+
+
+.edit-right-content {
+  margin-left:3em;
+}
