@@ -441,13 +441,12 @@ const secluded = {
 //   sourceKey: 'id'
 // });
 
-// http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
-// Sync all models that aren't already in the database
-
- //sequelize.sync({force:true}); // param: {force:true} to drop and re-create
+// Do not use this approach anymore. Run > node create_database.js instead!
+//sequelize.sync({force:true}); // param: {force:true} to drop and re-create
 
 
 module.exports = {
+  sequelize,
   User,
   News,
   Apikey,
