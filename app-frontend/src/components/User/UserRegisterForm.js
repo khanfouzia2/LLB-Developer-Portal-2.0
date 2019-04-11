@@ -37,8 +37,8 @@ class UserRegisterForm extends Component {
     try {
       let result = await FormRegister(this.state.firstName, this.state.lastName,
         this.state.email, this.state.password);
-      const { first_name, last_name, email, role } = result.data;
-      updateAuthInfo(true, first_name, last_name, email, role);
+      const { first_name, last_name, email, role, id } = result.data;
+      updateAuthInfo(true, first_name, last_name, email, role,id);
       this.setState({ redirect: true, redirectURL: "/" });
     }
     catch (err) {

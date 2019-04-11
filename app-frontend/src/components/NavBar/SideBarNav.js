@@ -69,7 +69,6 @@ class SideBarNav extends Component {
 
     renderAuthenticateRequiredMenu = () => {
       const { isAuth } = this.context;
-      console.log(isAuth)
       if(isAuth) {
          return (
            <>

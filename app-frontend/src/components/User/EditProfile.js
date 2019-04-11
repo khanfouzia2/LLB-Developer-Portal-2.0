@@ -8,7 +8,6 @@ class EditProfile extends Component {
   static contextType = AuthContext;
   constructor(props) {
     super(props);
-    console.log("props from Edit profile", props)
     this.state = {
       email: "",
       first_name: "",
@@ -71,8 +70,8 @@ class EditProfile extends Component {
     try{
       const {updateAuthInfo} = this.context;
       const result = await UpdateInfo(this.state.first_name, this.state.last_name, this.state.password);
-      const {first_name, last_name, email, role} = result.data;
-      updateAuthInfo(true, first_name, last_name, email, role);
+      const {first_name, last_name, email, role, id} = result.data;
+      updateAuthInfo(true, first_name, last_name, email, role, id);
       this.setState({showMessage: true, messageType: "success" , message: "Update info successful"});
     }
     catch(ex) {

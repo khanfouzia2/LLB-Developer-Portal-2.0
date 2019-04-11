@@ -12,12 +12,13 @@ class GlobalState extends Component {
         last_name: "",
         email: "",
         role: "",
+        id: 0,
         updateAuthInfo: this.updateAuthInfo,
       };
     }
 
-    updateAuthInfo = (isAuth, first_name, last_name, email, role) => {
-      this.setState(() => ({isAuth, first_name, last_name, email, role}));
+    updateAuthInfo = (isAuth, first_name, last_name, email, role, id) => {
+      this.setState(() => ({isAuth, first_name, last_name, email, role, id}));
     }
 
     componentDidMount = async () => {
