@@ -209,35 +209,45 @@ router.post('/comment', authentication, (req, res) => {
 // Under construction!
 router.delete('/comment/:id', authentication, (req, res) => {
 
-  var comment_id = parseInt(req.params.id, 10)
-
-  var pr = models.Comment.findByPk(comment_id);
+  // Take the comment_id from call
+  const comment_id = parseInt(req.params.id, 10)
+  // Get by ID
+  var pr = models.Comment.findByPk(comment_id); // NOTE: Does NOT find soft deleted rows (returns null). In this case it's OK.
 
   pr.then(cmt => {
+    console.log(cmt)
+    if(cmt==null) { return false; }
+    // Check policies
     var policyCheck = policies.deleteComment(cmt, req.user);
-    console.log("POLICY CHECK: " + policyCheck );
+    console.log("\tPOLICY CHECK: " + policyCheck );
 
-    if(cmt != null && policyCheck) {
-      return pr2 = models.Comment.destroy({where: {id: 99}});  // soft delete [deleted_at is set at current timestamp]
+    if(policyCheck) {
+      // User is allowed to delete this Comment. (soft) Delete it
+      return models.Comment.destroy({where: {id: comment_id}});  // soft delete [deleted_at is set at current timestamp]
     } else {
-      res.status(403)
-      throw new Error("Comment was not deleted! : Permission denied");
+      // Send permission denied
+      res.status(403).send();
+      return false;
     }
 
   }).then(result => {
+
+    // After trying to delete. Result is bool.
     console.log(result);
     if(result==true) {
-      res.status(500);
+      res.status(200).send(); // Success
+      return;
     } else {
-      console.log("#");
       res.status(404).send();
+      return;
     }
 
 
   }).catch(err => {
-    res.status(500);
+    console.log(err);
+    res.status(500).send();
     return;
-  })
+  });
 
 });
 

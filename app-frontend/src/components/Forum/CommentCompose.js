@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { Link } from "react-router-dom"
 import { COMMENT_POST } from '../../rest-endpoints.js';
 import Modal from '../Misc/Modal.js';
+import ContentPreview from '../Misc/ContentPreview.js';
 import * as config from '../../config.js'
+import '../../styles.css'
 const helpers = require('../../helpers.js');
+var sanitizeHtml = require('sanitize-html');
 
 /*
 
@@ -37,14 +40,21 @@ class CommentCompose extends React.Component {
       <React.Fragment>
         <label for="comment_content">Comment</label>
         <textarea onChange={(e) => this.handleInputChange(e)} name="comment_content" value={this.state.comment_content} className="form-control"
-          style={{minHeight:'3.0em',maxHeight:'40em',}} maxlength={config.THREAD_COMMENT_MANXLEN}></textarea>
+          style={{minHeight:'3.0em',maxHeight:'40em',}} maxlength={config.THREAD_COMMENT_MANXLEN}>
+        </textarea>
           <div style={{display:'block',}}>
+            <span style={{float:'left'}} className="metatext" >Allowed tags: b, a [href, target], code, pre, br. Remember to use http://</span>
             <span style={{float:'right',}} className="metatext" > {this.state.comment_content.length}/{config.THREAD_COMMENT_MANXLEN} </span>
             <div style={{clear:'both',}}></div>
           </div>
         <div className="mt-1">
           <button onClick={(e)=>this.handleCommentButtonClick(e)} className="btn btn-primary btn-sm float-right" role="button" type="button">Comment</button>
         </div>
+
+        {/* Comment preview : Can't be <textarea> */}
+        { this.state.comment_content.length >= 3 &&
+          <ContentPreview content={this.state.comment_content} />
+        }
 
         {/*  */}
         <Modal isShown={this.state.modal.isShown}
@@ -113,8 +123,6 @@ class CommentCompose extends React.Component {
   }
 
 
-
-
   /* Generic method for changing form-values */
   handleInputChange(event) {
     const target = event.target;
@@ -125,6 +133,8 @@ class CommentCompose extends React.Component {
       [name]: value
     });
   }
+
+
 
 
 

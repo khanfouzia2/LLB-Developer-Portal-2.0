@@ -19,11 +19,15 @@ class ThreadMain extends React.Component {
         title: "",
         content: "",
         comments: []
+      },
+      modal: {
+        isShown: false,
       }
     }
 
     // Events:
     this.afterSuccesfullCommenting = this.afterSuccesfullCommenting.bind(this);
+    this.onCommentDelete = this.onCommentDelete.bind(this);
   }
 
   render() {
@@ -42,16 +46,18 @@ class ThreadMain extends React.Component {
 
         <div className="App-custom-page-content">
           <h3>{ this.state.threadObj.title }</h3>
+          <span className="metatext">{helpers.getDateFormatted(this.state.threadObj.created_at)}</span>
 
-          <p style={{textBreak:'break-text',}} dangerouslySetInnerHTML={this.getSanitizedContent(this.state.threadObj.content)}></p>
+          <p style={{textBreak:'break-text',}} dangerouslySetInnerHTML={helpers.getSanitizedContent(this.state.threadObj.content)}></p>
 
+          {/* <input type="text" className="form-control f_orm-control-sm" placeholder="URL://" readonly /> */}
           <hr/>
 
           {/* Comments */}
           <div className="container" id="comments">
             <span id="comment-count" style={meta}>{numComments} {helpers.getNumericBending(numComments, "comment", "comments")} - oldest first</span>
             { this.state.threadObj.comments.map((comment, i) => {
-                return(<Comment id={comment.id} content={comment.content} userObj={comment.user} created_at={comment.created_at} key={comment.id} index={i} />);
+                return(<Comment id={comment.id} content={comment.content} userObj={comment.user} created_at={comment.created_at} key={comment.id} index={i} onCommentDelete={this.onCommentDelete}/>);
             }) }
           </div>
 
@@ -59,8 +65,14 @@ class ThreadMain extends React.Component {
           <div className="mt-3">
             <CommentCompose thread_id={this.state.threadObj.id} afterSuccesfullCommenting={this.afterSuccesfullCommenting}/>
           </div>
-          
+
+          {/* Modal window lurking here. Not visible by default */}
+          <Modal onCloseFunction={()=>this.setState({modal:{isShown:false}})} closeButtonStyle={this.state.modal.closeButtonStyle} isShown={this.state.modal.isShown} title={this.state.modal.title} content={this.state.modal.content} />
+
         </div>
+
+        {/* some empty space */}
+        <div className="mb-5"></div>
 
       </React.Fragment>
     );
@@ -94,7 +106,7 @@ class ThreadMain extends React.Component {
       })
       console.log(data)
     }).catch(err => {
-      throw new Error("Thread not found in DB. Pleas insert some example data or check ID");
+      throw new Error("Component couldn't mount! Error in code or invalid ID");
       console.log(err)
     })
 
@@ -102,20 +114,15 @@ class ThreadMain extends React.Component {
   }
 
 
-  getSanitizedContent(content) {
-    // see react docs for this return...
-    return {__html: sanitizeHtml(content, {
-        allowedTags: config.THREAD_CONTENT_ALLOWED_TAGS,
-        allowedAttributes: {
-          'iframe': [ 'src', 'width', 'height' ],
-          'img': ['src', 'width', 'height'],
-          'a': ['href', 'target']
-        },
-        allowedIframeHostnames: config.THREAD_CONTENT_ALLOWED_IFRAME_HOSTS
-      })
-    };
-  }
 
+  /* Pass this function to Comment. This function is called after server resp. is received */
+  onCommentDelete(success=false) {
+    if(success) {
+      this.setState({ modal: { isShown:true, title:"Comment deleted", closeButtonStyle:"success", content: "Comment deleted and no longer visible to other users." } })
+    } else {
+      this.setState({ modal: { isShown:true, title:"An error occured"} })
+    }
+  }
   /*
     Updates the UI.
     Pass this function to CommentCompose -component

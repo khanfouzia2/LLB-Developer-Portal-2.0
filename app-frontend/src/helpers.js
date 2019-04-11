@@ -1,5 +1,5 @@
 var config = require('./config.js');
-
+var sanitizeHtml = require('sanitize-html');
 
 /*
   is a valid interger and larger than 1
@@ -16,14 +16,37 @@ exports.isValidID = function(id) {
 }
 
 /*
+
+  Dangerois html sanitizer method used globally.
+  Uses sanitizeHtml npm package
+
+*/
+exports.getSanitizedContent = function(dirty) {
+  // see react docs for this return...
+  return {__html: sanitizeHtml(dirty, {
+      allowedTags: config.ALLOWED_TAGS,
+      allowedAttributes: config.ALLOWED_TAG_ATTRIBUTES,
+      allowedIframeHostnames: config.THREAD_CONTENT_ALLOWED_IFRAME_HOSTS,
+      transformTags: {
+        'a': sanitizeHtml.simpleTransform('a', {target: '_blank'})
+      }
+    })
+  };
+}
+
+
+
+
+/*
   Returns singular or plural string based on amount
+  (3, "cat", "cats") ==> "cats"
 */
 exports.getNumericBending = function(amount, singular, plural) {
   return amount == 1 ? singular : plural;
 }
 
-exports.redirectUser = function(url) {
-  if(!url) {
+exports.redirectUser = function(url=null) {
+  if(url==null) {
     window.location.reload();
   }
   window.location.href = url;

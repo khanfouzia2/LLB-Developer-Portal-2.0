@@ -41,10 +41,9 @@ class ForumThreadInfoBox extends React.Component {
             <Link to= {`/forum/thread/${this.props.threadObj.id}`}>{this.props.threadObj.title} </Link>
           </span>
           <br/>
-          <Link id="author" class="" to={`/${this.props.threadObj.user.id}`} style={authorNameStyle}> { helpers.getAuthorDetails(this.props.threadObj.user) } </Link>
-          <span clasName="" title={`ID: ${this.props.threadObj.id}`} style={metadataStyle}>{ helpers.getDateFormatted(this.props.threadObj.created_at) }</span>
-          <p style={contentStyle}>{ helpers.niceSubstr(this.props.threadObj.content, 300) }</p>
-
+          <Link id="author" className="" to={`/${this.props.threadObj.user.id}`} style={authorNameStyle}> { helpers.getAuthorDetails(this.props.threadObj.user) } </Link>
+          <span className="" title={`ID: ${this.props.threadObj.id}`} style={metadataStyle}>{ helpers.getDateFormatted(this.props.threadObj.created_at) }</span>
+          <p style={contentStyle}>{ helpers.niceSubstr(this.props.threadObj.content, 400) }</p>
 
         </div>
       </div>
@@ -55,7 +54,7 @@ class ForumThreadInfoBox extends React.Component {
 }
 
 ForumThreadInfoBox.propTypes = {
-  threadObj: PropTypes.node
+  threadObj: PropTypes.object
 }
 
 export default ForumThreadInfoBox;

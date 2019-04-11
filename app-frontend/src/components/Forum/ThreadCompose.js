@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from "react-router-dom"
 import { FORUM_POST_NEW } from '../../rest-endpoints.js';
 import * as config from '../../config.js'
+import './forum.css';
 import Modal from '../Misc/Modal.js';
+import ContentPreview from '../Misc/ContentPreview.js';
 const helpers = require('../../helpers.js');
 
 
@@ -76,6 +78,12 @@ class ThreadCompose extends React.Component {
                   <button type="button" onClick={(e)=>this.handlePost(e)} className="ml-2 btn btn-success btn-sm">Post</button>
                 </div>
               </div>
+            </div>
+
+            <div className="mt-3">
+              { this.state.content.length >= 5 &&
+                <ContentPreview content={this.state.content}  />
+              }
             </div>
 
           </div>

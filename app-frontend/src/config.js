@@ -31,9 +31,19 @@ const THREAD_TITLE_MAXLEN = 100;
 const THREAD_CONTENT_MAXLEN = 50000;
 const THREAD_COMMENT_MANXLEN =  5000;
 
-// Thread content
+// Global configs. for sanitizing content
+const ALLOWED_TAGS = ['b', 'u', 'i', 'hr', 'br', 'a', 'img', 'pre', 'code', 'iframe', 'h5', 'h6'];
+const ALLOWED_IFRAME_HOSTS = ['www.youtube.com', 'www.vimeo.com']
+const ALLOWED_TAG_ATTRIBUTES = {
+  'a': ['href', 'target'],
+  'img': ['src', 'width', 'height'],
+  'iframe': ['src', 'width', 'height']
+}
+
+// Will be deprecated and replaced with global configs ^
 const THREAD_CONTENT_ALLOWED_TAGS = ['b', 'u', 'i', 'a', 'img', 'pre', 'code', 'iframe']
 const THREAD_CONTENT_ALLOWED_IFRAME_HOSTS = ['www.youtube.com', 'www.vimeo.com']
+const COMMENT_ALLOWED_TAGS = ['b','u','a','pre','code','br']
 
 module.exports = {
   BASE_URL,
@@ -42,9 +52,13 @@ module.exports = {
   NUM_OF_NEWS_SHOWN_PAGE,
   NEWS_TITLE_MAXLEN,
   NEWS_CONTENT_MAXLEN,
+  ALLOWED_TAGS,
+  ALLOWED_IFRAME_HOSTS,
+  ALLOWED_TAG_ATTRIBUTES,
   THREAD_COMMENT_MANXLEN,
   THREAD_CONTENT_ALLOWED_TAGS,
   THREAD_CONTENT_ALLOWED_IFRAME_HOSTS,
+  COMMENT_ALLOWED_TAGS,
   ADMIN_ROLE_NAME,
   NEWS_SHOWN_CHARS,
   NEWS_DEFAULT_BACKGROUND_FILENAME,

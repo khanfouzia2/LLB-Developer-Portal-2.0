@@ -2,10 +2,7 @@ import React, {Component} from 'react';
 import { Link } from "react-router-dom";
 import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH, NEWS_DELETE } from '../../rest-endpoints.js';
 import PropTypes from 'prop-types';
-
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
+import ContentPreview from '../Misc/ContentPreview.js';
 import NewsDraftsList from './NewsDraftsList.js';
 import  * as config from '../../config.js';
 const qs = require('query-string');
@@ -86,28 +83,6 @@ class NewsCompose extends Component {
                   <div className="col-md-9">
                      <textarea rows="8" name="content" value={this.state.content} onChange={(e)=>this.handleInputChange(e)}
                      placeholder="..." className="form-control" maxlength={config.NEWS_CONTENT_MAXLEN} required></textarea>
-                    
-                     {/* <CKEditor
-                       editor={ ClassicEditor }
-                       data=""
-                       config={
-                        {toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList','undo','redo']}
-                       }
-                       onInit={ editor => {
-                           // You can store the "editor" and use when it is needed.
-                           console.log( 'Editor is ready to use!', editor );
-                       } }
-                       onChange={ ( event, editor ) => {
-                           const data = editor.getData();
-                           console.log( { event, editor, data } );
-                       } }
-                       onBlur={ editor => {
-                           console.log( 'Blur.', editor );
-                       } }
-                       onFocus={ editor => {
-                           console.log( 'Focus.', editor );
-                       } }
-                     /> */}
 
                     <span class="badge badge badge-danger">Required</span>
                     <span className="small" style={{float:"right"}}>{this.state.content.length}/{config.NEWS_CONTENT_MAXLEN}</span>
@@ -149,7 +124,6 @@ class NewsCompose extends Component {
                   </div>
                 </div>
                 */}
-
               </form>
 
             </div>
@@ -167,6 +141,16 @@ class NewsCompose extends Component {
 
             </div>
           </div>
+
+          {/*  */}
+          { this.state.content.length >= 5 &&
+            <div className="card mt-3">
+              <div className="card-header">Preview</div>
+              <div className="card-body">
+                <ContentPreview content={this.state.content} />
+              </div>
+            </div>
+          }
 
         </div>{/* col */}
 

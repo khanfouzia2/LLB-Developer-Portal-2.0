@@ -1,1 +1,28 @@
 /* Nothing yet */
+
+
+.comment {
+  display:bclock;
+  padding:0.9em;
+  margin-top:0.25em;
+  font-size:0.9em;
+  background-color: rgb(245, 241, 252);
+  border:1px solid rgb(175, 210, 226);
+  border-radius:3px;
+}
+.comment:last-child {
+}
+
+.comment-left {
+  border-right:1px solid #aaa;
+}
+
+.comment-content {
+  word-wrap:break-word;
+}
+
+.comment-content pre {
+border-left:3px dashed #aaa;
+padding-left:1em;
+background-color: rgb(235,235,235);
+}
