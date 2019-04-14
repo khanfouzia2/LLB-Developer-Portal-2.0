@@ -105,7 +105,7 @@ class SideBarNav extends Component {
                         <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/">
                             Report a Bug
                         </Link>
-                        <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/">
+                        <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/givefeedback">
                           Feedback
                         </Link>
               </Accrodion>

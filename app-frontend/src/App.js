@@ -18,12 +18,14 @@ import NotFound from './components/Misc/NotFound';
 import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
 import ThreadMain from './components/Forum/ThreadMain';
+import FeedbackForm from './components/FeedbackForm/FeedbackForm';
 
 import EditProfile from './components/User/EditProfile';
 import GlobalState from './context/GlobalState';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import SideNavBar from './components/NavBar/SideBarNav';
 import AuthContext from './context/auth-context'
+
 import './App.css';
 
 class App extends Component {
@@ -43,6 +45,7 @@ class App extends Component {
         <Route exact path="/tools/designGuidelines" component={DesignGuidelines} />
         <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
+        <Route exact path="/givefeedback" component={FeedbackForm}/>
         <Switch>
           <Route exact path="/forum/thread/:id" component={ThreadMain} />
           <Route exact path="/forum/" component={ForumMain} />
