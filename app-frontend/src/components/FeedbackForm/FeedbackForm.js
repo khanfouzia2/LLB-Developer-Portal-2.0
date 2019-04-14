@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FEEDBACK_TITLE_MAXLEN } from '../../config.js';
-import './style.css';
+
 
 
 
