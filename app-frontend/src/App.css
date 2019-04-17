@@ -55,3 +55,9 @@
   color:#959595;
   font-size:0.9em;
 }
+
+.more-info {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  cursor:help;
+}

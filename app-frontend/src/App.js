@@ -19,6 +19,7 @@ import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
 import ThreadMain from './components/Forum/ThreadMain';
 import FeedbackForm from './components/FeedbackForm/FeedbackForm';
+import EditThread from './components/Forum/EditThread';
 
 import EditProfile from './components/User/EditProfile';
 import GlobalState from './context/GlobalState';
@@ -30,7 +31,7 @@ import './App.css';
 
 class App extends Component {
   static contextType = AuthContext;
-  
+
   renderPortalContent = () => (
     <SideNavBar>
       <div id="main-content">
@@ -47,6 +48,7 @@ class App extends Component {
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
         <Route exact path="/givefeedback" component={FeedbackForm}/>
         <Switch>
+          <Route exact path="/forum/thread/:id/edit" component={EditThread} />
           <Route exact path="/forum/thread/:id" component={ThreadMain} />
           <Route exact path="/forum/" component={ForumMain} />
         </Switch>

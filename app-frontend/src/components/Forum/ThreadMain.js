@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import AuthContext from '../../context/auth-context';
 import Modal from '../Misc/Modal.js';
 import Comment from './Comment.js';
 import CommentCompose from './CommentCompose.js';
@@ -10,6 +11,8 @@ const helpers = require('../../helpers.js');
 var sanitizeHtml = require('sanitize-html');
 
 class ThreadMain extends React.Component {
+
+  static contextType = AuthContext;
 
   constructor(props) {
     super(props);
@@ -26,8 +29,9 @@ class ThreadMain extends React.Component {
     }
 
     // Events:
-    this.afterSuccesfullCommenting = this.afterSuccesfullCommenting.bind(this);
-    this.onCommentDelete = this.onCommentDelete.bind(this);
+    this.afterSuccesfullCommenting    = this.afterSuccesfullCommenting.bind(this);
+    this.onCommentDelete              = this.onCommentDelete.bind(this);
+    this.renderEditedNotification     = this.renderEditedNotification.bind(this);
   }
 
   render() {
@@ -48,14 +52,17 @@ class ThreadMain extends React.Component {
           <h3>{ this.state.threadObj.title }</h3>
           <span className="metatext">{helpers.getDateFormatted(this.state.threadObj.created_at)}</span>
 
-          <p style={{textBreak:'break-text',}} dangerouslySetInnerHTML={helpers.getSanitizedContent(this.state.threadObj.content)}></p>
+          <div className="thread-mainpost-content" dangerouslySetInnerHTML={helpers.getSanitizedContent(this.state.threadObj.content)}></div>
 
-          {/* <input type="text" className="form-control f_orm-control-sm" placeholder="URL://" readonly /> */}
+          {/* Edit link for admin & owner */}
+          { this.getEditLink() }
+
           <hr/>
 
           {/* Comments */}
           <div className="container" id="comments">
-            <span id="comment-count" style={meta}>{numComments} {helpers.getNumericBending(numComments, "comment", "comments")} - oldest first</span>
+            <span id="comment-count" className="metatext">{numComments} {helpers.getNumericBending(numComments, "comment", "comments")} - oldest first</span>
+            { this.renderEditedNotification() }
             { this.state.threadObj.comments.map((comment, i) => {
                 return(<Comment id={comment.id} content={comment.content} userObj={comment.user} created_at={comment.created_at} key={comment.id} index={i} onCommentDelete={this.onCommentDelete}/>);
             }) }
@@ -113,6 +120,24 @@ class ThreadMain extends React.Component {
     console.log("Did mount. Fetch Thread data from server... ID " + id)
   }
 
+
+
+  getEditLink() {
+
+    const { id, role } = this.context; // Get auth. user data
+    if(id === this.state.threadObj.author_id || role === config.ADMIN_ROLE_NAME) {
+      return(<Link to={`/forum/thread/${this.state.threadObj.id}/edit`}>Edit</Link>)
+    } else { return(null); }
+  }
+
+
+  /* If thread has been edited, show an alert */
+  renderEditedNotification() {
+    const th = this.state.threadObj;
+    if(th.created_at != null && th.updated_at != null && th.created_at != th.updated_at) {
+      return( <span className="metatext float-right">This thread has been edited after it was first published. Last edited: {helpers.getDateFormatted(th.updated_at)}</span> );
+    } else { return(null); }
+  }
 
 
   /* Pass this function to Comment. This function is called after server resp. is received */

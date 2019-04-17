@@ -31,9 +31,6 @@ const THREAD_TITLE_MAXLEN = 100;
 const THREAD_CONTENT_MAXLEN = 50000;
 const THREAD_COMMENT_MANXLEN =  5000;
 
-// Feedback & Bug reports
-const FEEDBACK_TITLE_MAXLEN = 100;
-
 // Global configs. for sanitizing content
 const ALLOWED_TAGS = ['b', 'u', 'i', 'hr', 'br', 'a', 'img', 'pre', 'code', 'iframe', 'h5', 'h6'];
 const ALLOWED_IFRAME_HOSTS = ['www.youtube.com', 'www.vimeo.com']
@@ -42,6 +39,8 @@ const ALLOWED_TAG_ATTRIBUTES = {
   'img': ['src', 'width', 'height'],
   'iframe': ['src', 'width', 'height']
 }
+const TEXT_FORMAT_HELP_TEXT = "Allowed tags are b, u, i, hr, br, a [href, target], img [src, width, height],\n pre, code, iframe, h5, h6.\n Remember to add http:// to links. We recomment using <pre>-tag for multiline codes. Allowed iframe hosts are Youtube and Vimeo."
+
 
 // Will be deprecated and replaced with global configs ^
 const THREAD_CONTENT_ALLOWED_TAGS = ['b', 'u', 'i', 'a', 'img', 'pre', 'code', 'iframe']
@@ -62,7 +61,7 @@ module.exports = {
   THREAD_CONTENT_ALLOWED_TAGS,
   THREAD_CONTENT_ALLOWED_IFRAME_HOSTS,
   COMMENT_ALLOWED_TAGS,
-  FEEDBACK_TITLE_MAXLEN,
+  TEXT_FORMAT_HELP_TEXT,
   ADMIN_ROLE_NAME,
   NEWS_SHOWN_CHARS,
   NEWS_DEFAULT_BACKGROUND_FILENAME,

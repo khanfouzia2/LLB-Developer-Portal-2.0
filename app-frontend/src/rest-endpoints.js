@@ -26,11 +26,12 @@ const USER_GENERATE_API = BASE_URL + 'users/apikey';
 const GOOGLE_LOGIN = BASE_URL + 'auth/google';
 
 // Forum and Threads
-const FORUM_GET_RECENT = BASE_URL + 'forum/'
-const FORUM_POST_NEW = BASE_URL + 'forum/'
-const GET_THREAD = BASE_URL + 'forum/thread' // +id
-const COMMENT_POST = BASE_URL + 'forum/comment'
-const COMMENT_DELETE = BASE_URL + 'forum/comment' // +/id
+const FORUM_GET_RECENT    = BASE_URL + 'forum/'
+const FORUM_POST_NEW      = BASE_URL + 'forum/'
+const GET_THREAD          = BASE_URL + 'forum/thread' // +id
+const COMMENT_POST        = BASE_URL + 'forum/comment'
+const COMMENT_DELETE      = BASE_URL + 'forum/comment' // +/id
+const THREAD_PATCH        = BASE_URL + 'forum/thread' // +/id
 
 
 module.exports = {
@@ -49,6 +50,7 @@ module.exports = {
   FORUM_POST_NEW,
   COMMENT_POST,
   COMMENT_DELETE,
+  THREAD_PATCH,
   GET_THREAD,
   GOOGLE_LOGIN,
   USER_GENERATE_API,

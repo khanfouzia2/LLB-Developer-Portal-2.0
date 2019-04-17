@@ -206,7 +206,58 @@ router.post('/comment', authentication, (req, res) => {
 });
 
 
-// Under construction!
+// TODO: Check permission
+// Check ID validity
+/*
+
+  The promise returns an array with one or two elements.
+  The first element is always the number of affected rows, while the second element
+  is the actual affected rows (only supported in postgres with options.returning true.)
+
+*/
+router.patch("/thread/:id", authentication, (req,res) => {
+
+  console.log("\n\t PATCH request received");
+  console.log("\t"+req.user.email);
+
+
+  var thread_id = parseInt(req.params.id, 10);
+
+  if(!isNaN(thread_id) && req.body.thread_content != null) {
+
+    var pr = models.Thread.update({
+      content: req.body.thread_content
+    }, {
+      where: {
+        id: {
+          [Sequelize.Op.eq]: thread_id
+        }
+      },
+      returning: true
+    });
+
+    // successfull value is array of updated IDs [objects/rows]
+    pr.then(data => {
+      console.log(data);
+      res.status(200);
+      res.json({success: true});
+    }).catch(err => {
+      console.log(err)
+      res.status(500);
+      res.json({message: "Error!"});
+    })
+
+  }
+  // id not valid
+  else {
+    res.status(500);
+    res.json({message: "Invalid content!"});
+  }
+
+  return;
+
+});
+
 router.delete('/comment/:id', authentication, (req, res) => {
 
   // Take the comment_id from call
@@ -250,5 +301,10 @@ router.delete('/comment/:id', authentication, (req, res) => {
   });
 
 });
+
+
+
+
+
 
 module.exports = router;

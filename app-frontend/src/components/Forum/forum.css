@@ -1,6 +1,13 @@
 /* Nothing yet */
 
 
+.thread-mainpost-content {
+  padding:1em;
+  background-color:#eee;
+  border-radius:3px;
+  word-wrap: break-word;
+}
+
 .comment {
   display:bclock;
   padding:0.9em;
