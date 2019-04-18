@@ -2,3 +2,83 @@
     padding-top: 2% ;
     padding-bottom: 2%;
   }
+.Guidelines-title
+	{
+   margin:0cm;
+    margin-bottom:.0001pt;
+    line-height:110%;
+    font-size:16.0pt;
+    font-family:"Corbel",sans-serif;
+    color:#099BDD;
+    text-transform:uppercase;
+    letter-spacing:.5pt;
+  }
+  .img-border
+  {
+    border: black;
+  }
+ .h2
+ {
+ margin-top:6.0pt;
+ margin-right:0cm;
+ margin-bottom:0cm;
+ margin-left:0cm;
+ margin-bottom:.0001pt;
+ line-height:110%;
+ background:#099BDD;
+ border:none;
+ padding:0cm;
+ font-size:11.0pt;
+ font-family:"Corbel",sans-serif;
+ color:white;
+ text-transform:uppercase;
+ letter-spacing:.75pt;
+ font-weight:normal;}
+ .h3
+ {
+ margin-top:6.0pt;
+ margin-right:0cm;
+ margin-bottom:0cm;
+ margin-left:0cm;
+ margin-bottom:.0001pt;
+ line-height:110%;
+ background:#099BDD;
+ border:none;
+ padding:0cm;
+ font-size:9.0pt;
+ font-family:"Corbel",sans-serif;
+ color:white;
+ text-transform:uppercase;
+ letter-spacing:.75pt;
+ font-weight:normal;}
+ .bullets
+ {
+  margin-left:25.0pt;
+ }
+ .card-background {
+  background-image: url('/img/inspirationBackground.png');
+  min-height:650px;
+  background-size:cover;
+  min-width:100%;
+  background-repeat: no-repeat;
+  padding: 0px 0px 0px 0px;
+}
+.card-background-front {
+  background-image: url('/img/inspirationBackgroundFront.png');
+  min-height:650px;
+  background-size:cover;
+  min-width:100%;
+  background-repeat: no-repeat;
+  padding: 0px 0px 0px 0px;
+}
+.card-background-colorless {
+  background-image: url('/img/inspirationBackgroundColorless.png');
+  min-height:650px;
+  background-size:cover;
+  min-width:100%;
+  background-repeat: no-repeat;
+  padding: 0px 0px 0px 0px;
+}
+.inspiration-card {
+  max-width: 80rem !important;
+}

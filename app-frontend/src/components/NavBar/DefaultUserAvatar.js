@@ -3,9 +3,9 @@ import './DefaultUserAvatar.css'
 class DefaultUserAvatar extends Component {
 
     render() {
-      let {FirstName, LastName} = this.props;
-      let firstCharacter = FirstName.charAt(0).toUpperCase()
-      let secondCharacter = LastName.charAt(0).toUpperCase()
+      const {FirstName, LastName} = this.props;
+      const firstCharacter = FirstName && FirstName.charAt(0).toUpperCase()
+      const secondCharacter = LastName && LastName.charAt(0).toUpperCase()
 
       return(
           <div className="default-user-avatar">

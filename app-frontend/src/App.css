@@ -25,11 +25,14 @@
 
 .App-custom-nav {
   background: #F8F9FA;
-  min-height: 13%;
+  min-height: 6em;
   text-align: left;
-  padding: 10px 10px 10px 10px;
+  padding: 20px 20px 10px 25px;
 }
-
+.App-custom-nav span {
+  font-size: 2em;
+  font-family: smoolthanbold,Helvetica,Arial,sans-serif;
+}
 .App-custom-page-content {
   padding-top: 2% ;
   padding-bottom: 2%;
@@ -44,4 +47,17 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+/* Grey text, smaller that average text. */
+.metatext {
+  color:#959595;
+  font-size:0.9em;
+}
+
+.more-info {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  cursor:help;
 }

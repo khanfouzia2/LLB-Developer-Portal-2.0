@@ -50,7 +50,6 @@ const User = sequelize.define('user',
     password: {
       type: Sequelize.STRING(255),
       allowNull: true,
-      defaultValue: "***" // is it a bad idea to have a null password hash?
     },
     email: {
       type: Sequelize.STRING(255),
@@ -105,7 +104,7 @@ const Apikey = sequelize.define('api_key',
     // id
     // user_id
     service_name: {
-      type: Sequelize.STRING(10),
+      type: Sequelize.STRING(50),
       allowNull: false
     },
     api_key: {
@@ -185,7 +184,8 @@ const Thread = sequelize.define('thread',
     forum_category_id: {
       // References forum_category.id
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null
     },
     author_id: {
       // References users.id
@@ -313,23 +313,23 @@ const News = sequelize.define('news',
   }
 );
 
-const Service = sequelize.define('service',
-  {
-    name: {
-      type: Sequelize.STRING(15),
-      primaryKey: true
-    },
-    created_at: {
-      type: Sequelize.DATE,
-      defaultValue: sequelize.literal('NOW()')
-    }
-  },
-  {
-    timestamps: false,
-    underscored: true,
-    freezeTableName: true,
-  }
-);
+// const Service = sequelize.define('service',
+//   {
+//     name: {
+//       type: Sequelize.STRING(15),
+//       primaryKey: true
+//     },
+//     created_at: {
+//       type: Sequelize.DATE,
+//       defaultValue: sequelize.literal('NOW()')
+//     }
+//   },
+//   {
+//     timestamps: false,
+//     underscored: true,
+//     freezeTableName: true,
+//   }
+// );
 
 /* Associations
 
@@ -414,28 +414,46 @@ Apikey.belongsTo(User, {
 });
 
 
-Service.hasMany(Apikey, {
-  foreignKey: 'service_name',
-  sourceKey: 'name'
-});
-Apikey.belongsTo(Service, {
-  foreignKey: 'service_name',
-  sourceKey: 'id'
-});
+/*
+  Default 'exclude' fields. Sensitive information that usually should not be send to the front-end
+  Example usage:
 
-// http://docs.sequelizejs.com/manual/tutorial/models-definition.html#database-synchronization
-// Sync all models that aren't already in the database
+  const options = {
+    attributes: {
+      exclude: models.secluded.user
+    }
+  }
 
- //sequelize.sync({force:true}); // param: {force:true} to drop and re-create
+*/
+const secluded = {
+  user: ['token', 'password', 'updated_at', 'deleted_at', 'is_finished_survey']
+}
+
+
+//
+
+// Service.hasMany(Apikey, {
+//   foreignKey: 'service_name',
+//   sourceKey: 'name'
+// });
+// Apikey.belongsTo(Service, {
+//   foreignKey: 'service_name',
+//   sourceKey: 'id'
+// });
+
+// Do not use this approach anymore. Run > node create_database.js instead!
+//sequelize.sync({force:true}); // param: {force:true} to drop and re-create
 
 
 module.exports = {
+  sequelize,
   User,
   News,
   Apikey,
-  Service,
+  //Service,
   ForumCategory,
   Thread,
   Comment,
-  BugFeedback
+  BugFeedback,
+  secluded
 }

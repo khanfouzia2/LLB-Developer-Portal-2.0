@@ -2,9 +2,11 @@ import React, {Component} from 'react';
 import './Form.css'
 import {CredentialLogin} from '../../services/UserApi';
 import { Redirect } from 'react-router-dom'
-import {AuthConsumer} from '../../context/authContext';
+import AuthContext from '../../context/auth-context';
+import {GOOGLE_LOGIN} from '../../rest-endpoints';
 
 class UserLoginForm extends Component {
+  static contextType = AuthContext;
   constructor(props) {
     super(props);
     this.state= {
@@ -24,12 +26,13 @@ class UserLoginForm extends Component {
     this.setState({[event.target.name]: event.target.value});
   }
 
-  handleSubmit = async (event, updateInfoFunction) => {
+  handleSubmit = async (event) => {
+    const {updateAuthInfo} = this.context;
     event.preventDefault();
     try {
       let result = await CredentialLogin(this.state.email, this.state.password);
-      const {first_name, last_name, email, role} = result.data;
-      updateInfoFunction(true, first_name, last_name, email, role);
+      const {first_name, last_name, email, role, id} = result.data;
+      updateAuthInfo(true, first_name, last_name, email, role, id);
       this.setState({redirect:true, redirectURL:"/"});            
     }
     catch(err) {
@@ -61,8 +64,6 @@ class UserLoginForm extends Component {
     }
     else {
       return (
-        <AuthConsumer>
-          {context => (
             <div className="login-form-wrapper" >
                <div className="user-form-grey-filter">
                  <div className="user-register-login-form">
@@ -74,7 +75,7 @@ class UserLoginForm extends Component {
                      <h3>LOG IN</h3>  
                    </div>
                    {this.renderMessage(isError, message)}
-                   <form onSubmit= {event => this.handleSubmit(event, context.updateAuthInfo)}>
+                   <form onSubmit= {event => this.handleSubmit(event)}>
                      <div className="form-group">
                          <label>Email</label>
                          <input className="form-control" placeholder="E-mail" name="email" type="text" onChange={this.handleChange} />
@@ -88,14 +89,12 @@ class UserLoginForm extends Component {
                      <a href="/"><small className="form-text text-muted">Forget password?</small></a>
                    </form>
                    <p className="form-header"> - OR -</p>
-                   <button id="google-button" className="btn btn-block btn-danger">
+                   <a href={GOOGLE_LOGIN} id="google-button" className="btn btn-block btn-danger">
                      <i className="fab fa-google"></i> Log in with Google
-                   </button>
+                   </a>
                  </div>
              </div>
           </div>
-          )}
-        </AuthConsumer>
       );
     }
   }

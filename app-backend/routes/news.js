@@ -4,10 +4,29 @@ var router = express.Router();
 const models = require('../database/models.js');
 const Sequelize = require('sequelize');
 const config = require('../config.js');
+const querystring = require('querystring');
 const authentication = require('../services/authentication.js');
 // Under construction
 
+/*
 
+  Routes for News-resource
+
+  TODO:
+    - Check user role
+    - Check input
+    - Send better error responses
+
+
+  Routes are:
+    # GET       /id/:id
+    # GET       /page/:page
+    # POST      /
+    # GET       /drafts
+    # PATCH     /:id
+    # DELETE    /:id
+
+*/
 
 router.get('/id/:id', (req, res) => {
   console.log("GET News ")
@@ -39,8 +58,6 @@ router.get('/id/:id', (req, res) => {
   }
 
 });
-
-
 
 router.get('/page/:page', (req, res) => {
 
@@ -107,12 +124,28 @@ router.post('/', authentication, (req, res) => {
 
   try {
     var title               = req.body.title.trim();
-    var cont                = req.body.content.substr(0, 50000);
+    var cont                = req.body.content.trim().substr(0, config.NEWS_CONTENT_MAXLEN);
     var is_visible          = req.body.is_visible;
     //var attachment_file     = req.body.attachment_file;
   } catch(err) {
     res.status(500).send();
   }
+
+  // Make some content validation
+  // Check for null
+  var contentValid;
+  if(title && cont) {
+    if(title.lenght <= 0 || cont.lenght <= 0 || title === "" || cont === "") {
+      contenValid = false;
+    }
+  } else {
+    contentValid = false;
+  }
+  if(!contentValid) {
+    // 415 Media not supported. aka invalid content
+    res.status(415).send();
+  }
+
 
   var pr = models.News.create({
     title: title,
@@ -123,6 +156,7 @@ router.post('/', authentication, (req, res) => {
 
   pr.then(data => {
     console.log(data);
+    res.status(201).send();
   }).catch(err => {
     res.status(500).send();
   })
@@ -132,15 +166,12 @@ router.post('/', authentication, (req, res) => {
 
 });
 
-
-
-/* UNDER CONSTRUCTION */
 router.patch('/:id', authentication, (req, res) => {
   console.log("\n===\nPATCH Request received...");
   console.log( req.body );
 
   // Step 1 - Content check
-  if(!req.body.title || !req.body.content || !req.body.is_visible) {
+  if(!req.body.title || !req.body.content || req.body.is_visible == undefined) {
     console.log("Invalid content");
     res.status(500).send();
   }
@@ -170,7 +201,92 @@ router.patch('/:id', authentication, (req, res) => {
 
 });
 
+/*
+  GET Drafts
 
+  @Response
+    Array of News objects [News-obj] (JSON)
+    OR
+    {
+      message: String,
+      success: Boolean
+    }
+    on error
+*/
+router.get('/drafts', authentication, (req, res) => {
+
+  console.log("===\nGET Drafts")
+
+  // Auth.
+  if(req.user.role != config.ADMIN_ROLE_NAME) {
+    res.json({message: 'Permission denied', success: false});
+  }
+
+  // http://docs.sequelizejs.com/class/lib/model.js~Model.html#static-method-findAll
+  var pr = models.News.findAll({
+    where: { is_visible: false }
+  });
+
+  pr.then(data => {
+    res.json( data );
+  }).catch(err => {
+    console.log( err )
+    res.json({message:'Retrieving drafts failed!', success: false});
+  });
+
+});
+
+/*
+  Under const.
+
+
+  Returns JSON object with values:
+    message:String
+    success:Boolean
+*/
+router.delete('/:id', authentication, (req, res) => {
+
+  var msg, success;
+  console.log("\n===\nNews.js | DELETE Request received...");
+  console.log("Auth. user is: "+ req.user.email + ", id: " + req.user.id)
+  //console.log(req);
+
+  if(!isNaN( parseInt(req.params.id))) {
+    var id = req.params.id;
+    console.log("news ID: " + id);
+    // Delete
+    var pr = models.News.destroy({
+      where: {
+        id: id
+      }
+    });
+
+    // Resolve Promise. Contains integer 1/0 if deletion was done.
+    pr.then(data => {
+      if(data == true) {
+        msg = `${id} was successfully deleted from the database!`;
+        success = true;
+      } else {
+        msg = `${id} was NOT deleted from the database!`;
+        success = false;
+      }
+
+    }).catch(err => {
+      console.log("ERROR: " + err)
+      msg = `Error: ${err}`;
+      success = false;
+    });
+
+  } else {
+    msg = `Error: Invalid param (news ID)`;
+    success = false;
+  }
+
+  // Send the final result
+  res.json({ message: msg, success: success });
+
+
+});
 
 
 

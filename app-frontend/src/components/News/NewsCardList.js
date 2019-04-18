@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import NewsCard from './NewsCard';
 import { Link } from "react-router-dom"
-import {AuthConsumer} from '../../context/authContext';
+import AuthContext from '../../context/auth-context';
 import  * as config from '../../config.js';
 import * as endpoints from '../../rest-endpoints.js';
 
@@ -10,7 +10,7 @@ import * as endpoints from '../../rest-endpoints.js';
 */
 
 class NewsCardList extends Component {
-
+  static contextType = AuthContext;
   constructor(props) {
     super(props);
 
@@ -83,22 +83,30 @@ class NewsCardList extends Component {
 
 
   /* Render this sub-component if auth. user is role=admin  */
-  renderAdminPanel(userInfo) {
-      console.log( userInfo.role +", "+ config.ADMIN_ROLE_NAME )
-      if(userInfo.isAuth && userInfo.role === config.ADMIN_ROLE_NAME) {
+  renderAdminPanel() {
+      const {isAuth, role} = this.context;
+      console.log( role +", "+ config.ADMIN_ROLE_NAME )
+      if(isAuth && role === config.ADMIN_ROLE_NAME) {
         return(
             <React.Fragment>
               <div className="card mt-md-3">
                 <div className="card-header">Admin tools</div>
                 <div className="card-body">
                   <ul>
-                    <li><Link to="/news/compose">Compose</Link></li>
+                    <li><Link to="/news/compose">Compose or edit drafts</Link></li>
                   </ul>
                 </div>
               </div>
             </React.Fragment>
         );
       }
+  }
+
+  renderAdminNotification() {
+    const {isAuth, role} = this.context;
+    if(isAuth && role === config.ADMIN_ROLE_NAME) {
+      return(<div className="alert alert-success mt-md-3">[Admin notice] News shown below are public. Users will see News section as it's shown here.</div>);
+    } else { return(null) }
   }
 
   render() {
@@ -110,7 +118,7 @@ class NewsCardList extends Component {
         <NewsCard newsObj={news} key={news.id} />
       );
     } else {
-      zero_posts_alert = <div className="container-fluid "><div className='alert alert-info mt-md-3'>No news to show!</div></div>
+      zero_posts_alert = <div className='alert alert-info mt-md-3'>No news to show! | <strong><Link to="/news/page/1">Go back to page 1</Link></strong></div>
     }
 
     let value = this.context;
@@ -121,18 +129,15 @@ class NewsCardList extends Component {
           <nav className="App-custom-nav">
               <span className="navbar-brand mb-0 h1">News</span>
           </nav>
-          <AuthConsumer>
-            {({userInfo}) => (
-              <div className="App-custom-page-content">
-                { this.renderAdminPanel(userInfo) }
-              </div>
-            )}
-          </AuthConsumer>
+          <div className="App-custom-page-content">
+            { this.renderAdminPanel() }
+            { this.renderAdminNotification() }
+          </div>
 
-          { zero_posts_alert }
           <div className="App-custom-page-content" id="news">
+            { zero_posts_alert }
             <div className="card-columns">
-               {rows}
+              { rows}
             </div>
             <hr/>
 

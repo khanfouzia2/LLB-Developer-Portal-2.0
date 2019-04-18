@@ -1,11 +1,16 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom"
-import { AuthConsumer } from '../../context/authContext';
+import AuthContext from "../../context/auth-context";
 import  * as config from '../../config.js'
 import './NewCard.css';
+const helpers = require('../../helpers.js');
 
+
+/*
+  Compoenent for one News Card
+*/
 class NewsCard extends Component {
-
+    static contextType = AuthContext;
     // props has a news-object
     constructor(props) {
       super(props);
@@ -20,7 +25,7 @@ class NewsCard extends Component {
                 <div className="card-header card-background-header">
                   <div className="grey-filter">
                     <h3 className="card-title title-text-shadow">{this.props.newsObj.title}</h3>
-                    <i>By {this.getAuthorFullName()} / <span title="Published">{this.getDateFormatted()} </span></i>
+                    <i>By {this.getAuthorFullName()} / <span title="Published">{helpers.getDateFormatted(this.props.newsObj.created_at)} </span></i>
                   </div>
                 </div>
                 <div className="card-body">
@@ -33,22 +38,19 @@ class NewsCard extends Component {
                   </p>
 
                 </div>
-                <AuthConsumer>
-                  { ({userInfo}) => (<React.Fragment> { this.renderAdminToolsFooter(userInfo) } </React.Fragment>) }
-                </AuthConsumer>
-
+                <React.Fragment> { this.renderAdminToolsFooter() } </React.Fragment>
             </div>
         </div>
       );
     }
 
 
-    renderAdminToolsFooter(userInfo) {
-      if(userInfo.isAuth && userInfo.role === config.ADMIN_ROLE_NAME) {
+    renderAdminToolsFooter() {
+      const {isAuth, role} = this.context;
+      if(isAuth && role === config.ADMIN_ROLE_NAME) {
         return(
           <div className="card-footer">
-            Admin tools<br/>
-            <Link to={`/news/compose?edit_id=${this.props.newsObj.id}`}>Edit</Link>
+            <small><Link to={`/news/compose?edit_id=${this.props.newsObj.id}`}>Edit</Link></small>
           </div>
         )
       }
@@ -79,17 +81,7 @@ class NewsCard extends Component {
       return content.length >= config.NEWS_SHOWN_CHARS ? content.substr(0, config.NEWS_SHOWN_CHARS-3) + "..." : content;
     }
 
-    getDateFormatted() {
-      try {
-        var options = { year: 'numeric', month: 'numeric', day: 'numeric', hour:"numeric", minute:"numeric" };
-        var ts = new Date(this.props.newsObj.updated_at);
-        return ts.toLocaleDateString(config.DEFAULT_LOCALE, options);
-      }
-      catch(err) {
-        console.log(err);
-        return null;
-      }
-    }
+
 
 }
 

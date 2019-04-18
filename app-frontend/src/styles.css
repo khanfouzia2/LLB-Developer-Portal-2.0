@@ -1,1 +1,11 @@
 /* nothing yet */
+
+
+
+
+.content-preview-box {
+padding:0.5em;
+border:2px dashed #ccc;
+border-radius:3px;
+font-size:0.8em;
+}
