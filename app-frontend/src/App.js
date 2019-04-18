@@ -19,11 +19,8 @@ import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
 import ThreadMain from './components/Forum/ThreadMain';
 import FeedbackForm from './components/FeedbackForm/FeedbackForm';
-<<<<<<< HEAD
 import EditThread from './components/Forum/EditThread';
-=======
 import PublicDisplay from './components/PublicDisplayPage/PublicDisplay';
->>>>>>> dd737841354142c1214438249d4ad8ef4e9e07a7
 
 import EditProfile from './components/User/EditProfile';
 import GlobalState from './context/GlobalState';
