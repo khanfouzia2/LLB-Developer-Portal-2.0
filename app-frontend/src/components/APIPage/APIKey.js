@@ -90,6 +90,9 @@ class APIKey extends Component {
               <br></br>
 
               <div className="card">
+                  <div className="card-header">
+                    Your API Key
+                  </div>
                   <div className="api-card-content"> 
                     {this.renderGenerateButton()}
                     <table className="table">

@@ -19,7 +19,11 @@ import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
 import ThreadMain from './components/Forum/ThreadMain';
 import FeedbackForm from './components/FeedbackForm/FeedbackForm';
+<<<<<<< HEAD
 import EditThread from './components/Forum/EditThread';
+=======
+import PublicDisplay from './components/PublicDisplayPage/PublicDisplay';
+>>>>>>> dd737841354142c1214438249d4ad8ef4e9e07a7
 
 import EditProfile from './components/User/EditProfile';
 import GlobalState from './context/GlobalState';
@@ -47,6 +51,7 @@ class App extends Component {
         <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
         <Route exact path="/givefeedback" component={FeedbackForm}/>
+        <Route exact path="/publicdisplay" component={PublicDisplay}/>
         <Switch>
           <Route exact path="/forum/thread/:id/edit" component={EditThread} />
           <Route exact path="/forum/thread/:id" component={ThreadMain} />
