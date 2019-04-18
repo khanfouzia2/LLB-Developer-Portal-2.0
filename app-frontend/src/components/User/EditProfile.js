@@ -116,20 +116,20 @@ class EditProfile extends Component {
                     </div>
                     <div className="form-group">
                       <label>First Name</label>
-                      <input className="form-control" placeholder="First Name" name="first_name" type="text" onChange={this.handleChange} value={first_name} />
+                      <input className="form-control" placeholder="First Name" name="first_name" type="text" onChange={this.handleChange} value={first_name} autocomplete="off" />
                     </div>
                     <div className="form-group">
                       <label>Last Name</label>
-                      <input className="form-control" placeholder="Last Name" name="last_name" type="text" onChange={this.handleChange} value={last_name} />
+                      <input className="form-control" placeholder="Last Name" name="last_name" type="text" onChange={this.handleChange} value={last_name} autocomplete="off"/>
                     </div>
                     <div className="form-group">
                       <label>New Password</label>
-                      <input className="form-control" placeholder="Password" name="password" type="password" onChange={this.handleChange} />
+                      <input className="form-control" placeholder="Password" name="password" type="password" onChange={this.handleChange} autocomplete="off"/>
                       <small id="emailHelp" class="form-text text-muted">Enter new password if you want to change the password !</small>
                     </div>
                     <div className="form-group">
                       <label>Confirm Password</label>
-                      <input className="form-control" placeholder="Password" name="confirmPassword" type="password" onChange={this.handleChange} />
+                      <input className="form-control" placeholder="Password" name="confirmPassword" type="password" onChange={this.handleChange} autocomplete="off"/>
                     </div>
                     <button type="submit" className="btn btn-md btn-primary float-right" >SAVE</button>
                   </form>
