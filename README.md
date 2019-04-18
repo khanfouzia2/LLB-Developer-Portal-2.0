@@ -16,7 +16,29 @@ app.get('/' , (req, res) => {
     res.send("Hello World from LLB project - backend part");
 });
 ```
+### Database connection ###
+[1] Requirements
+- Postgres 11.x installed and running.
+- Database must be created.
 
+[2] Create a file called `config.js` to `app-database\database`.
+That file must contain the following configurations:
+```
+exports.user = "<YOUR DB USER>"
+exports.dbname = "<YOUR LOCAL DB NAME. SCHEMA IS CREATED HERE>"
+exports.passwd = "<PASSWORD>"
+exports.host = "<YOUR DB HOSTNAME [TYPICALLY LOCALHOST]>"
+exports.port = "<PORT NUMBER YOUR POSTGRES IS LISTENING. DEFAULT IS 5432>"
+```
+
+[3] In terminal, run (in folder `app-database\database`):
+`node create_database.js`
+Script will create the schema to database (name) you provided.
+Pre-defined users are:
+```
+admin@admin 1234
+basic@basic 1234 (role: basic)
+```
 #### App-frontend ####
 The frontend part of the project is build using ReactJS as the framework. Currently, `app.js` is a starting point of the project. 
 
