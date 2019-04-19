@@ -313,6 +313,57 @@ const News = sequelize.define('news',
   }
 );
 
+const MobileApp = sequelize.define('mobile_app',
+  {
+    application_name: {
+      type: Sequelize.STRING(255),
+      allowNull: false,
+    },
+    description: {
+      type: Sequelize.STRING(500),
+      allowNull: false,
+    },
+    title_type: {
+      type: Sequelize.ENUM('basic', 'moderator', 'admin'),
+      allowNull: false,
+      defaultValue: 'basic',
+    },
+    status: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    is_finished_survey: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    token: {
+      type: Sequelize.STRING(255),
+      allowNull: true
+    },
+    // must be done like this if we want DEFAULT NOW()
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  // options:
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ['email']
+      }
+    ],
+  }
+);
+
 // const Service = sequelize.define('service',
 //   {
 //     name: {
