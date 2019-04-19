@@ -72,7 +72,7 @@ class SideBarNav extends Component {
       if(isAuth) {
          return (
            <>
-              <Accrodion header="UUSIMAA">
+              <Accrodion header="CAPITAL AREA">
                           <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/api">
                             API Documemtation
                           </Link>
@@ -82,11 +82,8 @@ class SideBarNav extends Component {
                           <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/tools">
                             Tools
                           </Link>
-                          <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/">
-                            Mobile App Dev
-                          </Link>
-                          <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/publicdisplay">
-                            Public Display Dev
+                          <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/myapps">
+                            My Apps
                           </Link>
               </Accrodion>
               <Accrodion header="TAMPERE">

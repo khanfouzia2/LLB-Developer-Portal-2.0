@@ -318,30 +318,26 @@ const MobileApp = sequelize.define('mobile_app',
     application_name: {
       type: Sequelize.STRING(255),
       allowNull: false,
+      unique: true,
     },
     description: {
-      type: Sequelize.STRING(500),
+      type: Sequelize.TEXT,
       allowNull: false,
     },
     title_type: {
-      type: Sequelize.ENUM('basic', 'moderator', 'admin'),
+      type: Sequelize.ENUM('small', 'medium', 'large'),
       allowNull: false,
-      defaultValue: 'basic',
+      defaultValue: 'small',
     },
-    status: {
-      type: Sequelize.BOOLEAN,
+    permission: {
+      type: Sequelize.ARRAY(Sequelize.STRING(100)),
       allowNull: false,
-      defaultValue: false,
+      defaultValue: [],
     },
-    is_finished_survey: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
+    zip_file_url: {
+      type: Sequelize.STRING(500)
     },
-    token: {
-      type: Sequelize.STRING(255),
-      allowNull: true
-    },
+
     // must be done like this if we want DEFAULT NOW()
     created_at: {
       type: Sequelize.DATE,
@@ -358,7 +354,7 @@ const MobileApp = sequelize.define('mobile_app',
     indexes: [
       {
         unique: true,
-        fields: ['email']
+        fields: ['application_name']
       }
     ],
   }
@@ -464,7 +460,23 @@ Apikey.belongsTo(User, {
   sourceKey: 'id'
 });
 
+User.hasMany(Apikey, {
+  foreignKey: 'user_id',
+  sourceKey: 'id',
+});
+Apikey.belongsTo(User, {
+  foreignKey: 'user_id',
+  sourceKey: 'id'
+});
 
+User.hasMany(MobileApp, {
+  foreignKey: 'user_id',
+  sourceKey: 'id',
+});
+MobileApp.belongsTo(User, {
+  foreignKey: 'user_id',
+  sourceKey: 'id'
+});
 /*
   Default 'exclude' fields. Sensitive information that usually should not be send to the front-end
   Example usage:
@@ -506,5 +518,6 @@ module.exports = {
   Thread,
   Comment,
   BugFeedback,
-  secluded
+  secluded,
+  MobileApp
 }
