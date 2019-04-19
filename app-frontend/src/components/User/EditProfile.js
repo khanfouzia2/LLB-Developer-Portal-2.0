@@ -12,7 +12,7 @@ class EditProfile extends Component {
       email: "",
       first_name: "",
       last_name: "",
-      password: "",
+      newPassword: "",
       confirmPassword: "",
       contextAPIrendered: false,
       showMessage: false,
@@ -63,13 +63,13 @@ class EditProfile extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    if(this.state.password !== "" && this.state.password !== this.state.confirmPassword) {
+    if(this.state.newPassword !== "" && this.state.newPassword !== this.state.confirmPassword) {
        this.setState({showMessage: true, message: "Confirm password does not match", messageType: "error"});
        return;
     }
     try{
       const {updateAuthInfo} = this.context;
-      const result = await UpdateInfo(this.state.first_name, this.state.last_name, this.state.password);
+      const result = await UpdateInfo(this.state.first_name, this.state.last_name, this.state.newPassword);
       const {first_name, last_name, email, role, id} = result.data;
       updateAuthInfo(true, first_name, last_name, email, role, id);
       this.setState({showMessage: true, messageType: "success" , message: "Update info successful"});
@@ -116,20 +116,20 @@ class EditProfile extends Component {
                     </div>
                     <div className="form-group">
                       <label>First Name</label>
-                      <input className="form-control" placeholder="First Name" name="first_name" type="text" onChange={this.handleChange} value={first_name} autocomplete="off" />
+                      <input className="form-control" placeholder="First Name" name="first_name" type="text" onChange={this.handleChange} value={first_name} autoComplete="something" />
                     </div>
                     <div className="form-group">
                       <label>Last Name</label>
-                      <input className="form-control" placeholder="Last Name" name="last_name" type="text" onChange={this.handleChange} value={last_name} autocomplete="off"/>
+                      <input className="form-control" placeholder="Last Name" name="last_name" type="text" onChange={this.handleChange} value={last_name} autoComplete="something"/>
                     </div>
                     <div className="form-group">
                       <label>New Password</label>
-                      <input className="form-control" placeholder="Password" name="password" type="password" onChange={this.handleChange} autocomplete="off"/>
-                      <small id="emailHelp" class="form-text text-muted">Enter new password if you want to change the password !</small>
+                      <input className="form-control" placeholder="Password" name="newPassword" type="password" onChange={this.handleChange} autoComplete="something"/>
+                      <small className="form-text text-muted">Enter new password if you want to change the password !</small>
                     </div>
                     <div className="form-group">
                       <label>Confirm Password</label>
-                      <input className="form-control" placeholder="Password" name="confirmPassword" type="password" onChange={this.handleChange} autocomplete="off"/>
+                      <input className="form-control" placeholder="Password" name="confirmPassword" type="password" onChange={this.handleChange} autoComplete="something"/>
                     </div>
                     <button type="submit" className="btn btn-md btn-primary float-right" >SAVE</button>
                   </form>
