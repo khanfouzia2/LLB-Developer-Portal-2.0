@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
-import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH, NEWS_DELETE } from '../../rest-endpoints.js';
+import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH, NEWS_DELETE, NEWS_GET_DRAFTS } from '../../rest-endpoints.js';
 import PropTypes from 'prop-types';
 import ContentPreview from '../Misc/ContentPreview.js';
 import NewsDraftsList from './NewsDraftsList.js';
@@ -33,7 +33,8 @@ class NewsCompose extends Component {
       alert: {
         isShown: false,
         content: "AAA"
-      }
+      },
+      drafts: [] // Array of news objects
     }
     this.attachment_file    = React.createRef();
     this.imgPreview         = React.createRef();
@@ -71,13 +72,12 @@ class NewsCompose extends Component {
 
                 {/* Title */}
                 <div className="form-group row">
-                  <div className="col-md-3">
+                  <div className="col-lg-3 col-sm-12">
                     <label for="" className="col-form-label">Title</label>
                   </div>
-                  <div className="col-md-9">
+                  <div className="col-lg-9 col-sm-12">
                     <input type="text" name="title" value={this.state.title} placeholder="Title" onChange={(event)=>this.handleInputChange(event)} maxlength="100"
                     className="form-control" required autocomplete="off" autofocus="autofocus" />
-                    <span className="badge badge badge-danger">Required</span>
                     <span className="metatext" style={{float:"right"}}>{this.state.title.length}/{config.NEWS_TITLE_MAXLEN} chars</span>
                   </div>
                 </div>
@@ -90,7 +90,6 @@ class NewsCompose extends Component {
                   <div className="col-md-9">
                      <textarea rows="8" name="content" value={this.state.content} onChange={(e)=>this.handleInputChange(e)}
                      placeholder="..." className="form-control" maxlength={config.NEWS_CONTENT_MAXLEN} style={{minHeight:'10em',}} required></textarea>
-                     <span class="badge badge badge-danger mr-1">Required</span>
                      <span className="more-info metatext" title={config.TEXT_FORMAT_HELP_TEXT}>Formatting help</span>
 
                     <span className="metatext" style={{float:"right"}}>{this.state.content.length}/{config.NEWS_CONTENT_MAXLEN}</span>
@@ -144,7 +143,10 @@ class NewsCompose extends Component {
 
                 </div>
                 <div className="col-md-6 ">
-                  <input type="submit" value={ !this.state.edit_mode ? ((this.state.is_visible) ? "Publish" : "Save as draft") : "Update" } onClick={this.handlePublish} className="float-md-right btn btn-success btn-sm" />
+                  <input type="submit" value={ !this.state.edit_mode ? ((this.state.is_visible) ? "Publish" : "Save as draft") : "Update" }
+                    onClick={this.handlePublish} className="float-md-right btn btn-success btn-sm"
+                    disabled={ (helpers.isStringEmpty(this.state.title) || helpers.isStringEmpty(this.state.content)) ? "disabled" : null }
+                  />
                 </div>
               </div>
 
@@ -164,7 +166,7 @@ class NewsCompose extends Component {
         </div>{/* col */}
 
         <div className="col-md-3">
-          <NewsDraftsList />
+          <NewsDraftsList drafts={this.state.drafts} />
         </div>
 
       </div>
@@ -209,6 +211,8 @@ class NewsCompose extends Component {
       )
     }
   }
+
+
 
 
   handlePublish(e) {
@@ -314,7 +318,7 @@ class NewsCompose extends Component {
     with FileReader. After done, event "loadend" will trigger.
     update dataULR to preview-el's src-attr.
 
-    TODO: Error message
+    NOT USED
   */
   handleAttachmentFileInputChange(event) {
 
@@ -339,7 +343,6 @@ class NewsCompose extends Component {
     })
 
   }
-
 
 
 
@@ -446,8 +449,32 @@ class NewsCompose extends Component {
     var parsed = qs.parse(this.props.location.search);
     var id = parseInt(parsed.edit_id, 10); // base 10 integer
     this.loadAndUpdateComponentContent(id);
+    this.loadDraftsAndUpdateState()
   }
 
+
+  /*
+    Retrieve Drafts from back-end and save to state.drafts.
+    state.drafts is array of news objects [News, ...]
+  */
+  loadDraftsAndUpdateState() {
+    var req = new Request(NEWS_GET_DRAFTS, {
+      method: "GET",
+      credentials: "include"
+    });
+
+    console.log("Fetching drafts from back end...");
+    fetch(req).then(data => {
+      return data.json()
+    }).then(data => {
+      this.setState({
+        drafts: data
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 
 
 

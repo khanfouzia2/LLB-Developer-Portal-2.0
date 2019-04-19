@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom"
+import PropTypes from 'prop-types';
+
 import { NEWS_GET_DRAFTS} from '../../rest-endpoints';
 import  * as config from '../../config.js';
 const helpers = require('../../helpers.js');
@@ -11,26 +13,29 @@ class NewsDraftsList extends Component {
       super(props);
 
       this.state = {
-        newsObjs: []
+        //newsObjs: []
       }
     }
 
     render() {
 
 
-      var x = this.state.newsObjs.map(news =>
+      var x = this.props.drafts.map(drafts =>
         <li class="list-group-item">
-          <Link to={`/news/compose?edit_id=${news.id}`}>{news.title ? helpers.niceSubstr(news.title, 25) : "ID: "+news.id}</Link>
-          <br/><small className="text-muted">{helpers.getDateFormatted(news.created_at)}</small>
+          <Link to={`/news/compose?edit_id=${drafts.id}`}>{drafts.title ? helpers.niceSubstr(drafts.title, 25) : "ID: "+drafts.id}</Link>
+          <br/><small className="text-muted">{helpers.getDateFormatted(drafts.created_at)}</small>
         </li>
       )
 
       return(
         <div className="card">
-          <div className="card-header">Drafts / not visible news</div>
-            <ul class="list-group list-group-flush">
-              { x }
-            </ul>
+          <div className="card-header">
+            <strong>Drafts</strong>
+            <span className="float-right metatext">not visible</span>
+          </div>
+          <ul class="list-group list-group-flush">
+            { x }
+          </ul>
         </div>
       );
 
@@ -44,11 +49,11 @@ class NewsDraftsList extends Component {
     componentWillMount() {
 
       console.log("Drafts componen will mount...");
-      this.loadDraftsAndUpdateState();
+      //this.loadDraftsAndUpdateState();
 
     }
 
-
+    /*
     loadDraftsAndUpdateState() {
       var req = new Request(NEWS_GET_DRAFTS, {
         method: "GET",
@@ -67,9 +72,13 @@ class NewsDraftsList extends Component {
         console.log(err)
       })
     }
-
+    */
 
 
 
   }
   export default NewsDraftsList;
+
+  NewsDraftsList.propTypes = {
+    drafts: PropTypes.array
+  }

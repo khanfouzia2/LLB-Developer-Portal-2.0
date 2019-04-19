@@ -97,17 +97,13 @@ class NewsCardList extends Component {
                   </ul>
                 </div>
               </div>
+              <div className="alert alert-success mt-md-3">[Admin notice] News shown below are public. Users will see News section as it's shown below.</div>
+              <hr/>
             </React.Fragment>
         );
       }
   }
 
-  renderAdminNotification() {
-    const {isAuth, role} = this.context;
-    if(isAuth && role === config.ADMIN_ROLE_NAME) {
-      return(<div className="alert alert-success mt-md-3">[Admin notice] News shown below are public. Users will see News section as it's shown here.</div>);
-    } else { return(null) }
-  }
 
   render() {
 
@@ -130,26 +126,26 @@ class NewsCardList extends Component {
               <span className="navbar-brand mb-0 h1">News</span>
           </nav>
           <div className="App-custom-page-content">
+
             { this.renderAdminPanel() }
-            { this.renderAdminNotification() }
-          </div>
 
-          <div className="App-custom-page-content" id="news">
-            { zero_posts_alert }
-            <div className="card-columns">
-              { rows}
+            <div className="" id="news">
+              { zero_posts_alert }
+              <div className="card-columns">
+                { rows}
+              </div>
+              <hr/>
+
+              {/* Nav. */}
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  { this.getPrevPageLink() }
+                  { this.getNextPageLink() }
+                </ul>
+              </nav>
+              <small>Current page {this.state.page}</small>
+
             </div>
-            <hr/>
-
-            {/* Nav. */}
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                { this.getPrevPageLink() }
-                { this.getNextPageLink() }
-              </ul>
-            </nav>
-            <small>Current page {this.state.page}</small>
-
           </div>
         </div>
     );

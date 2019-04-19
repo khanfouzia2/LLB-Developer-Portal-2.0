@@ -143,7 +143,7 @@ router.post('/', authentication, (req, res) => {
   }
   if(!contentValid) {
     // 415 Media not supported. aka invalid content
-    res.status(415).send({message: "Invalid content. News not saved!"});
+    res.status(415).json({message: "Invalid content. News not saved!"});
   }
 
 
@@ -171,7 +171,7 @@ router.patch('/:id', authentication, (req, res) => {
   // Step 1 - Content check
   if(!req.body.title || !req.body.content || req.body.is_visible == undefined) {
     console.log("Invalid content");
-    res.status(500).send();
+    res.status(415).send();
   }
 
   // Step 2 - Get the News
@@ -181,21 +181,27 @@ router.patch('/:id', authentication, (req, res) => {
   pr.then(obj => {
     console.log(" ID found. " + obj)
 
-    obj.update({
+    var pr2 = obj.update({
       title: req.body.title,
       content: req.body.content,
       is_visible: req.body.is_visible,
-    }).catch((err) => {
+    });
+
+    pr2.then(
+      (data) => {
+        console.log("Success")
+        res.json({message:"Updated successfully!", news: data})
+      },
+      (err) => {
+        console.log(err)
         res.status(500).send();
-    })
+      }
+    );
 
+  }).catch((err) => {
+      res.status(500).send();
+  })
 
-  }).catch(err => {
-    console.log("  ID NOT found. " + err)
-    res.status(404).send();
-  });
-
-  res.send();
 
 });
 

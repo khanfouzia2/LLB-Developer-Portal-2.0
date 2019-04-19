@@ -38,7 +38,7 @@ class ThreadCompose extends React.Component {
     return(
       <React.Fragment>
         <div className="card border-success_ mb-5">
-          <div className="card-body">
+          <div className="card-body pb-0">
 
             <div className="mb-3">
               <h3>New Thread</h3>
@@ -60,11 +60,7 @@ class ThreadCompose extends React.Component {
                   rows="5" placeholder="Content" maxlength={config.THREAD_CONTENT_MAXLEN} value={this.state.content} required>
                 </textarea>
                 <span className="metatext" style={charCounter}>{this.state.content ? this.state.content.length : "0"} / { config.THREAD_CONTENT_MAXLEN }</span>
-                <span className="metatext" style={{lineHeight:'0.5em', fontSize:'0.7em',}}>
-                  Allowed tags are: { config.THREAD_CONTENT_ALLOWED_TAGS.join(", ") }.<br/>
-                  NOTE: Allowed iframe hosts: { config.THREAD_CONTENT_ALLOWED_IFRAME_HOSTS.join(", ") }.<br/>
-                  Allowed attributes: a [src, target], img [src, height, width]
-                </span>
+                <span className="more-info metatext" title={config.TEXT_FORMAT_HELP_TEXT}>Formatting help</span>
               </div>
             </div>
 
@@ -80,7 +76,7 @@ class ThreadCompose extends React.Component {
               </div>
             </div>
 
-            <div className="mt-3">
+            <div className="mt-3 mb-3">
               { this.state.content.length >= 5 &&
                 <ContentPreview content={this.state.content}  />
               }

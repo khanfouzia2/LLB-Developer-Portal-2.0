@@ -43,7 +43,7 @@ class CommentCompose extends React.Component {
           style={{minHeight:'3.0em',maxHeight:'40em',}} maxlength={config.THREAD_COMMENT_MANXLEN}>
         </textarea>
           <div style={{display:'block',}}>
-            <span style={{float:'left'}} className="metatext" >Allowed tags: b, a [href, target], code, pre, br. Remember to use http://</span>
+            <span className="more-info metatext float-left" title={config.TEXT_FORMAT_HELP_TEXT}>Formatting help</span>
             <span style={{float:'right',}} className="metatext" > {this.state.comment_content.length}/{config.THREAD_COMMENT_MANXLEN} </span>
             <div style={{clear:'both',}}></div>
           </div>

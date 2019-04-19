@@ -31,9 +31,9 @@ class NewsCard extends Component {
                 <div className="card-body">
                   <p className="card-text">
                     {this.getContent()}
-
-                    <Link to={`/news/id/${this.props.newsObj.id}`}>
-                      <button type="button" class="btn btn-outline-primary btn-block mt-md-3">Read more</button>
+                    <br/>
+                    <Link className="link" to={`/news/id/${this.props.newsObj.id}`}>
+                      Read more...
                     </Link>
                   </p>
 

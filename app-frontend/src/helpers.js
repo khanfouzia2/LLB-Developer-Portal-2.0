@@ -6,12 +6,15 @@ var sanitizeHtml = require('sanitize-html');
 */
 exports.isValidID = function(id) {
 
-  id = parseInt(id, 10); // base 10
-  if(id != undefined && !isNaN(id)) {
-    return id > 0;
-  } else {
-    return false;
+  if(id) {
+    id = parseInt(id, 10); // base 10
+    if(id != undefined && !isNaN(id)) {
+      return id > 0;
+    } else {
+      return false;
+    }
   }
+  return false;
 
 }
 
@@ -23,7 +26,7 @@ exports.isStringEmpty = function(str) {
   if(str) {
     return str.trim().lenth === 0
   }
-  return false;
+  return true;
 }
 
 /*
