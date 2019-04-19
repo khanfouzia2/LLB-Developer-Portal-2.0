@@ -19,7 +19,10 @@ import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
 import ThreadMain from './components/Forum/ThreadMain';
 import FeedbackForm from './components/FeedbackForm/FeedbackForm';
+<<<<<<< HEAD
 
+=======
+>>>>>>> b8120a2956879919f48c7997de4d7f6642e7e714
 import EditThread from './components/Forum/EditThread';
 import PublicDisplay from './components/PublicDisplayPage/PublicDisplay';
 
