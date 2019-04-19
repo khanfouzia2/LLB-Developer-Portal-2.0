@@ -51,7 +51,7 @@ class News extends React.Component {
               <span className="em small muted" id="author" >First published: { helpers.getDateFormatted(this.state.newsObj.created_at) }</span>
               <hr/>
 
-              <p className="" style={newsContStyle}>{this.state.newsObj.content}</p>
+              <div className="" dangerouslySetInnerHTML={helpers.getSanitizedContent(this.state.newsObj.content)}></div>
             </div>
           </div>
 

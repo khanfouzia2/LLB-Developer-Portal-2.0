@@ -44,12 +44,18 @@ class NewsDraftsList extends Component {
     componentWillMount() {
 
       console.log("Drafts componen will mount...");
+      this.loadDraftsAndUpdateState();
 
+    }
+
+
+    loadDraftsAndUpdateState() {
       var req = new Request(NEWS_GET_DRAFTS, {
         method: "GET",
         credentials: "include"
       });
 
+      console.log("Fetching drafts from back end...");
       fetch(req).then(data => {
         return data.json()
       }).then(data => {
@@ -60,7 +66,6 @@ class NewsDraftsList extends Component {
       .catch(err => {
         console.log(err)
       })
-
     }
 
 

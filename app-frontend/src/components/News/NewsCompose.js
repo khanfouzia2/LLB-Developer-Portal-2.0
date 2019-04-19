@@ -4,6 +4,8 @@ import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH, NEWS_DELETE } from '../../rest-end
 import PropTypes from 'prop-types';
 import ContentPreview from '../Misc/ContentPreview.js';
 import NewsDraftsList from './NewsDraftsList.js';
+import Modal from '../Misc/Modal.js';
+import Alert from '../Misc/Alert.js';
 import  * as config from '../../config.js';
 const qs = require('query-string');
 const helpers = require('../../helpers');
@@ -28,17 +30,21 @@ class NewsCompose extends Component {
       is_visible: false,
       previewSrc: null,
       edit_mode: false, // edit mode or composing new News?
+      alert: {
+        isShown: false,
+        content: "AAA"
+      }
     }
     this.attachment_file    = React.createRef();
     this.imgPreview         = React.createRef();
 
 
-    this.handleInputChange                   = this.handleInputChange.bind(this);
-    this.handleInputIsVisibleChange = this.handleInputIsVisibleChange.bind(this);
-    this.handlePublish                              = this.handlePublish.bind(this);
-    this.handleAttachmentFileInputChange          = this.handleAttachmentFileInputChange.bind(this);
-    this.handleOnClickDelete            = this.handleOnClickDelete.bind(this);
-    this.loadAndUpdateComponentContent = this.loadAndUpdateComponentContent.bind(this);
+    this.handleInputChange                  = this.handleInputChange.bind(this);
+    this.handleInputIsVisibleChange         = this.handleInputIsVisibleChange.bind(this);
+    this.handlePublish                      = this.handlePublish.bind(this);
+    this.handleAttachmentFileInputChange    = this.handleAttachmentFileInputChange.bind(this);
+    this.handleOnClickDelete                = this.handleOnClickDelete.bind(this);
+    this.loadAndUpdateComponentContent      = this.loadAndUpdateComponentContent.bind(this);
   }
 
 
@@ -59,7 +65,7 @@ class NewsCompose extends Component {
             <div className="card-body">
 
               { this.showEditModeAlert() }
-              { this.showNotPublicAlert() }
+              <Alert isShown={this.state.alert.isShown} content={this.state.alert.content} style={this.state.alert.style} key="999" />
 
               <form>
 
@@ -69,9 +75,10 @@ class NewsCompose extends Component {
                     <label for="" className="col-form-label">Title</label>
                   </div>
                   <div className="col-md-9">
-                    <input type="text" name="title" value={this.state.title} placeholder="Title" onChange={(event)=>this.handleInputChange(event)} maxlength="100" className="form-control" required />
+                    <input type="text" name="title" value={this.state.title} placeholder="Title" onChange={(event)=>this.handleInputChange(event)} maxlength="100"
+                    className="form-control" required autocomplete="off" autofocus="autofocus" />
                     <span className="badge badge badge-danger">Required</span>
-                    <span className="small" style={{float:"right"}}>{this.state.title.length}/{config.NEWS_TITLE_MAXLEN} chars</span>
+                    <span className="metatext" style={{float:"right"}}>{this.state.title.length}/{config.NEWS_TITLE_MAXLEN} chars</span>
                   </div>
                 </div>
 
@@ -82,10 +89,11 @@ class NewsCompose extends Component {
                   </div>
                   <div className="col-md-9">
                      <textarea rows="8" name="content" value={this.state.content} onChange={(e)=>this.handleInputChange(e)}
-                     placeholder="..." className="form-control" maxlength={config.NEWS_CONTENT_MAXLEN} required></textarea>
+                     placeholder="..." className="form-control" maxlength={config.NEWS_CONTENT_MAXLEN} style={{minHeight:'10em',}} required></textarea>
+                     <span class="badge badge badge-danger mr-1">Required</span>
+                     <span className="more-info metatext" title={config.TEXT_FORMAT_HELP_TEXT}>Formatting help</span>
 
-                    <span class="badge badge badge-danger">Required</span>
-                    <span className="small" style={{float:"right"}}>{this.state.content.length}/{config.NEWS_CONTENT_MAXLEN}</span>
+                    <span className="metatext" style={{float:"right"}}>{this.state.content.length}/{config.NEWS_CONTENT_MAXLEN}</span>
                   </div>
                 </div>
 
@@ -101,6 +109,7 @@ class NewsCompose extends Component {
                       <option value="true" selected={this.state.is_visible ? "true" : "false"}>YES</option>
                       <option value="false" selected={!this.state.is_visible ? "true" : "false"}>NO</option>
                     </select>
+                    { !this.state.is_visible ? <span className="metatext float-right">Will be saved as a draft</span> : null }
                   </div>
 
                 </div>
@@ -169,12 +178,6 @@ class NewsCompose extends Component {
     }
   }
 
-  /* Show an alert box if News is not public */
-  showNotPublicAlert() {
-    if(!this.state.is_visible) {
-      return(<div className="alert alert-warning">Will not be visible to public! Will be saved as a draft.</div>);
-    }
-  }
 
   /* Show News id if in edit mode */
   showNewsId() {
@@ -211,7 +214,17 @@ class NewsCompose extends Component {
   handlePublish(e) {
     console.log("Users pressed Publish/Save News -button");
 
-    /* for sending some mock data to back-end, will be changed */
+    // First, check fields
+    if(helpers.isStringEmpty(this.state.title) || helpers.isStringEmpty(this.state.content)) {
+      this.setState({ alert: {isShown: true, content: "Please fill the required fields!", style: "info"} });
+      return false;
+    }
+    //
+
+    // Content ok, prepare for sending request to back end.
+    // Disable button for a moment
+    e.target.disabled = true;
+    setInterval( function(button) { button.disabled=false; }, 4000, e.target);
 
     const data = {
       id: this.state.id,
@@ -258,9 +271,39 @@ class NewsCompose extends Component {
     fetch(req).then(res => {
       //alert(res.status);
       console.log(res);
-    }).catch(err => {
-      console.log(err);
-    })
+
+      // If response was not OK
+      if(res.ok) {
+        return res.json();
+      } else {
+        console.log("NOT OK")
+        // Resolve error
+        res.json().then( (err) => {
+          this.setState({
+            alert: {isShown: true, content: err.message, style: "danger"}
+          });
+        });
+        return Promise.reject();
+      }
+
+
+    },
+    // Fetch failed.
+    (err) => {
+      this.setState({
+        alert: {isShown: true, content: "An error occured", style: "danger"}
+      });
+      return Promise.reject();
+    }).then(data => {
+
+      // Make alert visible
+      console.log(data)
+      this.setState({
+        alert: {isShown: true, content: data.message, style: "success"}
+      })
+
+    });
+
 
   }
 

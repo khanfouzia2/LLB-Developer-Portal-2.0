@@ -16,6 +16,17 @@ exports.isValidID = function(id) {
 }
 
 /*
+  First checks if is null, undefined, isNaN ...
+  Then will check length of trimmed string.
+*/
+exports.isStringEmpty = function(str) {
+  if(str) {
+    return str.trim().lenth === 0
+  }
+  return false;
+}
+
+/*
 
   Dangerois html sanitizer method used globally.
   Uses sanitizeHtml npm package

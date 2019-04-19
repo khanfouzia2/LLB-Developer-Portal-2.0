@@ -39,7 +39,7 @@ const ALLOWED_TAG_ATTRIBUTES = {
   'img': ['src', 'width', 'height'],
   'iframe': ['src', 'width', 'height']
 }
-const TEXT_FORMAT_HELP_TEXT = "Allowed tags are b, u, i, hr, br, a [href, target], img [src, width, height],\n pre, code, iframe, h5, h6.\n Remember to add http:// to links. We recomment using <pre>-tag for multiline codes. Allowed iframe hosts are Youtube and Vimeo."
+const TEXT_FORMAT_HELP_TEXT = "Allowed tags are b, u, i, hr, br, a [href, target], img [src, width, height],\n pre, code, iframe, h5, h6.\n Remember to add http:// to links. We recommend using <pre>-tag for multiline codes. Allowed iframe hosts are Youtube and Vimeo."
 
 
 // Will be deprecated and replaced with global configs ^

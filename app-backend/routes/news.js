@@ -133,7 +133,7 @@ router.post('/', authentication, (req, res) => {
 
   // Make some content validation
   // Check for null
-  var contentValid;
+  var contentValid = true;
   if(title && cont) {
     if(title.lenght <= 0 || cont.lenght <= 0 || title === "" || cont === "") {
       contenValid = false;
@@ -143,7 +143,7 @@ router.post('/', authentication, (req, res) => {
   }
   if(!contentValid) {
     // 415 Media not supported. aka invalid content
-    res.status(415).send();
+    res.status(415).send({message: "Invalid content. News not saved!"});
   }
 
 
@@ -156,13 +156,11 @@ router.post('/', authentication, (req, res) => {
 
   pr.then(data => {
     console.log(data);
-    res.status(201).send();
+    res.status(201).json({message: "News created successfully!"});
   }).catch(err => {
-    res.status(500).send();
+    res.status(500).json({message: "An error occured."});
   })
 
-  // 201 = Resource created successfully
-  res.status(201).send();
 
 });
 
