@@ -63,6 +63,8 @@ class EditProfile extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
+    if (!event.isTrusted) return;
+
     if(this.state.newPassword !== "" && this.state.newPassword !== this.state.confirmPassword) {
        this.setState({showMessage: true, message: "Confirm password does not match", messageType: "error"});
        return;
