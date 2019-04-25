@@ -148,8 +148,7 @@ class NewsCardList extends Component {
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
   }
 }
 
