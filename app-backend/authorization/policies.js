@@ -30,17 +30,18 @@ exports.deleteComment = function(cmt=null, user=null) {
   // both must be not null
   if( anyNulls(cmt, user) ) { return false; }
 
-  return (
-    (cmt.author_id != null && cmt.author_id === user.id) || user.role === config.ADMIN_ROLE_NAME
-  );
-
-  return false;
+  return ( (cmt.author_id != null && cmt.author_id === user.id) || (user.role === config.ADMIN_ROLE_NAME) )
 
 }
 
 
+exports.deleteThread = function(thr=null, user=null) {
 
+  if( anyNulls(thr, user)) { return false; }
 
+  return ('author_id' in thr && thr.author_id == user.id) || (user.role === config.ADMIN_ROLE_NAME)
+
+}
 
 
 

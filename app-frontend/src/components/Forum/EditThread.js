@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom"
-import { GET_THREAD, THREAD_PATCH } from '../../rest-endpoints.js';
+import { GET_THREAD, THREAD_PATCH, THREAD_DELETE } from '../../rest-endpoints.js';
 import { editThreadPolicy } from '../../authorization/view-policies.js';
 import AuthContext from '../../context/auth-context';
 import Modal from '../Misc/Modal.js';
@@ -26,13 +26,19 @@ class EditThread extends React.Component {
     super(props);
 
     this.state = {
+      thread_id: -1,
       thread_title: "",
       thread_content: "",
-
+      modal: {
+        isShown: false,
+        title: "",
+        content: ""
+      }
     }
 
-    this.handleUpdateOnClick = this.handleUpdateOnClick.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleUpdateOnClick  = this.handleUpdateOnClick.bind(this);
+    this.handleInputChange    = this.handleInputChange.bind(this);
+    this.deleteThread         = this.deleteThread.bind(this);
   }
 
 
@@ -62,7 +68,7 @@ class EditThread extends React.Component {
             <div className="row mt-3">
               <div class="col-9">
                 <ConfirmButton isRendered={true} buttonText="Delete" buttonTextAfterFirstClick="Confirm deletion?" CSSClassString="btn-danger"
-                  secondClickOnClickFunc={(e)=>{alert("function called")}} disabledTime={2500} />
+                  secondClickOnClickFunc={(e)=>{ this.deleteThread(e) }} disabledTime={2000} />
               </div>
               <div class="col-3 align-self-end">
                 <button onClick={(e)=>this.handleUpdateOnClick(e)} className="btn btn-success float-right">Update</button>
@@ -76,6 +82,7 @@ class EditThread extends React.Component {
           </div>
 
         </div>
+        <Modal isShown={this.state.modal.isShown} title={this.state.modal.title} content={this.state.modal.content} />
       </React.Fragment>
     );
 
@@ -132,6 +139,7 @@ class EditThread extends React.Component {
   handleUpdateOnClick(e) {
 
     console.log("User clicked update!");
+
     // Disable btn for a short moment
     e.target.disabled = true;
     setInterval( function(button) { button.disabled=false; }, 5000, e.target);
@@ -158,6 +166,39 @@ class EditThread extends React.Component {
   }
 
 
+
+  deleteThread(e) {
+
+    // Headers
+    var heds = new Headers();
+    heds.append('Application-Content', 'application/json');
+
+    // Options
+    const options = {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: heds,
+    };
+
+    //
+    var r = new Request(THREAD_DELETE+'/'+this.state.thread_id, options);
+
+    // Call
+    fetch(r).then(res => {
+      if(res.status == 202) {
+        helpers.redirectUser('/forum');
+      } else {
+        return res.json();
+      }
+    }).then(data => {
+      this.setState({modal: {
+        isShown: true,
+        title: data.message
+      }})
+    })
+
+
+  }
 
 
 

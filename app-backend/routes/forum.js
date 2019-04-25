@@ -303,6 +303,78 @@ router.delete('/comment/:id', authentication, (req, res) => {
 });
 
 
+/*
+  Delete entire Thread.
+
+  Returns:
+
+  204: Request ok, but nothing to delete
+    json { message: ""}
+
+  202: Deletion was done successfully:
+    json { message: "" }
+
+  403: No permission.
+    json { error: "" }
+
+  500: Server error
+    json { error: "" }
+*/
+router.delete('/thread/:id', authentication, (req, res) => {
+
+  console.log("\n===\n\tDELETE request received");
+  console.log("\t"+req.user.email);
+
+  const thread_id = parseInt(req.params.id, 10);
+  if(isNaN(thread_id) || thread_id <= 0) {
+    res.status(400).json({error:'Bad request. ID not valid'}); // 400 Bad request
+  }
+
+  pr = models.Thread.findByPk(thread_id);
+  pr.then(data => {
+
+    // already deleted, find by pk only finds NOT soft deleted rows
+    if(data == null) {
+      res.status(404).json({message: 'ID not found'});
+      return;
+    }
+
+
+    console.log(data)
+    console.log( policies.deleteThread(data, req.user) );
+    const isPermission = policies.deleteThread(data, req.user);
+    if(!isPermission) {
+      res.status(403).json({error: 'Permission denied'});
+      return;
+    }
+
+    pr2 = models.Thread.destroy({
+      where: {
+        id: data.id
+      }
+    });
+
+    pr2.then(data => {
+      if(data === 0) {
+        // 204 = OK, no further data
+        res.status(204).send();
+      } else {
+        // 202 = deletion done
+        res.status(202).json({message: 'Deleted successfully!' });
+      }
+    }, err => {
+      res.status(500).json({error:'An error occured!'})
+    })
+
+  }, onFailure);
+
+
+  var onFailure = function(err) {
+    console.log("Sequelize query failed!")
+    res.status(500).json({error:'An error occured!'})
+  }
+
+})
 
 
 
