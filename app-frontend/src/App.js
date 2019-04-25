@@ -21,7 +21,7 @@ import ThreadMain from './components/Forum/ThreadMain';
 import FeedbackForm from './components/FeedbackForm/FeedbackForm';
 
 import EditThread from './components/Forum/EditThread';
-import PublicDisplay from './components/PublicDisplayPage/PublicDisplay';
+import MyApps from './components/MyApps/MyApps';
 
 import EditProfile from './components/User/EditProfile';
 import GlobalState from './context/GlobalState';
@@ -49,7 +49,7 @@ class App extends Component {
         <Route exact path="/tools/developerGuidelines" component={DeveloperGuidelines} />
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
         <Route exact path="/givefeedback" component={FeedbackForm}/>
-        <Route exact path="/publicdisplay" component={PublicDisplay}/>
+        <Route exact path="/myapps" component={MyApps}/>
         <Switch>
           <Route exact path="/forum/thread/:id/edit" component={EditThread} />
           <Route exact path="/forum/thread/:id" component={ThreadMain} />

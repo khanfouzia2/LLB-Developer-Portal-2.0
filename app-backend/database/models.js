@@ -313,6 +313,53 @@ const News = sequelize.define('news',
   }
 );
 
+const MobileApp = sequelize.define('mobile_app',
+  {
+    application_name: {
+      type: Sequelize.STRING(255),
+      allowNull: false,
+      unique: true,
+    },
+    description: {
+      type: Sequelize.TEXT,
+      allowNull: false,
+    },
+    title_type: {
+      type: Sequelize.ENUM('small', 'medium', 'large'),
+      allowNull: false,
+      defaultValue: 'small',
+    },
+    permission: {
+      type: Sequelize.ARRAY(Sequelize.STRING(100)),
+      allowNull: false,
+      defaultValue: [],
+    },
+    zip_file_url: {
+      type: Sequelize.STRING(500)
+    },
+
+    // must be done like this if we want DEFAULT NOW()
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  // options:
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ['application_name']
+      }
+    ],
+  }
+);
+
 // const Service = sequelize.define('service',
 //   {
 //     name: {
@@ -413,7 +460,23 @@ Apikey.belongsTo(User, {
   sourceKey: 'id'
 });
 
+User.hasMany(Apikey, {
+  foreignKey: 'user_id',
+  sourceKey: 'id',
+});
+Apikey.belongsTo(User, {
+  foreignKey: 'user_id',
+  sourceKey: 'id'
+});
 
+User.hasMany(MobileApp, {
+  foreignKey: 'user_id',
+  sourceKey: 'id',
+});
+MobileApp.belongsTo(User, {
+  foreignKey: 'user_id',
+  sourceKey: 'id'
+});
 /*
   Default 'exclude' fields. Sensitive information that usually should not be send to the front-end
   Example usage:
@@ -455,5 +518,6 @@ module.exports = {
   Thread,
   Comment,
   BugFeedback,
-  secluded
+  secluded,
+  MobileApp
 }

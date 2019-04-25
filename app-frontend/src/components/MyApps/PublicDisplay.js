@@ -13,7 +13,7 @@ class PublicDisplay extends Component {
           <nav className="App-custom-nav">
             <span className="navbar-brand mb-0 h1">PUBLIC DISPLAY DEVELOPMENT</span>
           </nav>
-          <div className="App-custom-page-content">
+          <div className="">
             <div className="card">
               <div className="api-card-content">
                 <div className="row">
@@ -39,13 +39,13 @@ class PublicDisplay extends Component {
                       </p>
                     </div>
                    
-                    <ul class="list-group">
-                    <li class="list-group-item list-group-item-action list-group-item-secondary">Current details</li>
-                    <li class="list-group-item">The data is available via LLB REST API and updated once in a second (1 Hz).</li>
-                    <li class="list-group-item">Current public screens: 21,5”, non-interactive Full HD display located in the front of the bus, behind the driver.</li>
-                    <li class="list-group-item">Services are displayed through a browser, from specified URL and with desired intervals.</li>
-                    <li class="list-group-item">For the development, we recommend HTML5 and related technologies.</li>
-                    <li class="list-group-item">
+                    <ul className="list-group">
+                    <li className="list-group-item list-group-item-action list-group-item-secondary">Current details</li>
+                    <li className="list-group-item">The data is available via LLB REST API and updated once in a second (1 Hz).</li>
+                    <li className="list-group-item">Current public screens: 21,5”, non-interactive Full HD display located in the front of the bus, behind the driver.</li>
+                    <li className="list-group-item">Services are displayed through a browser, from specified URL and with desired intervals.</li>
+                    <li className="list-group-item">For the development, we recommend HTML5 and related technologies.</li>
+                    <li className="list-group-item">
                       The data available via LLB REST API has three main sources:
                       <ul>
                         <li>Onboard positioning and 3D sensors (uBlox NEO-M8L)</li>
