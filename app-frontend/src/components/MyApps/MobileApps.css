@@ -1,0 +1,23 @@
+
+.mobile-app-content {
+  min-height: 600px;
+  padding: 2%;
+}
+
+.mobile-app-content p {
+  font-size: 1.1em;
+  line-height:1.8;
+}
+
+.no-mobile-app{
+  min-width: 100%;
+}
+
+.no-mobile-app-content {
+  text-align: center
+}
+
+.no-mobile-app-content h5 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}

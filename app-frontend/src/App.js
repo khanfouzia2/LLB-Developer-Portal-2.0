@@ -22,6 +22,7 @@ import FeedbackForm from './components/FeedbackForm/FeedbackForm';
 
 import EditThread from './components/Forum/EditThread';
 import MyApps from './components/MyApps/MyApps';
+import EditAppForm from './components/MyApps/EditAppForm';
 
 import EditProfile from './components/User/EditProfile';
 import GlobalState from './context/GlobalState';
@@ -36,7 +37,7 @@ class App extends Component {
 
   renderPortalContent = () => (
     <SideNavBar>
-      <div id="main-content">
+      <div id="main-content" >
         <Route exact path="/" component={InfoPage} />
         <Route exact path="/news/compose" component={NewsCompose} />
         <Route exact path="/news/page/:page" component={NewsCardList} />
@@ -50,6 +51,7 @@ class App extends Component {
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
         <Route exact path="/givefeedback" component={FeedbackForm}/>
         <Route exact path="/myapps" component={MyApps}/>
+        <Route exact path="/myapps/create" component={EditAppForm}/>
         <Switch>
           <Route exact path="/forum/thread/:id/edit" component={EditThread} />
           <Route exact path="/forum/thread/:id" component={ThreadMain} />

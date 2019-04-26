@@ -18,6 +18,7 @@ passport.use(new GoogleStrategy({
           email: email,
           role: "basic",
           is_finished_survey: false,
+          is_single_sign_on: true,
           status: true
         }});
         return done(null, user);
