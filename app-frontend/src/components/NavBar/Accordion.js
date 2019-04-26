@@ -13,7 +13,7 @@ class Accordion extends Component {
   handleOnAccordionClick = () => {
      this.setState((prevState) => {
         return {
-          accordionClass: (prevState.accordionClass === "accordion") ? "accordion activate" : "accordion",
+          accordionClass: (prevState.accordionClass === "accordion") ? "accordion accordion-activate" : "accordion",
           childContentStyle: (prevState.childContentStyle == null) 
                              ? {maxHeight: this.childContent.clientHeight} 
                              : null

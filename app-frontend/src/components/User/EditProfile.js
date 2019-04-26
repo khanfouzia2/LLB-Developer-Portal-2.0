@@ -3,6 +3,7 @@ import AuthContext from '../../context/auth-context';
 import DefaultUserAvatar from '../NavBar/DefaultUserAvatar';
 import './EditProfile.css';
 import { UpdateInfo } from '../../services/UserApi';
+import { Signer } from 'crypto';
 
 class EditProfile extends Component {
   static contextType = AuthContext;
@@ -14,33 +15,26 @@ class EditProfile extends Component {
       last_name: "",
       newPassword: "",
       confirmPassword: "",
-      contextAPIrendered: false,
+      currentPassword: "",
       showMessage: false,
       message: "",
       messageType: "",
+      is_single_sign_on: false
     }
     this.renderEditProfile = this.renderEditProfile.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.renderMessage = this.renderMessage.bind(this);
+    this.renderPasswordFormGroup = this.renderPasswordFormGroup.bind(this);
   }
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   }
-  componentDidMount() {
-    if (this.context !== null) {
-      this.setState({
-        first_name: this.context.first_name,
-        last_name: this.context.last_name,
-        email: this.context.email
-      })
-    }
-  }
 
   renderMessage = () => {
-    const {showMessage, message, messageType} = this.state;
+    const { showMessage, message, messageType } = this.state;
     let class_name = "";
-    switch(messageType){
+    switch (messageType) {
       case "success":
         class_name = "alert alert-success";
         break;
@@ -51,7 +45,7 @@ class EditProfile extends Component {
         class_name = "alert alert-success"
         break;
     }
-    if(showMessage) {
+    if (showMessage) {
       return (
         <div className={class_name} role="alert">
           {message}
@@ -61,42 +55,76 @@ class EditProfile extends Component {
     else return (<></>);
   }
 
+  renderPasswordFormGroup = () => {
+    if (!this.state.is_single_sign_on) {
+      const {currentPassword, newPassword, confirmPassword} = this.state;
+      return (
+        <>
+          <div className="form-group">
+            <label>Current Password</label>
+            <input className="form-control" value={currentPassword} name="currentPassword" type="password" onChange={this.handleChange}  autoComplete="something" />
+            <small className="form-text text-muted">Enter current password if you want to update profile info !</small>
+          </div>
+          <div className="form-group">
+            <label>New Password</label>
+            <input className="form-control" value={newPassword} name="newPassword" type="password" onChange={this.handleChange} autoComplete="something" />
+            <small className="form-text text-muted">Enter new password if you want to change the password !</small>
+          </div>
+          <div className="form-group">
+            <label>Confirm Password</label>
+            <input className="form-control" value={confirmPassword} name="confirmPassword" type="password" onChange={this.handleChange} autoComplete="something" />
+          </div>
+        </>
+      )
+    }
+    else return <></>
+  }
+
   handleSubmit = async (event) => {
     event.preventDefault();
     if (!event.isTrusted) return;
+    //Only check if current password exist or not if a single sign on user
+    if (this.state.currentPassword === "" && !this.state.is_single_sign_on) {
+      this.setState({ showMessage: true, message: "Current password is missing", messageType: "error" });
+      return;
+    }
+    if (this.state.newPassword !== "" && this.state.newPassword !== this.state.confirmPassword) {
+      this.setState({ showMessage: true, message: "Confirm password does not match", messageType: "error" });
+      return;
+    }
+    try {
+      const { updateAuthInfo } = this.context;
+      const result = await UpdateInfo(this.state.first_name, this.state.last_name,
+        this.state.currentPassword, this.state.newPassword);
+      const { first_name, last_name, email, role, id, is_single_sign_on, is_finished_survey } = result.data;
+      updateAuthInfo(true, first_name, last_name, email, role, id, is_finished_survey, is_single_sign_on);
+      this.setState({ showMessage: true, messageType: "success", 
+                      message: "Update info successful", newPassword:"",
+                      currentPassword: "", confirmPassword:""});
+    }
+    catch (err) {
+      if (err.response.status === 401) {
+        this.setState({ showMessage: true, messageType: "error", message: "Incorrect current password" });
+        return;
+      }
+      console.log(`Something wrong when update user info, err = ${err}`);
+      this.setState({ showMessage: true, messageType: "error", message: "Something went wrong when updating info" });
+    }
 
-    if(this.state.newPassword !== "" && this.state.newPassword !== this.state.confirmPassword) {
-       this.setState({showMessage: true, message: "Confirm password does not match", messageType: "error"});
-       return;
-    }
-    try{
-      const {updateAuthInfo} = this.context;
-      const result = await UpdateInfo(this.state.first_name, this.state.last_name, this.state.newPassword);
-      const {first_name, last_name, email, role, id} = result.data;
-      updateAuthInfo(true, first_name, last_name, email, role, id);
-      this.setState({showMessage: true, messageType: "success" , message: "Update info successful"});
-    }
-    catch(ex) {
-      console.log(`Something wrong when update user info, err = ${ex}`);
-      this.setState({showMessage: true, messageType: "error" ,message: "Something went wrong when updating info"});
-    }
-    
   }
-  componentDidUpdate = (prevProps, prevState) => {
-    if (this.context.first_name !== "" && this.state.contextAPIrendered === false) {
-      this.setState({
-        first_name: this.context.first_name,
-        last_name: this.context.last_name,
-        email: this.context.email,
-        contextAPIrendered: true,
-      })
-    }
+  componentDidMount = () => {
+    this.setState({
+      first_name: this.context.first_name,
+      last_name: this.context.last_name,
+      email: this.context.email,
+      is_single_sign_on: this.context.is_single_sign_on
+    })
   }
 
   renderEditProfile = () => {
     const { email, first_name, last_name } = this.state;
-    const {isAuth} = this.context;
-    if(!isAuth) return (<></>);
+    const { isAuth } = this.context;
+    if (!isAuth) return (<></>);
     else {
       return (
         <>
@@ -116,7 +144,7 @@ class EditProfile extends Component {
                     <form onSubmit={event => this.handleSubmit(event)}>
                       <div className="form-group">
                         <label>Email</label>
-                        <input className="form-control" placeholder="E-mail" name="email" type="text" onChange={this.handleChange} value={email} disabled/>
+                        <input className="form-control" placeholder="E-mail" name="email" type="text" onChange={this.handleChange} value={email} disabled />
                       </div>
                       <div className="form-group">
                         <label>First Name</label>
@@ -124,17 +152,9 @@ class EditProfile extends Component {
                       </div>
                       <div className="form-group">
                         <label>Last Name</label>
-                        <input className="form-control" placeholder="Last Name" name="last_name" type="text" onChange={this.handleChange} value={last_name} autoComplete="something"/>
+                        <input className="form-control" placeholder="Last Name" name="last_name" type="text" onChange={this.handleChange} value={last_name} autoComplete="something" />
                       </div>
-                      <div className="form-group">
-                        <label>New Password</label>
-                        <input className="form-control" placeholder="Password" name="newPassword" type="password" onChange={this.handleChange} autoComplete="something"/>
-                        <small className="form-text text-muted">Enter new password if you want to change the password !</small>
-                      </div>
-                      <div className="form-group">
-                        <label>Confirm Password</label>
-                        <input className="form-control" placeholder="Password" name="confirmPassword" type="password" onChange={this.handleChange} autoComplete="something"/>
-                      </div>
+                      {this.renderPasswordFormGroup()}
                       <button type="submit" className="btn btn-md btn-primary float-right" >SAVE</button>
                     </form>
                   </div>

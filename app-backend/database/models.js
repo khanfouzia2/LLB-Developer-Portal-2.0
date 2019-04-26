@@ -73,6 +73,11 @@ const User = sequelize.define('user',
       allowNull: false,
       defaultValue: false,
     },
+    is_single_sign_on: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     token: {
       type: Sequelize.STRING(255),
       allowNull: true

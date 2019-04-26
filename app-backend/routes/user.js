@@ -1,12 +1,12 @@
 const express = require('express');
 const bycrypt = require('bcrypt');
 const router = express.Router();
-const {User, Apikey} = require('../database/models.js');
+const { User, Apikey } = require('../database/models.js');
 const authentication = require('../services/authentication.js');
 const util = require('../utils/userUtil');
 const axios = require('axios');
 
-router.post('/register', async function(req, res){
+router.post('/register', async function (req, res) {
    try {
       const payload = req.body;
       let user = await User.create({
@@ -17,131 +17,142 @@ router.post('/register', async function(req, res){
          role: "basic",
          is_finished_survey: false,
          status: true
-       });
+      });
       let token = await util.GenerateJWT(user);
-      if(token == null) throw "Something wrong with generate token";
+      if (token == null) throw "Something wrong with generate token";
 
       res.cookie('Authorization', token);
       res.status(201).send(util.GenerateResponseConext(user));
    }
-   catch(e) {
+   catch (e) {
       console.log(e);
       res.status(500).send();
-   }   
+   }
 })
 
-router.post('/login', async function(req, res){
+router.post('/login', async function (req, res) {
    try {
       const payload = req.body;
-      console.log(payload);
       let user = await User.findOne(
-         { where: 
+         {
+            where:
             {
-               email : payload.email,
-            } 
+               email: payload.email,
+            }
          });
 
-      if(user == null) return res.status(404).send();
+      if (user == null) return res.status(404).send();
+      if (user.is_single_sign_on) return res.status(401).send();
+
       const match = await bycrypt.compare(payload.password, user.password);
-      if(!match) {
+      if (!match) {
          return res.status(401).send();
       }
-     
+
       let token = await util.GenerateJWT(user);
-      if(token == null) throw "Something wrong when creating token";
-   
+      if (token == null) throw "Something wrong when creating token";
+
       res.cookie('Authorization', token);
       res.status(200).send(util.GenerateResponseConext(user));
    }
-   catch(e) {
+   catch (e) {
       console.log(`Error while trying to login. error = ${e}`);
       res.status(500).send();
    }
 });
 
-router.get('/logout', authentication , async function(req, res){
+router.get('/logout', authentication, async function (req, res) {
    try {
       req.user.token = "";
-      await req.user.save({fields: ['token']});
+      await req.user.save({ fields: ['token'] });
       res.status(200).send();
    }
-   catch(e) {
+   catch (e) {
       console.log(`Error while trying to logout. error = ${e}`);
       res.status(500).send();
    }
 });
 
 
-router.get('/me',authentication,function(req, res){
+router.get('/me', authentication, function (req, res) {
    try {
       res.status(200).send(util.GenerateResponseConext(req.user));
    }
-   catch(e) {
+   catch (e) {
       console.log(`Error while trying to login. error = ${e}`);
       res.status(500).send();
    }
 });
 
-router.put('/me', authentication, async function(req, res) {
+router.put('/me', authentication, async function (req, res) {
    try {
       const payload = req.body;
       let user = req.user;
+
+      //Only attemp to check and update password if user account doesn't use single sign on
+      if (!user.is_single_sign_on) {
+         const match = await bycrypt.compare(payload.currentPassword, user.password);
+         if (!match) {
+            return res.status(401).send();
+         }
+         user.password = (payload.password !== null && payload.password !== "")
+            ? bycrypt.hashSync(payload.password, 11) : user.password;
+      }
+
       user.first_name = payload.first_name;
       user.last_name = payload.last_name;
-      user.password = (payload.password !== null && payload.password !== "")
-                      ? bycrypt.hashSync(payload.password, 11) : user.password;
 
       let newUser = await user.save();
       return res.status(200).send(util.GenerateResponseConext(newUser));
    }
-   catch(e) {
+   catch (e) {
       console.log(`Error while trying to update user info. error = ${e}`);
       res.status(500).send();
    }
 })
 
-router.post('/apikey', authentication ,async function(req, res){
-   try {                 
+router.post('/apikey', authentication, async function (req, res) {
+   try {
       dashboard_creds = process.env.TYK_DASHBOARD_CRED;
       api_id = process.env.TYK_API_KEY;
       url = 'https://admin.cloud.tyk.io/api/keys';
 
       headers = {
-        'authorization': dashboard_creds,
-        'Content-Type': 'application/json'
+         'authorization': dashboard_creds,
+         'Content-Type': 'application/json'
       }
       const payload = {
-        "allowance":1000,
-        "rate":1000,
-        "per":60,
-        "expires":0,
-        "quota_max":-1,
-        "quota_renews":1510452082,
-        "quota_remaining":-1,
-        "quota_renewal_rate":60,
-        "access_rights": {
-          api_id:{
-            "api_name":"LLB Bus API",
-            "api_id":api_id,
-            "versions":["Default"],
-            "allowed_urls":[]
-          }
-        },
-        "apply_policy_id":"5a07a7949b82ed0001584c92",
-        "tags":[],
-        "jwt_data":{"secret":""},
-        "meta_data":{},
-        "alias": req.user.email
+         "allowance": 1000,
+         "rate": 1000,
+         "per": 60,
+         "expires": 0,
+         "quota_max": -1,
+         "quota_renews": 1510452082,
+         "quota_remaining": -1,
+         "quota_renewal_rate": 60,
+         "access_rights": {
+            api_id: {
+               "api_name": "LLB Bus API",
+               "api_id": api_id,
+               "versions": ["Default"],
+               "allowed_urls": []
+            }
+         },
+         "apply_policy_id": "5a07a7949b82ed0001584c92",
+         "tags": [],
+         "jwt_data": { "secret": "" },
+         "meta_data": {},
+         "alias": req.user.email
       }
 
-      let result = await axios.post(url, payload ,{
+      let result = await axios.post(url, payload, {
          headers: {
             'authorization': dashboard_creds,
             'Content-Type': 'application/json'
          }
-       });
+      });
 
-      if(result.status == 200) {
+      if (result.status == 200) {
          console.log(result.data);
          let apiKey = await Apikey.create({
             service_name: "Uusimaa LLB API",
@@ -151,23 +162,24 @@ router.post('/apikey', authentication ,async function(req, res){
          return res.status(200).send(apiKey);
       }
    }
-   catch(e) {
+   catch (e) {
       console.log(e);
       res.status(500).send();
-   }   
+   }
 })
 
-router.get('/apikey', authentication ,async function(req, res){
+router.get('/apikey', authentication, async function (req, res) {
    try {
       let apiKey = await Apikey.findOne(
-         { where: 
+         {
+            where:
             {
-               user_id : req.user.id,
-            } 
+               user_id: req.user.id,
+            }
          });
       return res.status(200).send(apiKey);
    }
-   catch(e) {
+   catch (e) {
       console.log(`Error while trying to login. error = ${e}`);
       res.status(500).send();
    }

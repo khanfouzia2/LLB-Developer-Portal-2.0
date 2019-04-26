@@ -50,9 +50,9 @@ class SideBarNav extends Component {
                           <DefaultUserAvatar FirstName={first_name} LastName={last_name}></DefaultUserAvatar>
                           <p className="text-center">
                             {`${first_name} ${last_name}`}
-                            <a href="/profile/edit" className="btn btn-default">
+                            <Link to="/profile/edit" className="btn btn-default">
                               <i className="fas fa-user-edit fa-lg"></i>
-                            </a>
+                            </Link>
                           </p>
             </div>
           );

@@ -28,8 +28,8 @@ const Logout =  () => {
 const GetInfo = () => {
   return axios.get(USER_ME, {withCredentials: true});
 }
-const UpdateInfo = (first_name, last_name, password) => {
-  return axios.put(USER_ME, {first_name, last_name, password}, {withCredentials: true});
+const UpdateInfo = (first_name, last_name, currentPassword ,password) => {
+  return axios.put(USER_ME, {first_name, last_name, currentPassword ,password}, {withCredentials: true});
 }
 
 const GenerateAPIKey = () => {
