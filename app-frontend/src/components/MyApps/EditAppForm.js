@@ -37,14 +37,14 @@ class EditAppForm extends Component {
       const { applicationName, applicationDescription, titleType, permissions, selectedFile } = this.state
       const result = await PostUserMobileApp(applicationName, applicationDescription, titleType, permissions, "testing", selectedFile);
       if(result.status === 201) {
-        this.setState({isShowAlert: true, alertContent:"Application created successful!", alertStyle:"success"})
+        this.setState({isShowAlert: true, alertContent:"Application created successful!", alertStyle:"success"});
       }
       if(result.status === 200) {
-        this.setState({isShowAlert: true, alertContent:"Application update successful!", alertStyle:"success"})
+        this.setState({isShowAlert: true, alertContent:"Application update successful!", alertStyle:"success"});
       }
     }
     catch (e) {
-      this.setState({isShowAlert: true, alertContent:"Something went wrong !", alertStyle:"danger"})
+      this.setState({isShowAlert: true, alertContent:"Something went wrong !", alertStyle:"danger"});
     }
   }
 
@@ -64,6 +64,11 @@ class EditAppForm extends Component {
     this.setState({ permissions: newPermissionArray });
   }
   onFileUploadChange = (event) => {
+    let file = event.target.files[0] 
+    if(file.mimetype !== 'application/zip') {
+      this.setState({isShowAlert: true, alertContent:"Only .zip file is supported !", alertStyle:"danger"});
+      return;
+    }
     this.setState({
       selectedFile: event.target.files[0],
       uploadFileName: (event.target.files.length > 0) ? event.target.files[0].name : this.state.uploadFileName
