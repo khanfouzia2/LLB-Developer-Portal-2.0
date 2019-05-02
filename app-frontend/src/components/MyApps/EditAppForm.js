@@ -64,8 +64,8 @@ class EditAppForm extends Component {
     this.setState({ permissions: newPermissionArray });
   }
   onFileUploadChange = (event) => {
-    let file = event.target.files[0] 
-    if(file.mimetype !== 'application/zip') {
+    let file = event.target.files[0]; 
+    if(file.type !== 'application/zip') {
       this.setState({isShowAlert: true, alertContent:"Only .zip file is supported !", alertStyle:"danger"});
       return;
     }
