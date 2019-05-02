@@ -1,6 +1,9 @@
 # Database config
 app-backend/database/config.js
 
+#apps upload folder from backend
+app-backend/apps
+
 # Logs
 logs
 *.log

@@ -3,7 +3,6 @@ import AuthContext from '../../context/auth-context';
 import DefaultUserAvatar from '../NavBar/DefaultUserAvatar';
 import './EditProfile.css';
 import { UpdateInfo } from '../../services/UserApi';
-import { Signer } from 'crypto';
 
 class EditProfile extends Component {
   static contextType = AuthContext;

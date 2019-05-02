@@ -334,15 +334,16 @@ const MobileApp = sequelize.define('mobile_app',
       allowNull: false,
       defaultValue: 'small',
     },
-    permission: {
+    permissions: {
       type: Sequelize.ARRAY(Sequelize.STRING(100)),
       allowNull: false,
       defaultValue: [],
     },
-    zip_file_url: {
-      type: Sequelize.STRING(500)
+    status: {
+      type: Sequelize.ENUM('testing', 'pending', 'approved', 'denied'),
+      allowNull: false,
+      defaultValue: 'testing',
     },
-
     // must be done like this if we want DEFAULT NOW()
     created_at: {
       type: Sequelize.DATE,

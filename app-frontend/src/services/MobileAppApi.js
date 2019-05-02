@@ -1,18 +1,24 @@
 import axios from 'axios';
-import {GET_USER_MOBILE_APPS} from '../rest-endpoints';
+import { USER_MOBILE_APPS, USER_MOBILE_APPS_UPLOAD_FILE } from '../rest-endpoints';
 
 const GetUserMobileApps = () => {
-  return axios.get(GET_USER_MOBILE_APPS,{withCredentials: true});
+  return axios.get(USER_MOBILE_APPS, { withCredentials: true });
 };
 
-// const FormRegister =  (first_name, last_name, email, password) => {
-//   return axios.post(USER_FORM_REGISTER, 
-//     {
-//       first_name, 
-//       last_name, 
-//       email, 
-//       password
-//     }, {withCredentials: true});
-//    };
+const PostUserMobileApp = (name, description, titleType, permissions, status, fileData) => {
+  const data = new FormData()
+  data.append('application_name', name);
+  data.append('description', description);
+  data.append('title_type', titleType);
+  data.append('permissions', permissions);
+  data.append('status', status);
+  data.append('file', fileData)
+  return axios.post(USER_MOBILE_APPS,
+    data,
+    {
+      withCredentials: true
+    });
+}
 
-export {GetUserMobileApps};
+
+export { GetUserMobileApps, PostUserMobileApp };

@@ -35,7 +35,8 @@ const THREAD_PATCH        = BASE_URL + 'forum/thread' // +/id
 const THREAD_DELETE       = BASE_URL + 'forum/thread' // +/id
 
 // Mobile App
-const GET_USER_MOBILE_APPS = BASE_URL + 'mobileapps'
+const USER_MOBILE_APPS = BASE_URL + 'mobileapps'
+const USER_MOBILE_APPS_UPLOAD_FILE = BASE_URL + 'mobileapps/uploadfile'
 
 module.exports = {
   NEWS_POST,
@@ -58,5 +59,6 @@ module.exports = {
   GET_THREAD,
   GOOGLE_LOGIN,
   USER_GENERATE_API,
-  GET_USER_MOBILE_APPS
+  USER_MOBILE_APPS,
+  USER_MOBILE_APPS_UPLOAD_FILE
 }

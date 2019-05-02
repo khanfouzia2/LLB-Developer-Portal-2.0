@@ -5,6 +5,7 @@ const _ = require('lodash');
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const passport = require('passport');
+const fs = require('fs');
 require('dotenv').config()
 
 
@@ -36,6 +37,13 @@ app.use('/mobileapps', mobileAppRoute);
 app.use('/', routeName);
 
 app.listen(port, () => {
+    //Folder for upload files related to mobileApp
+    // if (!fs.existsSync('./apps')){
+    //     console.log("apps folder not found")
+    //     fs.mkdirSync('./apps');
+    //     console.log("apps folder created")
+    // }
+    
     console.log(`Express app started on port ${port}`);
 });
 
