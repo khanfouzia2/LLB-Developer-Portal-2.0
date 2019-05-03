@@ -5,14 +5,15 @@ const GetUserMobileApps = () => {
   return axios.get(USER_MOBILE_APPS, { withCredentials: true });
 };
 
-const PostUserMobileApp = (name, description, titleType, permissions, status, fileData) => {
+const PostUserMobileApp = (name, description, titleType, permissions, status, fileName , fileData) => {
   const data = new FormData()
   data.append('application_name', name);
   data.append('description', description);
   data.append('title_type', titleType);
   data.append('permissions', permissions);
   data.append('status', status);
-  data.append('file', fileData)
+  data.append('zip_file_name', fileName);
+  data.append('file', fileData);
   return axios.post(USER_MOBILE_APPS,
     data,
     {

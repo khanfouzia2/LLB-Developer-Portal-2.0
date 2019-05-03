@@ -329,6 +329,10 @@ const MobileApp = sequelize.define('mobile_app',
       type: Sequelize.TEXT,
       allowNull: false,
     },
+    zip_file_name: {
+      type: Sequelize.STRING(250),
+      allowNull: true,
+    },
     title_type: {
       type: Sequelize.ENUM('small', 'medium', 'large'),
       allowNull: false,

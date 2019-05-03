@@ -48,19 +48,24 @@ router.post('/', authentication, function (req, res) {
       const payload = req.body;
       let mobileApp = await MobileApp.create({
         ...payload,
-        user_id : req.user.id,
+        user_id: req.user.id,
         // The data send through FormData from the backend is a String not an prober array , hence we need to do some splitting
-        permissions: payload.permissions.split(',') 
+        permissions: payload.permissions.split(',')
       });
-      //Now we unzip the file to correct folder and delete the upload .zip file
-      UnZipAndDeleteZipFile(req.file, mobileApp.id);
+      if (req.file != null) {
+        //Now we unzip the file to correct folder and delete the upload .zip file
+        UnZipAndDeleteZipFile(req.file, mobileApp.id);
+      }
+
       return res.status(201).send();
     }
     catch (e) {
       console.log(`Error while trying to create an app. error = ${e}`);
-      if (fs.existsSync(req.file.path)) {
-        console.log("file upload but insert fail so just gonna remove the file now");
-        fs.unlinkSync(req.file.path);
+      if(req.file != null) {
+        if (fs.existsSync(req.file.path)) {
+          console.log("file upload but insert fail so just gonna remove the file now");
+          fs.unlinkSync(req.file.path);
+        }
       }
       res.status(500).send();
     }
