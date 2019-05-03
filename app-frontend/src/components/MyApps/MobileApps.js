@@ -43,6 +43,7 @@ class MobileApps extends Component {
           <td>{x.description}</td>
           <td>{x.title_type}</td>
           <td>{x.permissions.toString()}</td>
+          <td>{x.zip_file_name}</td>
           <td>{x.status}</td>
           <td>{x.updated_at}</td>
           <td><button className="btn btn-secondary">Edit</button></td>
@@ -58,6 +59,7 @@ class MobileApps extends Component {
                 <th scope="col">Application Description</th>
                 <th scope="col">Title Type</th>
                 <th scope="col">Permission</th>
+                <th scope="col">Zip File Name</th>
                 <th scope="col">Status</th>
                 <th scope="col">Last Update</th>
                 <th scope="col"></th>

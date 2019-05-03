@@ -28,23 +28,41 @@ class EditAppForm extends Component {
     this.renderPermissionCheckBox = this.renderPermissionCheckBox.bind(this);
     this.handlePermissionChange = this.handlePermissionChange.bind(this);
     this.onFileUploadChange = this.onFileUploadChange.bind(this);
-    this.handlePublishClicked = this.handlePublishClicked.bind(this);
+    this.handButtonClicked = this.handButtonClicked.bind(this);
+    this.formValidation = this.formValidation.bind(this);
+  }
+  formValidation = () => {
+    let error = "";
+    if (this.state.applicationName === "") error = "Please enter the application name";
+    if (this.state.applicationDescription === "") error = "Please enter the application description";
+    if (this.state.permissions.length <= 0) error = "Please choose some permissions";
+    if (this.state.uploadFileName === "Choose a file") error = "Please choose the file to upload";
+
+    if (error !== "") {
+      this.setState({ isShowAlert: true, alertContent: error, alertStyle: "danger" });
+      return false;
+    }
+    return true;
   }
 
-  handlePublishClicked = async (e) => {
+  handButtonClicked = async (e) => {
     e.preventDefault();
+    let isFormValid = this.formValidation();
+    if (!isFormValid) return;
+
     try {
-      const { applicationName, applicationDescription, titleType, permissions, selectedFile } = this.state
-      const result = await PostUserMobileApp(applicationName, applicationDescription, titleType, permissions, "testing", selectedFile);
-      if(result.status === 201) {
-        this.setState({isShowAlert: true, alertContent:"Application created successful!", alertStyle:"success"});
+      const status = (e.target.name === "publishButton") ? "testing" : "pending";
+      const { applicationName, applicationDescription, titleType, permissions, selectedFile, uploadFileName } = this.state
+      const result = await PostUserMobileApp(applicationName, applicationDescription, titleType, permissions, status, uploadFileName, selectedFile);
+      if (result.status === 201) {
+        this.setState({ isShowAlert: true, alertContent: "Application created successful!", alertStyle: "success" });
       }
-      if(result.status === 200) {
-        this.setState({isShowAlert: true, alertContent:"Application update successful!", alertStyle:"success"});
+      if (result.status === 200) {
+        this.setState({ isShowAlert: true, alertContent: "Application update successful!", alertStyle: "success" });
       }
     }
     catch (e) {
-      this.setState({isShowAlert: true, alertContent:"Something went wrong !", alertStyle:"danger"});
+      this.setState({ isShowAlert: true, alertContent: "Something went wrong !", alertStyle: "danger" });
     }
   }
 
@@ -64,9 +82,9 @@ class EditAppForm extends Component {
     this.setState({ permissions: newPermissionArray });
   }
   onFileUploadChange = (event) => {
-    let file = event.target.files[0]; 
-    if(file.type !== 'application/zip') {
-      this.setState({isShowAlert: true, alertContent:"Only .zip file is supported !", alertStyle:"danger"});
+    let file = event.target.files[0];
+    if (file.type !== 'application/zip') {
+      this.setState({ isShowAlert: true, alertContent: "Only .zip file is supported !", alertStyle: "danger" });
       return;
     }
     this.setState({
@@ -101,7 +119,7 @@ class EditAppForm extends Component {
   }
   renderFormContent = () => {
     const { isAuth } = this.context;
-    const {alertContent, alertStyle, isShowAlert} = this.state;
+    const { alertContent, alertStyle, isShowAlert } = this.state;
 
     if (!isAuth) { return (<></>); }
     else {
@@ -115,7 +133,7 @@ class EditAppForm extends Component {
               <div className="col-md-9 offset-md-1">
                 <div className="card">
                   <div className="edit-wrapper">
-                    <Alert style={alertStyle} isShown={isShowAlert} content= {alertContent}/>
+                    <Alert style={alertStyle} isShown={isShowAlert} content={alertContent} />
                     <form>
                       <div className="form-group">
                         <label>Name</label>
@@ -162,8 +180,8 @@ class EditAppForm extends Component {
                           <li>Submit for Approval - Your app will be submitted to Adminstrators to check and review. It will appear on the normal list of applications for users to add to their Landing Page. You cannot edit your application once it has been submitted. </li>
                         </ul>
                       </div>
-                      <button type="submit" className="btn btn-md btn-primary float-right btn-app-submit" >SUBMIT FOR APPROVAL</button>
-                      <button type="submit" className="btn btn-md btn-secondary float-right" onClick={this.handlePublishClicked}>PUBLISH FOR TESTING</button>
+                      <button type="submit" name="submitButton" className="btn btn-md btn-primary float-right btn-app-submit" onClick={this.handButtonClicked}>SUBMIT FOR APPROVAL</button>
+                      <button type="submit" name="publishButton" className="btn btn-md btn-secondary float-right" onClick={this.handButtonClicked}>PUBLISH FOR TESTING</button>
                     </form>
                   </div>
                 </div>
