@@ -5,7 +5,14 @@ import PropTypes from 'prop-types';
   Generic modal window (aka pop-up)
 
   Example usage:
-  <Modal onCloseFunction={()=>this.closeModal()} closeButtonStyle="warning" closeButtonText="Close me!" isShown={this.state.showModal} title="Foo foo" content="This is content" />
+  <Modal
+    onCloseFunction={()=>this.closeModal()}
+    closeButtonStyle="warning"
+    closeButtonText="Close me!"
+    isShown={this.state.showModal}
+    title="Foo foo"
+    content="This is content"
+    extraButtons=[<button> ...] />
 
   Note that function closeModal() is defined in the calling parent Component.
   This function defines what will happen when 'clode' button is pressed.
@@ -21,7 +28,6 @@ class Modal extends React.Component {
 
   constructor(props) {
     super(props);
-
   }
 
 
@@ -107,9 +113,14 @@ class Modal extends React.Component {
             </div>
 
             <div className="footer" style={footerStyle}>
-              <button onClick={()=>this.props.onCloseFunction()} className={`btn btn-block btn-${this.props.closeButtonStyle}`}>
-                <strong>{this.props.closeButtonText}</strong>
-              </button>
+              <div className="float-right">
+                {/* Primary button. Always on right side */}
+                { this.renderExtraButtons() }
+                <button onClick={()=>this.props.onCloseFunction()} className={`btn ml-3 btn-${this.props.closeButtonStyle}`}>
+                  <strong>{this.props.closeButtonText}</strong>
+                </button>
+              </div>
+              <div style={{clear:'both'}}></div>
             </div>
 
           </div>
@@ -119,6 +130,19 @@ class Modal extends React.Component {
     } // render
 
 
+    renderExtraButtons() {
+      const items = []
+      if(this.props.extraButtons.lenght == 0) { return(null); }
+      this.props.extraButtons.map(btn => {
+        //items.push(btn)
+          items.push(
+            <div className="mr-1" style={{display:'inline-block'}}>
+              {btn}
+            </div>
+          );
+      })
+      return items;
+    }
 
 
 }
@@ -130,11 +154,13 @@ Modal.propTypes = {
   closeButtonStyle: PropTypes.oneOf(['primary','danger','info','success','warning', 'secondary', 'light', 'dark']),
   isShown: PropTypes.bool,
   title: PropTypes.string,
-  content: PropTypes.string
+  content: PropTypes.string,
+  extraButtons: PropTypes.array,
 };
 // Specifies the default values for props:
 Modal.defaultProps = {
   closeButtonText: 'Close',
   closeButtonStyle: 'primary',
   isShown: true,
+  extraButtons: []
 };
