@@ -240,7 +240,7 @@ const BugFeedback = sequelize.define('bug_feedback',
     },
     status: {
       type: Sequelize.ENUM,
-      values: ['ACTIVE', 'pending', 'deleted', 'something...'],
+      values: ['ACTIVE', 'pending', 'deleted'],
       defaultValue: 'ACTIVE',
       allowNull: false
     },
@@ -260,11 +260,11 @@ const BugFeedback = sequelize.define('bug_feedback',
     },
     expected_result: {
       type: Sequelize.TEXT,
-      allowNull: false
+      allowNull: true
     },
     actual_result: {
       type: Sequelize.TEXT,
-      allowNull: false
+      allowNull: true
     },
     created_at: {
       type: Sequelize.DATE,

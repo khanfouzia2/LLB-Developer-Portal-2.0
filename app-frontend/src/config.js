@@ -26,6 +26,9 @@ const NEWS_DEFAULT_BACKGROUND_FILENAME = "./bus.png";
 // Should not happen, but better than nothing
 const TEXT_IF_POST_EMPTY = "No content";
 
+//Feedback
+const FEEDBACK_TITLE_MAXLEN = 100;
+
 // Forum
 const THREAD_TITLE_MAXLEN = 100;
 const THREAD_CONTENT_MAXLEN = 50000;
@@ -66,5 +69,6 @@ module.exports = {
   NEWS_SHOWN_CHARS,
   NEWS_DEFAULT_BACKGROUND_FILENAME,
   THREAD_TITLE_MAXLEN,
-  THREAD_CONTENT_MAXLEN
+  THREAD_CONTENT_MAXLEN,
+  FEEDBACK_TITLE_MAXLEN
 }

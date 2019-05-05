@@ -18,6 +18,7 @@ const forumRoute = require('./routes/forum.js');
 const googleAuthRoute = require('./routes/googleAuth.js')
 const authentication = require('./services/authentication.js');
 const mobileAppRoute = require('./routes/mobileApp.js');
+const feedbackRoute = require('./routes/feedback.js');
 const port = process.env.PORT || 8080;
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/tools', toolsRoute);
 app.use('/auth', googleAuthRoute)
 app.use('/forum', forumRoute)
 app.use('/mobileapps', mobileAppRoute);
+app.use('/feedback', feedbackRoute);
 app.use('/', routeName);
 
 app.listen(port, () => {
