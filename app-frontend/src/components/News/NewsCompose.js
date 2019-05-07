@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
-import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH, NEWS_DELETE, NEWS_GET_DRAFTS } from '../../rest-endpoints.js';
+import { NEWS_POST, NEWS_GET_ONE, NEWS_PATCH, NEWS_DELETE, NEWS_DELETE_DONE_STATUS, NEWS_GET_DRAFTS } from '../../rest-endpoints.js';
 import PropTypes from 'prop-types';
 import ContentPreview from '../Misc/ContentPreview.js';
 import NewsDraftsList from './NewsDraftsList.js';
@@ -34,6 +34,11 @@ class NewsCompose extends Component {
         isShown: false,
         content: "AAA"
       },
+      modal: {
+        isShown: false,
+        title: "",
+        content: ""
+      },
       drafts: [] // Array of news objects
     }
     this.attachment_file    = React.createRef();
@@ -46,6 +51,10 @@ class NewsCompose extends Component {
     this.handleAttachmentFileInputChange    = this.handleAttachmentFileInputChange.bind(this);
     this.handleOnClickDelete                = this.handleOnClickDelete.bind(this);
     this.loadAndUpdateComponentContent      = this.loadAndUpdateComponentContent.bind(this);
+
+    // Modal actions
+    this.modal_DeleteCancel                 = this.modal_DeleteCancel.bind(this);  // Deletion modal window cancel action.
+    this.modal_DeletePrimaryAction          = this.modal_DeletePrimaryAction.bind(this);
   }
 
 
@@ -66,7 +75,7 @@ class NewsCompose extends Component {
             <div className="card-body">
 
               { this.showEditModeAlert() }
-              <Alert isShown={this.state.alert.isShown} content={this.state.alert.content} style={this.state.alert.style} key="999" />
+              <Alert isShown={this.state.alert.isShown} content={this.state.alert.content} style={this.state.alert.style} />
 
               <form>
 
@@ -169,6 +178,9 @@ class NewsCompose extends Component {
           <NewsDraftsList drafts={this.state.drafts} />
         </div>
 
+        { this.renderModalWindow() }
+
+
       </div>
     );
   }
@@ -179,6 +191,67 @@ class NewsCompose extends Component {
       return(<div className="alert alert-info">You are now in edit mode</div>);
     }
   }
+
+
+  modal_DeleteCancel(e) {
+    console.log("User clicked cancel")
+    this.setState({modal: {isShown:false}})
+  }
+
+  /*
+    The actual delete-call happens here
+  */
+  modal_DeletePrimaryAction() {
+
+    const news_id = this.state.id;
+    if(!news_id) {
+      console.log("Invalid ID");
+      return; }
+
+    var req = new Request(NEWS_DELETE+'/'+news_id, {
+      method: 'DELETE',
+      headers: {},
+      credentials: 'include',
+      body: JSON.stringify(null)
+    });
+
+    // Make a HTTP call
+    var pr = fetch(req);
+
+    pr.then(data => {
+      if(data.status === NEWS_DELETE_DONE_STATUS) {
+        return;
+      } else {
+        throw new Error();
+      }
+    }, (err) => {
+      alert("Someting went wrong!");
+    }).then(() => {
+      // Redirect user
+      helpers.redirectUser('/news/compose');
+    });
+
+  }
+
+  renderModalWindow() {
+
+    const extraButtons = [
+      <button id="extra-1" className="btn btn-outline-danger" onClick={this.modal_DeleteCancel}>Cancel</button>,
+    ]
+
+    return(
+      <Modal
+        isShown={this.state.modal.isShown}
+        title={this.state.modal.title}
+        content={this.state.modal.content}
+        closeButtonText="DELETE"
+        closeButtonStyle="danger"
+        onCloseFunction={this.modal_DeletePrimaryAction}
+        extraButtons={extraButtons} />
+    )
+  }
+
+
 
 
   /* Show News id if in edit mode */
@@ -300,10 +373,14 @@ class NewsCompose extends Component {
       return Promise.reject();
     }).then(data => {
 
-      // Make alert visible
+      // Make alert visible. Callback will setInterval to hide it after X seconds
       console.log(data)
       this.setState({
         alert: {isShown: true, content: data.message, style: "success"}
+      }, () => {
+        setInterval(() => {
+          this.setState({alert: {isShown: false, content: "", style: ""}})
+        }, 3000);
       })
 
     });
@@ -386,26 +463,9 @@ class NewsCompose extends Component {
   handleOnClickDelete(event) {
 
     console.log("DELETE button handler function triggered...");
-    const news_id = this.state.id;
-    if(!news_id) { return; }
-
-    var req = new Request(NEWS_DELETE+'/'+news_id, {
-      method: 'DELETE',
-      headers: {
-      },
-      credentials: 'include',
-      body: JSON.stringify(null)
-    });
-
-    // Make a HTTP call
-    fetch(req).then(data => {
-      return data.json()
-    }).then(data => {
-      console.log( data.message );
-    }).catch(err => {
-      //alert(err);
+    this.setState({
+      modal: { isShown:true, title: "Do you really want to delete this resource?", content: "This cannot be undone." }
     })
-
   }
 
 

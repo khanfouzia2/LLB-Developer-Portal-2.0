@@ -97,7 +97,7 @@ class NewsCardList extends Component {
                   </ul>
                 </div>
               </div>
-              <div className="alert alert-success mt-md-3">[Admin notice] News shown below are public. Users will see News section as it's shown below.</div>
+              <div className="alert alert-success mt-3">[Admin notice] News shown below are public. Users will see News section as it's shown below.</div>
               <hr/>
             </React.Fragment>
         );
@@ -114,7 +114,7 @@ class NewsCardList extends Component {
         <NewsCard newsObj={news} key={news.id} />
       );
     } else {
-      zero_posts_alert = <div className='alert alert-info mt-md-3'>No news to show! | <strong><Link to="/news/page/1">Go back to page 1</Link></strong></div>
+      zero_posts_alert = <div className='alert alert-info mt-3'>No news to show! | <strong><Link to="/news/page/1">Go back to page 1</Link></strong></div>
     }
 
     let value = this.context;

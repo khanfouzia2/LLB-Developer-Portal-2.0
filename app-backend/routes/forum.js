@@ -208,49 +208,105 @@ router.post('/comment', authentication, (req, res) => {
 
 // TODO: Check permission
 // Check ID validity
+
 /*
 
-  The promise returns an array with one or two elements.
-  The first element is always the number of affected rows, while the second element
-  is the actual affected rows (only supported in postgres with options.returning true.)
+
+  Returns
+
+  When success :: 200
+
+  {
+      "success": true,
+      "thread": [
+          1,  // <--- Number of updated rows
+          [
+              {
+                  "id": 1,
+                  "forum_category_id": null,
+                  "author_id": 1000,
+                  "title": "Example thread",
+                  "content": "...",
+                  "created_at": "2019-05-03T08:59:07.851Z",
+                  "updated_at": "2019-05-03T09:49:36.897Z",
+                  "deleted_at": null
+              }
+          ]
+      ]
+  }
+
+  On error: 500
+
+  On invalid parameters: 400 (Bad request)
+  json { message: "Error!" }
+
 
 */
 router.patch("/thread/:id", authentication, (req,res) => {
 
-  console.log("\n\t PATCH request received");
+  console.log("\n\tPATCH request received");
   console.log("\t"+req.user.email);
 
-
+  // Get ID
   var thread_id = parseInt(req.params.id, 10);
 
+  // Check IDs validity
   if(!isNaN(thread_id) && req.body.thread_content != null) {
 
-    var pr = models.Thread.update({
-      content: req.body.thread_content
-    }, {
-      where: {
-        id: {
-          [Sequelize.Op.eq]: thread_id
-        }
-      },
-      returning: true
-    });
+    // Get Thread obj. and check editing policy (admin and owner can edit)
+    pr_ = models.Thread.findByPk(thread_id); // NOTE: only finds not soft deleted rows
+    pr_.then(row => {
+      // Was found?
+      if(!row) {
+        res.status(404).send();
+        return new Promise().resolve();
+      }
+      // Check permission
+      const permission = policies.patchThread(row, req.user);
+      if(!permission) {
+        res.status(403).json({success: false, message: "Forbidden!"});
+        return new Promise().resolve();
+      }
 
-    // successfull value is array of updated IDs [objects/rows]
-    pr.then(data => {
-      console.log(data);
-      res.status(200);
-      res.json({success: true});
-    }).catch(err => {
-      console.log(err)
-      res.status(500);
-      res.json({message: "Error!"});
+      // Do the actual updating
+      var pr = models.Thread.update({
+        content: req.body.thread_content.trim()
+      }, {
+        where: {
+          id: {
+            [Sequelize.Op.eq]: thread_id
+          }
+        },
+        returning: true
+      });
+
+      // successfull value is array of updated IDs [objects/rows]
+      pr.then(data => {
+        console.log(data);
+        // If at lest 1 row changed
+        if(data[0] >= 1) {
+          res.status(200);
+          res.json({success: true, thread: data});
+        } else {
+          res.status(404).json({success: false, message: "Not found!"});
+        }
+      }, (err) => {
+        console.log(err)
+        res.status(500);
+        res.json({message: "Error!"});
+      })
+
+      return;
+    }, (err) => {
+      // error
+      throw new Error(err);
     })
+
 
   }
   // id not valid
   else {
-    res.status(500);
+    res.status(400); // Bad request
     res.json({message: "Invalid content!"});
   }
 

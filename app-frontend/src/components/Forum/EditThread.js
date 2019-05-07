@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom"
-import { GET_THREAD, THREAD_PATCH, THREAD_DELETE } from '../../rest-endpoints.js';
+import { GET_THREAD, THREAD_PATCH, THREAD_DELETE, THREAD_PATCH_DONE_STATUS, THREAD_DELETE_DONE_STATUS } from '../../rest-endpoints.js';
 import { editThreadPolicy } from '../../authorization/view-policies.js';
 import AuthContext from '../../context/auth-context';
 import Modal from '../Misc/Modal.js';
@@ -32,13 +32,16 @@ class EditThread extends React.Component {
       modal: {
         isShown: false,
         title: "",
-        content: ""
+        content: "",
+        closeButtonText: "",
+        closeButtonStyle: "",
+        extraButtons: []
       }
     }
 
     this.handleUpdateOnClick  = this.handleUpdateOnClick.bind(this);
     this.handleInputChange    = this.handleInputChange.bind(this);
-    this.deleteThread         = this.deleteThread.bind(this);
+    this.makeDeleteThreadCall         = this.makeDeleteThreadCall.bind(this);
   }
 
 
@@ -67,11 +70,10 @@ class EditThread extends React.Component {
 
             <div className="row mt-3">
               <div class="col-9">
-                <ConfirmButton isRendered={true} buttonText="Delete" buttonTextAfterFirstClick="Confirm deletion?" CSSClassString="btn-danger"
-                  secondClickOnClickFunc={(e)=>{ this.deleteThread(e) }} disabledTime={2000} />
+                <button className="btn btn-danger btn-sm" onClick={(e)=>{ this.onClickDeleteThread(e) }}>Delete thread</button>
               </div>
               <div class="col-3 align-self-end">
-                <button onClick={(e)=>this.handleUpdateOnClick(e)} className="btn btn-success float-right">Update</button>
+                <button onClick={(e)=>this.handleUpdateOnClick(e)} className="btn btn-success btn-sm float-right">Update</button>
               </div>
             </div>
 
@@ -82,12 +84,36 @@ class EditThread extends React.Component {
           </div>
 
         </div>
-        <Modal isShown={this.state.modal.isShown} title={this.state.modal.title} content={this.state.modal.content} />
+
+        <Modal isShown={this.state.modal.isShown}
+          title={this.state.modal.title}
+          content={this.state.modal.content}
+          onCloseFunction={this.state.modal.onCloseFunction}
+          extraButtons={this.state.modal.extraButtons}
+          closeButtonText={this.state.modal.closeButtonText}
+          closeButtonStyle={this.state.modal.closeButtonStyle}
+        />
+
       </React.Fragment>
     );
 
 
   }
+
+
+  /*
+    When user clicks 'delete thread': Open modal window for confirmation
+  */
+  onClickDeleteThread(e) {
+
+    const ebs = [<button className="btn btn-outline-secondary" onClick={(e)=>this.setState({modal:{isShown:false}})}>Cancel</button>,];
+
+    this.setState({
+      modal: { isShown: true, title: "Do you really want to delete this thread?", extraButtons: ebs, onCloseFunction: this.makeDeleteThreadCall, closeButtonStyle: "danger", closeButtonText: "DELETE"}
+    })
+
+  }
+
 
 
   /*
@@ -134,7 +160,6 @@ class EditThread extends React.Component {
 
   }
 
-  //
 
   handleUpdateOnClick(e) {
 
@@ -161,13 +186,34 @@ class EditThread extends React.Component {
     const req = new Request(THREAD_PATCH+'/'+this.state.thread_id, options);
 
     // Send to back-end
-    fetch(req);
+    fetch(req).then(resp => {
+      if(resp.status === THREAD_PATCH_DONE_STATUS) {
+        this.setState({
+          modal: {
+            isShown: true,
+            title: "Updated succesfully!",
+            content: null
+          }
+        })
+      } else if(resp.status) {
+        console.log(resp.status);
+        throw new Error("An error occured!")
+      }
+    }).catch(err => {
+      this.setState({
+        modal: {
+          isShown: true,
+          title: "Error "+err,
+          content: null
+        }
+      })
+    })
 
   }
 
 
 
-  deleteThread(e) {
+  makeDeleteThreadCall(e) {
 
     // Headers
     var heds = new Headers();
@@ -185,7 +231,7 @@ class EditThread extends React.Component {
 
     // Call
     fetch(r).then(res => {
-      if(res.status == 202) {
+      if(res.status == THREAD_DELETE_DONE_STATUS) {
         helpers.redirectUser('/forum');
       } else {
         return res.json();

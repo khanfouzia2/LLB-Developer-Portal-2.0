@@ -57,9 +57,6 @@ class Modal extends React.Component {
         borderRadius: 7,
         height: 'auto',
         width: '50vw',
-        /*minWidth: 200,
-        maxWidth: '80vw',
-        minHeight: 250,*/
         maxHeight: '95vh',
         zIndex:100,
         overflowY: 'auto',
@@ -74,7 +71,6 @@ class Modal extends React.Component {
       position: 'relative',
       overflowY: 'scroll',
       minHeight: 50,
-      height: 200,
       maxHeight: '40%',
       wordWrap: 'break-text',
     };
@@ -149,7 +145,7 @@ class Modal extends React.Component {
 export default Modal;
 
 Modal.propTypes = {
-  onCloseFunction: PropTypes.func,
+  onCloseFunction: PropTypes.func, /* should be renamed as primary button function */
   closeButtonText: PropTypes.string,
   closeButtonStyle: PropTypes.oneOf(['primary','danger','info','success','warning', 'secondary', 'light', 'dark']),
   isShown: PropTypes.bool,

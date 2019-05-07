@@ -60,7 +60,7 @@ exports.getNumericBending = function(amount, singular, plural) {
 }
 
 exports.redirectUser = function(url=null) {
-  if(url==null) {
+  if(url == null || url == "") {
     window.location.reload();
   }
   window.location.href = url;

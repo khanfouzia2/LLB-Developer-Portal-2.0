@@ -21,6 +21,20 @@ const config = require('../config.js');
 
 
 
+
+exports.patchThread = function(thread=null, user=null) {
+  if( anyNulls(thread, user) ) { return false; }
+
+  // Check object validity
+  if('author_id' in thread && 'id' in user && 'role' in user) {
+    if(user.id != null && thread.author_id != null && user.role != null) {
+      // Actual permission check:
+      return (thread.author_id === user.id || user.role === config.ADMIN_ROLE_NAME)
+    }
+  }
+  return false;
+}
+
 /*
   - User can delete his own comment
   - Admin can delete any comment

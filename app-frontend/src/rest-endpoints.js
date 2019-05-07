@@ -11,6 +11,7 @@ const NEWS_GET_ALL = BASE_URL + "news/page"; // +id
 const NEWS_GET_ONE = BASE_URL + "news/id"; // +id
 const NEWS_PATCH = BASE_URL + "news"; // +id
 const NEWS_DELETE = BASE_URL + "news"; // +id
+  const NEWS_DELETE_DONE_STATUS = 204;
 const NEWS_GET_DRAFTS = BASE_URL + "news/drafts"
 
 const TOOLS_GET = BASE_URL + "tools";
@@ -31,12 +32,34 @@ const FORUM_POST_NEW      = BASE_URL + 'forum/'
 const GET_THREAD          = BASE_URL + 'forum/thread' // +/id
 const COMMENT_POST        = BASE_URL + 'forum/comment'
 const COMMENT_DELETE      = BASE_URL + 'forum/comment' // +/id
+  const COMMENT_DELETE_DONE_STATUS = 200;
 const THREAD_PATCH        = BASE_URL + 'forum/thread' // +/id
+  const THREAD_PATCH_DONE_STATUS = 200;
 const THREAD_DELETE       = BASE_URL + 'forum/thread' // +/id
+  const THREAD_DELETE_DONE_STATUS = 202;
 
 // Mobile App
 const USER_MOBILE_APPS = BASE_URL + 'mobileapps'
 const USER_MOBILE_APPS_UPLOAD_FILE = BASE_URL + 'mobileapps/uploadfile'
+
+
+
+/*
+  Generic HTTP Status codes and their names
+  https://httpstatuses.com/
+*/
+
+const HTTP_OK                   = 200;
+const HTTP_CREATED              = 201; // Inserted to DB succesfully
+const HTTP_NO_CONTENT           = 204; // Request OK, nothing is sent back
+const HTTP_BAD_REQUEST          = 400;
+const HTTP_UNAUTH               = 401;
+const HTTP_FORBIDDEN            = 403; // No permission
+const HTTP_NOT_FOUND            = 404; // ID not in DB
+const HTTP_UNSUPPORTED_MEDIA    = 415; // Invalid content, for example string is empty
+const HTTP_SERVER_ERR           = 500;
+
+
 
 module.exports = {
   NEWS_POST,
@@ -44,6 +67,7 @@ module.exports = {
   NEWS_GET_ONE,
   NEWS_PATCH,
   NEWS_DELETE,
+  NEWS_DELETE_DONE_STATUS,
   NEWS_GET_DRAFTS,
   TOOLS_GET,
   USER_FORM_REGISTER,
@@ -54,11 +78,23 @@ module.exports = {
   FORUM_POST_NEW,
   COMMENT_POST,
   COMMENT_DELETE,
+  COMMENT_DELETE_DONE_STATUS,
   THREAD_PATCH,
+  THREAD_PATCH_DONE_STATUS,
   THREAD_DELETE,
+  THREAD_DELETE_DONE_STATUS,
   GET_THREAD,
   GOOGLE_LOGIN,
   USER_GENERATE_API,
   USER_MOBILE_APPS,
-  USER_MOBILE_APPS_UPLOAD_FILE
+  USER_MOBILE_APPS_UPLOAD_FILE,
+  HTTP_OK,
+  HTTP_CREATED,
+  HTTP_NO_CONTENT,
+  HTTP_BAD_REQUEST,
+  HTTP_UNAUTH,
+  HTTP_FORBIDDEN,
+  HTTP_NOT_FOUND,
+  HTTP_UNSUPPORTED_MEDIA,
+  HTTP_SERVER_ERR,
 }

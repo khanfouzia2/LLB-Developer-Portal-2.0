@@ -247,15 +247,22 @@ router.get('/drafts', authentication, (req, res) => {
   Returns JSON object with values:
     message:String
     success:Boolean
+
+  204 If params ok. No matter if resource was deleted or not
+  400 If id is invalid
+  403 If not permission (Not implemented yet)
+  500 Server error
+
 */
 router.delete('/:id', authentication, (req, res) => {
 
   var msg, success;
+  var status = 404;
   console.log("\n===\nNews.js | DELETE Request received...");
   console.log("Auth. user is: "+ req.user.email + ", id: " + req.user.id)
   //console.log(req);
 
-  if(!isNaN( parseInt(req.params.id))) {
+  if(!isNaN( parseInt(req.params.id, 10))) {
     var id = req.params.id;
     console.log("news ID: " + id);
     // Delete
@@ -267,27 +274,36 @@ router.delete('/:id', authentication, (req, res) => {
 
     // Resolve Promise. Contains integer 1/0 if deletion was done.
     pr.then(data => {
+      console.log(data)
       if(data == true) {
+        status = 204;
         msg = `${id} was successfully deleted from the database!`;
         success = true;
       } else {
-        msg = `${id} was NOT deleted from the database!`;
+        status = 204;
+        msg = `${id} was not deleted from the database!`;
         success = false;
       }
 
-    }).catch(err => {
+    }, (err) => {
       console.log("ERROR: " + err)
+      status = 500;
       msg = `Error: ${err}`;
       success = false;
     });
 
+    pr.finally(() => {
+      console.log("s: " + status + msg)
+      res.status(status).json({ message: msg, success: success });
+    })
+
   } else {
+    status = 400; // Invalid request
     msg = `Error: Invalid param (news ID)`;
     success = false;
+    res.status(status).json({ message: msg, success: success });
   }
-
-  // Send the final result
-  res.json({ message: msg, success: success });
+  console.log(res)
 
 
 });

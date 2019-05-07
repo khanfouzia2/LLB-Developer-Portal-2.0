@@ -38,7 +38,6 @@ class ThreadMain extends React.Component {
 
 
     const numComments = this.state.threadObj.comments.length;
-    const u = { id: 123, first_name: "Test", last_name: "Testing", }
     const meta = { color:'#ccc', fontSize:'0.8em', }
     // TODO error handling for empty objects/lists
 
@@ -57,10 +56,10 @@ class ThreadMain extends React.Component {
           {/* Edit link for admin & owner */}
           { this.getEditLink() }
 
-          <hr/>
+          <hr className="mt-5"/>
 
           {/* Comments */}
-          <div className="container" id="comments">
+          <div className="" id="comments">
             <span id="comment-count" className="metatext">{numComments} {helpers.getNumericBending(numComments, "comment", "comments")} - oldest first</span>
             { this.renderEditedNotification() }
             { this.state.threadObj.comments.map((comment, i) => {
@@ -134,7 +133,7 @@ class ThreadMain extends React.Component {
   /* If thread has been edited, show an alert */
   renderEditedNotification() {
     const th = this.state.threadObj;
-    if(th.created_at != null && th.updated_at != null && th.created_at != th.updated_at) {
+    if(th.created_at < th.updated_at) {
       return( <span className="metatext float-right">This thread has been edited after it was first published. Last edited: {helpers.getDateFormatted(th.updated_at)}</span> );
     } else { return(null); }
   }
@@ -143,7 +142,8 @@ class ThreadMain extends React.Component {
   /* Pass this function to Comment. This function is called after server resp. is received */
   onCommentDelete(success=false) {
     if(success) {
-      this.setState({ modal: { isShown:true, title:"Comment deleted", closeButtonStyle:"success", content: "Comment deleted and no longer visible to other users." } })
+      //this.setState({ modal: { isShown:true, title:"Comment deleted", closeButtonStyle:"success", content: "Comment deleted and no longer visible to other users." } })
+      helpers.redirectUser(""); // reload
     } else {
       this.setState({ modal: { isShown:true, title:"An error occured"} })
     }

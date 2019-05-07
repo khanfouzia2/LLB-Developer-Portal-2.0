@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from '../Misc/Modal.js';
 import ForumThreadInfoBox from './ForumThreadInfoBox.js';
 import ThreadCompose from './ThreadCompose.js';
+import AuthContext from '../../context/auth-context';
 import { FORUM_GET_RECENT } from '../../rest-endpoints.js';
 import { Link } from "react-router-dom"
 import * as config from '../../config.js'
@@ -15,13 +16,16 @@ const helpers = require('../../helpers.js');
 */
 class ForumMain extends React.Component {
 
+  static contextType = AuthContext;
+
+
   constructor(props) {
     super(props);
 
     this.state = {
       page: 1,
       threads: [],
-      showComposeNewPost: false
+      showComposeNewPost: false,
     }
 
 
@@ -34,15 +38,6 @@ class ForumMain extends React.Component {
 
     const metaText = { color:'#aaa', fontSize:'0.8em', }
 
-    var composeNewPost;
-    if(this.state.showComposeNewPost) {
-      composeNewPost = <ThreadCompose onCancelFunction={this.handleCancelCompose} />;
-    } else {
-      composeNewPost = null;
-    }
-
-
-
     return(
       <React.Fragment>
         <div className="App-custom-nav">
@@ -50,21 +45,7 @@ class ForumMain extends React.Component {
         </div>
         <div className="App-custom-page-content">
 
-
-          <div className="container">
-
-            {/* Top row */}
-            <div className="row">
-              <div className="col-md-12 mb-3">
-                {/* Show button if compose-component is not visible */}
-                {!this.state.showComposeNewPost &&
-                  <button className="btn btn-primary" onClick={(e)=>this.handleClickCreateNewThread(e)}>Create new thread</button>
-                }
-                { composeNewPost }
-              </div>
-            </div>
-
-          </div>
+          { this.renderComposeNewPost() }
 
           {/* Content section */}
           <div className="container">
@@ -86,6 +67,46 @@ class ForumMain extends React.Component {
       </React.Fragment>
     )
 
+  }
+
+
+
+  /* Only render if user is logged in */
+  renderComposeNewPost() {
+    const {id, isAuth} = this.context;
+
+    var composeNewPost;
+    if(this.state.showComposeNewPost == true) {
+      composeNewPost = <ThreadCompose onCancelFunction={this.handleCancelCompose} />;
+    } else {
+      composeNewPost = null;
+    }
+
+
+    if(isAuth === true) {
+      return(
+        <div className="container">
+          <div className="row">
+            <div className="col-md-12 mb-3">
+              {/* Show button if compose-component is not visible */}
+              {!this.state.showComposeNewPost &&
+                <button className="btn btn-primary" onClick={(e)=>this.handleClickCreateNewThread(e)}>Create new thread</button>
+              }
+              { composeNewPost }
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return(
+        <div className="container mb-5">
+          <Link to="/" className="">Register or sign up to create a thread</Link>
+        </div>
+      );
+    }
+  }
+
+  componentWillMount() {
   }
 
   /*
@@ -128,9 +149,18 @@ class ForumMain extends React.Component {
 
 
   handleLoadMoreThreads(e) {
-      console.log("onClick event received!");
-      var p = this.state.page+1;
-      this.fetchRecentThreads(p);
+    console.log("onClick event received!");
+
+    e.target.disabled = true;
+    e.target.setAttribute('style', 'cursor:wait;');
+
+    setInterval((btn) => {
+      btn.disabled = false;
+      btn.style.removeProperty('cursor');
+    }, 1000, e.target)
+
+    var p = this.state.page+1;
+    this.fetchRecentThreads(p);
   }
 
   handleClickCreateNewThread(e) {

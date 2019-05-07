@@ -16,7 +16,6 @@ const helpers = require('../../helpers.js');
 
   @Author: okkop
 
-  UNDER CONSTRUCTION - everything you see here might be changed in the future
 
 */
 class ForumThreadInfoBox extends React.Component {
@@ -32,7 +31,6 @@ class ForumThreadInfoBox extends React.Component {
     const authorNameStyle = { display:'inline', fontSize:'0.8em', fontWeight:600, };
     const metadataStyle = { display:'inline-block', marginRight:'1em', fontSize:'0.8em', color:'#aaaaaa', };
     const contentStyle = { marginTop:'0.5em', fontStyle:'italic', fontSize:'0.9em', wordWrap:'text-break', padding:'0.5em', marginLeft:'1em', backgroundColor:'#f7f7f7',};
-    //const metadataBox = { borderTop:'1px solid #eee' }
 
     return(
       <div className="card mt-2 _mt-md-2 _mt-sm-2">
@@ -41,7 +39,8 @@ class ForumThreadInfoBox extends React.Component {
             <Link to= {`/forum/thread/${this.props.threadObj.id}`}>{this.props.threadObj.title} </Link>
           </span>
           <br/>
-          <Link id="author" className="" to={`/${this.props.threadObj.user.id}`} style={authorNameStyle}> { helpers.getAuthorDetails(this.props.threadObj.user) } </Link>
+          {/*<Link id="author" className="" to={`/${this.props.threadObj.user.id}`} style={authorNameStyle}> { helpers.getAuthorDetails(this.props.threadObj.user) } </Link>*/}
+          <span> { helpers.getAuthorDetails(this.props.threadObj.user) } </span>
           <span className="" title={`ID: ${this.props.threadObj.id}`} style={metadataStyle}>{ helpers.getDateFormatted(this.props.threadObj.created_at) }</span>
           <p style={contentStyle}>{ helpers.niceSubstr(this.props.threadObj.content, 400) }</p>
 
