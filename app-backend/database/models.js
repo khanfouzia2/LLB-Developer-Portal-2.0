@@ -240,7 +240,7 @@ const BugFeedback = sequelize.define('bug_feedback',
     },
     status: {
       type: Sequelize.ENUM,
-      values: ['ACTIVE', 'pending', 'deleted', 'something...'],
+      values: ['ACTIVE', 'pending', 'deleted'],
       defaultValue: 'ACTIVE',
       allowNull: false
     },
@@ -260,11 +260,11 @@ const BugFeedback = sequelize.define('bug_feedback',
     },
     expected_result: {
       type: Sequelize.TEXT,
-      allowNull: false
+      allowNull: true
     },
     actual_result: {
       type: Sequelize.TEXT,
-      allowNull: false
+      allowNull: true
     },
     created_at: {
       type: Sequelize.DATE,
@@ -370,6 +370,74 @@ const MobileApp = sequelize.define('mobile_app',
   }
 );
 
+const MobileAppQuestionair = sequelize.define('mobile_app_questionair',
+  {
+    question: {
+      type: Sequelize.STRING(255),
+      allowNull: false,
+    },
+    type: {
+      type: Sequelize.TEXT,
+      allowNull: false,
+    },
+    zip_file_name: {
+      type: Sequelize.STRING(250),
+      allowNull: true,
+    },
+    type: {
+      type: Sequelize.ENUM('text', 'singleChoice', 'multipleChoice','sentiment', "rating"),
+      allowNull: false,
+      defaultValue: 'text',
+    },
+    // must be done like this if we want DEFAULT NOW()
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  // options:
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+    indexes: [
+      {
+        unique: false,
+        fields: ['question']
+      }
+    ],
+  }
+);
+
+  const MobileAppQuestionairChoice = sequelize.define('questionair_choice',
+  {
+    content: {
+      type: Sequelize.STRING(500),
+      allowNull: false,
+    },
+    // must be done like this if we want DEFAULT NOW()
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  // options:
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+    indexes: [
+      {
+        unique: false,
+        fields: ['content']
+      }
+    ],
+  }
+);
 // const Service = sequelize.define('service',
 //   {
 //     name: {
@@ -487,6 +555,25 @@ MobileApp.belongsTo(User, {
   foreignKey: 'user_id',
   sourceKey: 'id'
 });
+
+MobileApp.hasMany(MobileAppQuestionair, {
+  foreignKey: 'app_id',
+  sourceKey: 'id'
+});
+MobileAppQuestionair.belongsTo(MobileApp, {
+  foreignKey: 'app_id',
+  sourceKey: 'id'
+});
+
+MobileAppQuestionair.hasMany(MobileAppQuestionairChoice, {
+  foreignKey: 'question_id',
+  sourceKey: 'id'
+});
+
+MobileAppQuestionairChoice.belongsTo(MobileAppQuestionair, {
+  foreignKey: 'question_id',
+  sourceKey: 'id'
+})
 /*
   Default 'exclude' fields. Sensitive information that usually should not be send to the front-end
   Example usage:
@@ -529,5 +616,7 @@ module.exports = {
   Comment,
   BugFeedback,
   secluded,
-  MobileApp
+  MobileApp,
+  MobileAppQuestionair,
+  MobileAppQuestionairChoice
 }
