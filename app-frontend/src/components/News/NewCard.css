@@ -49,3 +49,11 @@ be read. Title is also always capitalized */
   text-transform: capitalize;
   text-shadow:2px 1px 5px #404040;
 }
+
+/* News-view (one News) */
+#news-card {
+  padding:1em;
+  background-color:rgba(255,255,255,0.95);
+  border:1px solid rgb(220,220,220);
+  border-radius:5px;
+}

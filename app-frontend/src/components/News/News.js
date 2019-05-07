@@ -41,11 +41,23 @@ class News extends React.Component {
       wordWrap: 'break-word'
     }
 
+    const background = {
+      backgroundImage: 'url(/img/LLB_Bus.png)',
+      height: '100%',
+      opacity:'0.95',
+      backgroundColor: 'rgba(233,233,233, 0.6)', /* Used if the image is unavailable */
+      position: 'absolute',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }
+
     return(
-      <div className="App-custom-page-content">
+      <div className="App-custom-page-content" style={background}>
           { this.renderNotVisibleAlert() }
-          <div clasName="card" id={`news-${this.state.newsObj.id}`} title={`ID: ${this.state.newsObj.id}`} >
+          <div clasName="card" id="news-card" data-id={`news-${this.state.newsObj.id}`} title={`ID: ${this.state.newsObj.id}`} >
             <div class="card-body">
+              <strong><Link to='/news/'>Go back</Link></strong>
               <h2>{this.state.newsObj.title}</h2>
               <span className="" id="author" >Author: { helpers.getAuthorDetails(this.state.authorObj) }</span><br/>
               <span className="em small muted" id="author" >First published: { helpers.getDateFormatted(this.state.newsObj.created_at) }</span>
