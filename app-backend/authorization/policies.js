@@ -62,7 +62,13 @@ exports.deleteThread = function(thr=null, user=null) {
 
 
 
-
+exports.isAdmin = function(user=null) {
+  if(validUser(user)) {
+    return user.role === config.ADMIN_ROLE_NAME;
+  } else {
+    return false;
+  }
+}
 
 
 
