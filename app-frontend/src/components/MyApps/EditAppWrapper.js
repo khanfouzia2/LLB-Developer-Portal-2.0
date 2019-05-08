@@ -23,7 +23,7 @@ class EditAppWrapper extends Component {
       isShowAlert: false,
       alertStyle: "",
       alertContent: "",
-      questionairList: "",
+      questionairList: [],
     }
     this.handleStateChange = this.handleStateChange.bind(this);
     this.renderFormContent = this.renderFormContent.bind(this);
@@ -47,9 +47,10 @@ class EditAppWrapper extends Component {
 
   handButtonClicked = async (e) => {
     e.preventDefault();
+    //console.log(this.state)
+
     let isFormValid = this.formValidation();
     if (!isFormValid) return;
-
     try {
       const status = (e.target.name === "publishButton") ? "testing" : "pending";
       const { applicationName, applicationDescription, titleType, permissions, selectedFile, uploadFileName } = this.state
@@ -72,7 +73,7 @@ class EditAppWrapper extends Component {
 
   renderFormContent = () => {
     const { isAuth } = this.context;
-    const { alertContent, alertStyle, isShowAlert } = this.state;
+    const { alertContent, alertStyle, isShowAlert, questionairList} = this.state;
 
     if (!isAuth) { return (<></>); }
     else {
@@ -96,7 +97,13 @@ class EditAppWrapper extends Component {
                         uploadFileName = {this.state.uploadFileName}
                         permissions = {this.state.permissions} >
                       </GeneralAppInfoForm>
-                      <QuestionairList></QuestionairList>
+                      <fieldset className="border p-2">
+                        <legend className="w-auto">FEEDBACK SETUP <i className="fas fa-comments"></i></legend>
+                        <QuestionairList onQuestionairListChange = {this.handleStateChange}
+                            questionairList={questionairList}>
+                        </QuestionairList>
+                      </fieldset>
+                      <br/>
                       <div className="alert alert-secondary">
                         <ul>
                           <li>Publish for Testing - Your app will be available for download on the LLB Landing Page. However, the app will only appear to users who have enabled Testing Mode.</li>
