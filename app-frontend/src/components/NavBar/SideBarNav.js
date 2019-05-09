@@ -6,8 +6,9 @@ import DefaultUserAvatar from './DefaultUserAvatar';
 import {Logout} from '../../services/UserApi';
 import { Redirect } from 'react-router-dom'
 import Context from '../../context/auth-context';
-
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
+import * as config from '../../config.js'
+
 class SideBarNav extends Component {
     static contextType = Context;
 
@@ -102,9 +103,9 @@ class SideBarNav extends Component {
                         </Link>
               </Accrodion>
               <Accrodion className="list-group-item list-group-item-action bg-light" header="CONTACT US">
-                        <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/">
+                        {/*<Link className="list-group-item list-group-item-action bg-light accordion-item" to="/">
                             Report a Bug
-                        </Link>
+                        </Link>*/}
                         <Link className="list-group-item list-group-item-action bg-light accordion-item" to="/givefeedback">
                           Feedback
                         </Link>
@@ -130,11 +131,26 @@ class SideBarNav extends Component {
       }
       return <></>
     }
+
+    renderAdminMenu() {
+      const { role } = this.context;
+      if(role === config.ADMIN_ROLE_NAME) {
+        return(
+          <Accrodion className="list-group-item list-group-item-action bg-light" header="ADMIN TOOLS">
+            <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item " to="/news/compose">New news item</Link>
+            <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item " to="/admin">Feedbacks</Link>
+          </Accrodion>
+        );
+      } else { return(null) }
+    }
+
+
     render() {
       const renderSideBarContent = (
           <>
             <div className="bg-light border-right">
               {this.renderUserInfo()}
+              {this.renderAdminMenu()}
               {this.renderGeneralMenu()}
               {this.renderAuthenticateRequiredMenu()}
               {this.renderLogoutButton()}
