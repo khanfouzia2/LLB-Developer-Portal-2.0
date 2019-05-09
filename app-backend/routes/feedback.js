@@ -61,7 +61,7 @@ router.get('/', authentication, (req, res) => {
     include: [
       {
         model: models.User,
-        attributes: ['id', 'email']
+        attributes: ['id', 'first_name', 'last_name', 'email']
       }
     ],
     limit: 10,

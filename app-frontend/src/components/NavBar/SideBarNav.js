@@ -138,7 +138,7 @@ class SideBarNav extends Component {
         return(
           <Accrodion className="list-group-item list-group-item-action bg-light" header="ADMIN TOOLS">
             <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item " to="/news/compose">New news item</Link>
-            <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item " to="/admin">Feedbacks</Link>
+            <Link className="list-group-item list-group-item-action bg-light overridde-list-group-item " to="/admin/feedbacks">Feedbacks</Link>
           </Accrodion>
         );
       } else { return(null) }

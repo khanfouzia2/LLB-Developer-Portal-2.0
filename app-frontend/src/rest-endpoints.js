@@ -17,6 +17,7 @@ const NEWS_GET_DRAFTS = BASE_URL + "news/drafts"
 const TOOLS_GET = BASE_URL + "tools";
 
 //Feedback
+const FEEDBACK_GET = BASE_URL + 'feedback/';
 const FEEDBACK_POST = BASE_URL + 'feedback/';
 
 // Users
@@ -74,6 +75,7 @@ module.exports = {
   NEWS_GET_DRAFTS,
   TOOLS_GET,
   FEEDBACK_POST,
+  FEEDBACK_GET,
   USER_FORM_REGISTER,
   USER_LOGIN,
   USER_LOGOUT,

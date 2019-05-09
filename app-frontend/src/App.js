@@ -19,6 +19,7 @@ import APIKey from './components/APIPage/APIKey';
 import ForumMain from './components/Forum/ForumMain';
 import ThreadMain from './components/Forum/ThreadMain';
 import FeedbackForm from './components/FeedbackForm/FeedbackForm';
+import BrowseFeedback from './components/FeedbackForm/BrowseFeedback';
 
 import EditThread from './components/Forum/EditThread';
 import MyApps from './components/MyApps/MyApps';
@@ -58,6 +59,8 @@ class App extends Component {
           <Route exact path="/forum/" component={ForumMain} />
         </Switch>
         <Route exact path="/profile/edit" component={EditProfile} />
+        {/* Admin part: */}
+        <Route exact path="/admin/feedbacks" component={BrowseFeedback} />
       </div>
     </SideNavBar>
   );
