@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { MobileApp } = require('../database/models.js');
+const { MobileApp, MobileAppQuestionair, MobileAppQuestionairChoice, sequelize } = require('../database/models.js');
 const authentication = require('../services/authentication.js');
 const multer = require('multer')
 const unzip = require('unzip');
 const fs = require('fs');
+
+let transaction;
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -44,30 +46,56 @@ router.post('/', authentication, function (req, res) {
       else if (err) {
         throw new Error(err);
       }
-      //This will create new app in DB
-      const payload = req.body;
-      let mobileApp = await MobileApp.create({
-        ...payload,
+
+      transaction = await sequelize.transaction();
+
+      const { questionairList, ...appInfo } = req.body;
+
+      //First let's create mobile App record
+      let createdMobileApp = await MobileApp.create({
+        ...appInfo,
         user_id: req.user.id,
-        // The data send through FormData from the backend is a String not an prober array , hence we need to do some splitting
-        permissions: payload.permissions.split(',')
-      });
+        permissions: JSON.parse(appInfo.permissions)
+      }, { transaction });
+
       if (req.file != null) {
-        //Now we unzip the file to correct folder and delete the upload .zip file
-        UnZipAndDeleteZipFile(req.file, mobileApp.id);
+        //Now we unzip the file to correct folder and delete the uploaded .zip file
+        UnZipAndDeleteZipFile(req.file, createdMobileApp.id);
       }
 
+      let objectQuestionairList = JSON.parse(questionairList);
+
+      for (question of objectQuestionairList) {
+        const { id, questionOptions, ...questionInfoToUpdate } = question;
+        //Now handle create questionair list
+        let createdQuestion = await MobileAppQuestionair.create({
+          ...questionInfoToUpdate,
+          app_id: createdMobileApp.id,
+        }, { transaction });
+
+        //Now handle create options of the question
+        for (option of questionOptions) {
+          const { id, ...optionInfoToUpdate } = option;
+          let createdOptions = await MobileAppQuestionairChoice.create({
+            ...optionInfoToUpdate,
+            question_id: createdQuestion.id
+          }, {transaction});
+        }
+      }
+
+      await transaction.commit();
       return res.status(201).send();
     }
     catch (e) {
       console.log(`Error while trying to create an app. error = ${e}`);
-      if(req.file != null) {
+      if (req.file != null) {
         if (fs.existsSync(req.file.path)) {
           console.log("file upload but insert fail so just gonna remove the file now");
           fs.unlinkSync(req.file.path);
         }
       }
-      res.status(500).send();
+      await transaction.rollback();
+      return res.status(500).send();
     }
   })
 })

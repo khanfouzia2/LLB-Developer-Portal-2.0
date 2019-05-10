@@ -14,7 +14,7 @@ class EditQuestionair extends Component {
   }
   //This is only handle the question on change not the OPTION on change
   handleOnChange = (event) => {
-    const questionOptions =  (event.target.name === "questionType") ? [] : this.props.questionObject.questionOptions
+    const questionOptions =  (event.target.name === "type") ? [] : this.props.questionObject.questionOptions
     this.props.handleOnItemChange({
       ...this.props.questionObject,
       [event.target.name]: event.target.value,
@@ -63,7 +63,7 @@ class EditQuestionair extends Component {
     });
   }
   renderOptionSection = () => {
-    const { questionType, questionOptions } = this.props.questionObject;
+    const { type, questionOptions } = this.props.questionObject;
     let optionList = questionOptions.map((option, index) => {
       return (
         <div className="row" key={option.id}>
@@ -84,7 +84,7 @@ class EditQuestionair extends Component {
       );
     })
 
-    if (questionType === "singleChoice" || questionType === "multipleChoice") {
+    if (type === "singleChoice" || type === "multipleChoice") {
       return (
         <div className="question-option-wrapper">
           <div className="row">
@@ -102,19 +102,19 @@ class EditQuestionair extends Component {
   }
 
   render() {
-    const { questionText, questionType } = this.props.questionObject;
+    const { question, type } = this.props.questionObject;
     return (
       <div>
         <div className="row">
           <div className="col-md-8">
             <div className="form-group">
               <input className="form-control" placeholder="Question"
-                name="questionText" onChange={this.handleOnChange} type="text" defaultValue={questionText} />
+                name="question" onChange={this.handleOnChange} type="text" defaultValue={question} />
             </div>
           </div>
           <div className="col-md-3">
             <select className="custom-select" onChange={this.handleOnChange}
-              name="questionType" defaultValue={questionType}>
+              name="type" defaultValue={type}>
               <option value="text">Text</option>
               <option value="singleChoice">Single Choice</option>
               <option value="multipleChoice">Multiple Choice</option>

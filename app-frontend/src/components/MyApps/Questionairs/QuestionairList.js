@@ -17,7 +17,7 @@ class QuestionairList extends Component {
     onQuestionairListChange(
       {
         questionairList: [...questionairList,
-        { id: uuidv1(), questionText: "", questionType: "text", questionOptions: [] }]
+        { id: uuidv1(), question: "", type: "text", questionOptions: [] }]
       }
     );
   }

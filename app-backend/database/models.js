@@ -377,14 +377,6 @@ const MobileAppQuestionair = sequelize.define('mobile_app_questionair',
       allowNull: false,
     },
     type: {
-      type: Sequelize.TEXT,
-      allowNull: false,
-    },
-    zip_file_name: {
-      type: Sequelize.STRING(250),
-      allowNull: true,
-    },
-    type: {
       type: Sequelize.ENUM('text', 'singleChoice', 'multipleChoice','sentiment', "rating"),
       allowNull: false,
       defaultValue: 'text',

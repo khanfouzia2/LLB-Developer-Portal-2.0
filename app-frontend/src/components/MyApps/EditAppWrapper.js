@@ -24,6 +24,7 @@ class EditAppWrapper extends Component {
       alertStyle: "",
       alertContent: "",
       questionairList: [],
+      isEdit:false
     }
     this.handleStateChange = this.handleStateChange.bind(this);
     this.renderFormContent = this.renderFormContent.bind(this);
@@ -53,8 +54,10 @@ class EditAppWrapper extends Component {
     if (!isFormValid) return;
     try {
       const status = (e.target.name === "publishButton") ? "testing" : "pending";
-      const { applicationName, applicationDescription, titleType, permissions, selectedFile, uploadFileName } = this.state
-      const result = await PostUserMobileApp(applicationName, applicationDescription, titleType, permissions, status, uploadFileName, selectedFile);
+      const { applicationName, applicationDescription, titleType, permissions, selectedFile, uploadFileName, questionairList } = this.state
+      const result = await PostUserMobileApp(applicationName, applicationDescription, 
+                                             titleType, permissions, status, 
+                                             uploadFileName, selectedFile, questionairList);
       if (result.status === 201) {
         this.setState({ isShowAlert: true, alertContent: "Application created successful!", alertStyle: "success" });
       }
