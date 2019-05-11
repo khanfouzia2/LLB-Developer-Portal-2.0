@@ -71,7 +71,8 @@ class ThreadCompose extends React.Component {
                   <button onClick={(e)=>this.props.onCancelFunction()} className="btn btn-outline-danger btn-sm">Cancel</button>
                 </div>
                 <div className="float-right">
-                  <button type="button" onClick={(e)=>this.handlePost(e)} className="ml-2 btn btn-success btn-sm">Post</button>
+                  <button type="button" onClick={(e)=>this.handlePost(e)} className="ml-2 btn btn-success btn-sm"
+                  disabled={ (helpers.isStringEmpty(this.state.title) || helpers.isStringEmpty(this.state.content)) ? "disabled" : null }>Post</button>
                 </div>
               </div>
             </div>
