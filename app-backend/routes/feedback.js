@@ -54,7 +54,13 @@ router.get('/', authentication, (req, res) => {
     return;
   }
 
-  const offset_ = 0; // TODO
+  // Get query 'page' value. 1 by default.
+  var page = 1;
+  if(req.query.page) {
+    page = parseInt(req.query.page, 10);
+  }
+
+  const offset_ = (page-1) * config.FEEDBACK_LOAD_LIMIT; // Get feedbacks from [0..x] if page=1 and so on...
 
   const options = {
     attributes: ['id', 'title', 'description', 'type', 'author_id', 'created_at'], // SELECT ... -part
@@ -64,7 +70,7 @@ router.get('/', authentication, (req, res) => {
         attributes: ['id', 'first_name', 'last_name', 'email']
       }
     ],
-    limit: 10,
+    limit: config.FEEDBACK_LOAD_LIMIT,
     offset: offset_,
     order: Sequelize.literal('created_at DESC') // newest first
   }
