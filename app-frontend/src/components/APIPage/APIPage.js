@@ -46,7 +46,7 @@ class APIPage extends Component {
                   <div className="alert alert-primary api-card-content">
                   <a href="/apikey"> If you haven't created your own API key. Click here to generate one !</a> 
                   </div>              
-                    <SwaggerUI url={this.props.URL} />
+                    <SwaggerUI url={this.props.URL} docExpansion="list" />
                   </div>
                 </div>
                 <div className="tab-pane" id="mqqtapi" role="tabpanel" aria-labelledby="publicDisplayApp-tab">

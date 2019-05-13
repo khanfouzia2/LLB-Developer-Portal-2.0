@@ -16,7 +16,7 @@
   "basePath" : "/llb-bus-api/",
   "schemes" : [ "https" ],
   "paths" : {
-    "/GetData" : {
+    "/GetData?" : {
       "get" : {
         "parameters" : [ {
           "name" : "busId",
