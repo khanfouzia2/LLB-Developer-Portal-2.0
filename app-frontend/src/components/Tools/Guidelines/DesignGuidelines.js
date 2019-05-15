@@ -25,7 +25,7 @@ class DesignGuidelines extends Component {
   render() {
 
     return(
-        <div>
+        <div className="indentation">
             <nav className="App-custom-nav">
                 <span className="navbar-brand mb-0 h1">Design Guidelines</span>
             </nav>

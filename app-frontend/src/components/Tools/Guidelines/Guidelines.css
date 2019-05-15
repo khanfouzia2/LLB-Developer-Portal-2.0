@@ -82,3 +82,8 @@
 .inspiration-card {
   max-width: 80rem !important;
 }
+
+.indentation {
+	padding-left: 2em;
+	padding-right: 2em;
+}
