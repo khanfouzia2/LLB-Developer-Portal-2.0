@@ -137,50 +137,54 @@ router.post('/', authentication, (req, res) => {
   var title = req.body.title;
   var cont = req.body.content;
 
-  if(!title || !cont) { console.log("Invalid content"); res.status(415).send(); }
+  if(!title || !cont) { console.log("Invalid content"); res.status(415).send(); return; }
 
   // received data
   console.log("\t" + title);
   console.log("\t" + cont);
 
-  title = title.substr(0,100).trim();
-  cont = cont.substr(0,50000).trim();
-
   var insertPromise = models.Thread.create({
-    title: title,
-    content: cont,
+    title: title.substr(0,100).trim(),
+    content: cont.substr(0,50000).trim(),
     author_id: req.user.id
   });
 
   insertPromise.then(data => {
     console.log("\nInserted successfully. ID " + data.id );
-    return data;
-
-  }).then(data => {
-    // Status 201 CREATED. Sets Content type json header
     res.status(201).json(data);
-
-  }).catch(err => {
+  }, (err) => {
     console.log(err);
-    res.status(500).send();
-  })
+    res.status(500).send(); return;
+  });
 
 
 
 });
 
+/*
+
+  POST comment
+  For posting a new comment to thread.
+  Requires authentication.
+
+  Returns (on success) json of the comment and HTTP 201
+  If thread id not found: HTTP 404
+  Invalid content: HTTP 415
+  Server error: 500
+  Not auth.: 401
+
+*/
 router.post('/comment', authentication, (req, res) => {
 
   console.log("\n\nPOST /comment request recieved.\tAuth: "+req.user.email);
 
-  var thread_id = parseInt(req.body.thread_id, 10);
+  const thread_id = parseInt(req.body.thread_id, 10);
   var content = req.body.content;
   console.log(thread_id +"\n"+ content)
 
   // Validate content
   if(!thread_id || !content) {
-    res.status(415).json({message: "Content not valid!"});
-    return;
+    res.status(415).json({message: "Request payload not valid!"}); return;
   }
 
   prom = models.Comment.create({
@@ -192,13 +196,12 @@ router.post('/comment', authentication, (req, res) => {
   prom.then(data => {
     // If inserted successfully
     if(data != null) {
-      res.json( data );
+      res.status(201).json( data );
     } else {
-      throw new Error("An error occured");
+      res.status(404).send(); return;
     }
 
-
-  }).catch(err =>{
+  }, (err) => {
     console.log(err);
     res.status(500).json({message: "An error occured"});
   })
@@ -251,7 +254,7 @@ router.patch("/thread/:id", authentication, (req,res) => {
   var thread_id = parseInt(req.params.id, 10);
 
   // Check IDs validity
-  if(!isNaN(thread_id) && req.body.thread_content != null) {
+  if(!isNaN(thread_id) && req.body.thread_content) {
 
     // Get Thread obj. and check editing policy (admin and owner can edit)
     pr_ = models.Thread.findByPk(thread_id); // NOTE: only finds not soft deleted rows
@@ -259,13 +262,12 @@ router.patch("/thread/:id", authentication, (req,res) => {
       // Was found?
       if(!row) {
         res.status(404).send();
-        return new Promise().resolve();
+        return;
       }
       // Check permission
-      const permission = policies.patchThread(row, req.user);
-      if(!permission) {
+      if(!policies.patchThread(row, req.user)) {
         res.status(403).json({success: false, message: "Forbidden!"});
-        return new Promise().resolve();
+        return;
       }
 
       // Do the actual updating
@@ -285,32 +287,26 @@ router.patch("/thread/:id", authentication, (req,res) => {
         console.log(data);
         // If at lest 1 row changed
         if(data[0] >= 1) {
-          res.status(200);
-          res.json({success: true, thread: data});
+          res.status(200).json({success: true, thread: data}); return;
         } else {
-          res.status(404).json({success: false, message: "Not found!"});
+          res.status(404).json({success: false, message: "Not found!"}); return;
         }
       }, (err) => {
         console.log(err)
-        res.status(500);
-        res.json({message: "Error!"});
+        res.status(500).json({message: "Error!"});
       })
 
       return;
     }, (err) => {
-      // error
-      throw new Error(err);
+      res.status(500).send();
     })
 
 
   }
   // id not valid
   else {
-    res.status(400); // Bad request
-    res.json({message: "Invalid content!"});
+    res.status(400).json({message: "Invalid content!"});
   }
-
-  return;
 
 });
 
@@ -318,12 +314,13 @@ router.delete('/comment/:id', authentication, (req, res) => {
 
   // Take the comment_id from call
   const comment_id = parseInt(req.params.id, 10)
+  if(isNaN(comment_id)) { res.status(400).send(); return; }
   // Get by ID
   var pr = models.Comment.findByPk(comment_id); // NOTE: Does NOT find soft deleted rows (returns null). In this case it's OK.
 
   pr.then(cmt => {
     console.log(cmt)
-    if(cmt==null) { return false; }
+    if(cmt==null) { res.status(404).send(); return; }
     // Check policies
     var policyCheck = policies.deleteComment(cmt, req.user);
     console.log("\tPOLICY CHECK: " + policyCheck );
@@ -333,27 +330,26 @@ router.delete('/comment/:id', authentication, (req, res) => {
       return models.Comment.destroy({where: {id: comment_id}});  // soft delete [deleted_at is set at current timestamp]
     } else {
       // Send permission denied
-      res.status(403).send();
-      return false;
+      res.status(403).send(); return;
     }
 
+  }, (err) => {
+    console.log(err);
+    res.status(500).send(); return;
   }).then(result => {
 
     // After trying to delete. Result is bool.
     console.log(result);
-    if(result==true) {
-      res.status(200).send(); // Success
-      return;
+    if(result) {
+      res.status(200).send(); return;
     } else {
-      res.status(404).send();
-      return;
+      res.status(404).send(); return;
     }
 
 
   }).catch(err => {
     console.log(err);
-    res.status(500).send();
-    return;
+    res.status(500).send(); return;
   });
 
 });

@@ -45,19 +45,16 @@ router.get('/', authentication, (req, res) => {
 
   console.log("\n\tGET feedback");
   console.log("\tAUTH:" + req.user.email);
-  //
-  // Check permission / Policies
-  var pol = policies.isAdmin(req.user);
+
   // If NOT admin
-  if(!pol) {
-    res.status(403).send(); // Forbidden aka No permission
-    return;
+  if(!policies.isAdmin(req.user)) {
+    res.status(403).send(); return;
   }
 
   // Get query 'page' value. 1 by default.
-  var page = 1;
-  if(req.query.page) {
-    page = parseInt(req.query.page, 10);
+  var page = parseInt(req.query.page, 10);
+  if(!page || page <= 0) {
+    page = 1;
   }
 
   const offset_ = (page-1) * config.FEEDBACK_LOAD_LIMIT; // Get feedbacks from [0..x] if page=1 and so on...
@@ -105,43 +102,31 @@ router.get('/', authentication, (req, res) => {
 router.post('/', authentication, (req, res) => {
 
     console.log("POST feedback")
-
+    console.log( "AUTH: " + req.user.email )
     console.log( req );
-    console.log( req.user )
 
-    var title = req.body.title;
-    var desc = req.body.description;
+    if( !req.body.title || !req.body.description || title.length == 0 || desc.length == 0) {
+      res.status(415).json({message: 'Content not valid!'}); return;
+    }
 
-    if( title == null || desc == null || title.length == 0 || desc.length == 0) {
-        res.status(415).json({message: 'Content not valid!'});
-        return;
-    }
-    title = title.toString().trim();
-    desc = desc.toString().trim();
-    var author_id;
-    if(req.user != null) {
-        author_id = !isNaN(req.user.id) ? req.user.id : null;
-    }
+    var title = req.body.title.trim();
+    var desc = req.body.description.trim();
 
     // Insert to DB
-    const fb = {
+    var pr = models.BugFeedback.create({
         title: title,
         description: desc,
         type: 'FEEDBACK',
         author_id: author_id,
-    }
+    });
 
-    var pr = models.BugFeedback.create(fb);
     pr.then(data => {
-        //console.log(data);
-        res.status(201).json(data);
-    }, onError)
-
-
-    var onError = function(err) {
-        console.log(err);
-        res.status(500).json({message: err});
-    }
+      //console.log(data);
+      res.status(201).json(data);
+    }, (err) => {
+      console.log(err);
+      res.status(500).json({message: err});
+    });
 
 });
 

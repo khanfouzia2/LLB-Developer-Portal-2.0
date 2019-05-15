@@ -6,6 +6,7 @@ const Sequelize = require('sequelize');
 const config = require('../config.js');
 const querystring = require('querystring');
 const authentication = require('../services/authentication.js');
+const policies = require('../authorization/policies.js');
 // Under construction
 
 /*
@@ -28,37 +29,89 @@ const authentication = require('../services/authentication.js');
 
 */
 
+
+
+/*
+
+  Gets one News-object with autor (user) object.
+
+  Returns (success):
+  HTTP 200
+  JSON
+  {
+    "id": 1,
+    "author_id": 1000,
+    "title": "Example news",
+    "content": "Some example content, <b>yay!</b>",
+    "is_visible": false,
+    "header_picture_filename": null,
+    "created_at": "2019-05-07T13:43:28.927Z",
+    "updated_at": "2019-05-07T13:43:28.880Z",
+    "deleted_at": null,
+    "user": {
+        "id": 1000,
+        "first_name": "Admin",
+        "last_name": "Admin",
+        "email": "admin@admin.com",
+        "role": "admin",
+        "status": false,
+        "is_single_sign_on": false,
+        "created_at": "2019-05-07T13:43:28.921Z"
+    }
+
+    500 Server error
+    400 Bad request
+    404 ID not found from DB. Also applies for [soft]deleted rows.
+
+}
+
+*/
 router.get('/id/:id', (req, res) => {
   console.log("GET News ")
 
-  try {
-    id = parseInt(req.params.id, 10) // base 10
-    if(!isNaN(id) && id > 0) {
+  const id = parseInt(req.params.id, 10) // base 10
+  if(!isNaN(id) && id > 0) {
 
-      // Try to find News ID, second param is options
-      var news = models.News.findByPk(id, {
-        include: [{
-          model: models.User,
-        }]
-      }); // Promise
+    // Try to find News ID, second param is options
+    var newsPromise = models.News.findByPk(id, {
+      include: [{
+        model: models.User,
+        attributes: { exclude: models.secluded.user } // Do not include password and some other fields.
+      }]
+    }); // returns a promise
 
-      news.then(data => {
+    newsPromise.then(data => {
+
+      console.log(data);
+      // If not found, return value is null
+      if(data != null) {
         res.status(200);
         res.json(data); // + send
-      }).catch(err => {
-        res.status(404).send();
-      });
-
-    } else {
+      } else {
+        res.status(404); // Not found
+        res.send();
+      }
+    }, (err) => {
+      // If promise itself failed for some reason (eg. database error)
       res.status(500).send();
-    }
-  } catch(err) {
-    console.log("Error " + err);
-    res.status(500).send();
+    });
+
+  } else {
+    // Bad request. ID is not valid
+    res.status(400).send();
   }
 
 });
 
+/*
+
+  Public route for getting multiple News.
+  Returns array of News objects with user (author) object.
+
+  HTTP 200 [<News>, ...] on success (JSON)
+  HTTP 500 on error
+
+*/
 router.get('/page/:page', (req, res) => {
 
   // http://docs.sequelizejs.com/manual/tutorial/querying.html#relations-associations
@@ -66,19 +119,15 @@ router.get('/page/:page', (req, res) => {
 
   var page = req.params.page; // page number is string (at this point)!
   console.log("\n===\nPage received: "+page)
-  try {
-    page = parseInt(page, 10) // base 10
-    if(isNaN(page) || page <= 0) {
-      page = 1;
-    }
-  } catch(err) {
-    console.log( err );
+  page = parseInt(page, 10) // base 10
+  if(isNaN(page) || page <= 0) {
     page = 1;
   }
-  console.log("Page after checks: "+page)
+
 
   // Pagination. How many news are skipped. on page 2, skip 2-1*X [for example get 11-20]
-  var offset_ = (page-1) * config.NUM_OF_NEWS_SHOWN_PAGE;
+  const offset_ = (page-1) * config.NUM_OF_NEWS_SHOWN_PAGE;
+  console.log("Page after checks: "+page)
   console.log("Fetching News... OFFSET: " + offset_ );
 
   // Query
@@ -88,14 +137,14 @@ router.get('/page/:page', (req, res) => {
     },
     include: [{
         model: models.User,
+        attributes: { exclude: models.secluded.user } // Do not include password and some other fields.
     }],
     limit: config.NUM_OF_NEWS_SHOWN_PAGE,
     offset: offset_,
     order: Sequelize.literal('created_at DESC') // newest first
   });
 
-
-
+  // Resolve promise. On success, data is sent no matter if content is empty ([]). Code 200
   pr.then(data => {
 
     //console.log(data)
@@ -103,9 +152,8 @@ router.get('/page/:page', (req, res) => {
     res.json(data);
     //res.send();
 
-  }).catch(err => {
-    res.json({error: "Error"})
-    //res.send();
+  }, (err) => {
+    res.status(500).send();
   });
 
 
@@ -114,12 +162,13 @@ router.get('/page/:page', (req, res) => {
 // For posting new News
 router.post('/', authentication, (req, res) => {
 
-  console.log("Making a new News!");
+  console.log("POST News");
   console.log( req.body );
 
   // Check user role. Deny if no admin role
-  if(req.user.role != config.ADMIN_ROLE_NAME) {
+  if(!policies.isAdmin(req.user)) {
     res.status(403).send(); // 403 = permission denied | 403 (Forbidden)
+    return;
   }
 
   try {
@@ -128,14 +177,15 @@ router.post('/', authentication, (req, res) => {
     var is_visible          = req.body.is_visible;
     //var attachment_file     = req.body.attachment_file;
   } catch(err) {
-    res.status(500).send();
+    res.status(415).send(); // Media not supported
+    return;
   }
 
   // Make some content validation
   // Check for null
   var contentValid = true;
   if(title && cont) {
-    if(title.lenght <= 0 || cont.lenght <= 0 || title === "" || cont === "") {
+    if(title.lenght < 3 || cont.lenght < 3 || title === "" || cont === "") {
       contenValid = false;
     }
   } else {
@@ -144,6 +194,7 @@ router.post('/', authentication, (req, res) => {
   if(!contentValid) {
     // 415 Media not supported. aka invalid content
     res.status(415).json({message: "Invalid content. News not saved!"});
+    return;
   }
 
 
@@ -157,48 +208,70 @@ router.post('/', authentication, (req, res) => {
   pr.then(data => {
     console.log(data);
     res.status(201).json({message: "News created successfully!"});
-  }).catch(err => {
+  }, (err) => {
     res.status(500).json({message: "An error occured."});
   })
 
 
 });
 
+
+/*
+  PATCH News
+  Can only patch News that are not [soft]deleted
+*/
 router.patch('/:id', authentication, (req, res) => {
   console.log("\n===\nPATCH Request received...");
   console.log( req.body );
 
-  // Step 1 - Content check
-  if(!req.body.title || !req.body.content || req.body.is_visible == undefined) {
-    console.log("Invalid content");
-    res.status(415).send();
+  const id = parseInt(req.params.id, 10);
+  if(isNaN(id) || id <= 0) {
+    res.status(415).send(); return;
   }
 
-  // Step 2 - Get the News
-  var pr = models.News.findByPk(req.body.id);
+  // Step 1 - Policy check
+  if(!policies.isAdmin(req.user)) {
+    res.status(403).send(); return;
+  }
 
-  // Step 3 - If success. Update.
+  // Step 2 - Content check
+  if(!req.body.title || !req.body.content || !(req.body.is_visible === false || req.body.is_visible === true) ) {
+    console.log("Invalid content");
+    res.status(415).send(); return;
+  }
+
+  // Step 3 - Get the News
+  var pr = models.News.findByPk(id);
+
+  // Step 4 - If success. Update.
   pr.then(obj => {
     console.log(" ID found. " + obj)
 
-    var pr2 = obj.update({
-      title: req.body.title,
-      content: req.body.content,
-      is_visible: req.body.is_visible,
-    });
+    if(obj != null) {
 
-    pr2.then(
-      (data) => {
-        console.log("Success")
-        res.json({message:"Updated successfully!", news: data})
-      },
-      (err) => {
-        console.log(err)
-        res.status(500).send();
-      }
-    );
+      var pr2 = obj.update({
+        title: req.body.title,
+        content: req.body.content,
+        is_visible: req.body.is_visible,
+      });
 
-  }).catch((err) => {
+      pr2.then(data => {
+          res.json({message:"Updated successfully!", news: data});
+          return;
+        }, (err) => {
+          console.log(err)
+          res.status(500).send();
+          return;
+        }
+      );
+
+    } else {
+      res.status(404).send();
+      return;
+    }
+  });
+
+  pr.catch((err) => {
       res.status(500).send();
   })
 
@@ -222,20 +295,25 @@ router.get('/drafts', authentication, (req, res) => {
   console.log("===\nGET Drafts")
 
   // Auth.
-  if(req.user.role != config.ADMIN_ROLE_NAME) {
-    res.json({message: 'Permission denied', success: false});
+  if(!policies.isAdmin(req.user)) {
+    res.status(403).json({message: 'Permission denied', success: false});
+    return;
   }
 
   // http://docs.sequelizejs.com/class/lib/model.js~Model.html#static-method-findAll
   var pr = models.News.findAll({
-    where: { is_visible: false }
+    where: { is_visible: false },
+    include: [{
+      model: models.User,
+      attributes: { exclude: models.secluded.user } // Do not include password and some other fields.
+    }]
   });
 
   pr.then(data => {
-    res.json( data );
-  }).catch(err => {
+    res.status(200).json( data );
+  }, (err) => {
     console.log( err )
-    res.json({message:'Retrieving drafts failed!', success: false});
+    res.status(500).json({message:'Retrieving drafts failed!', success: false});
   });
 
 });
@@ -260,11 +338,17 @@ router.delete('/:id', authentication, (req, res) => {
   var status = 404;
   console.log("\n===\nNews.js | DELETE Request received...");
   console.log("Auth. user is: "+ req.user.email + ", id: " + req.user.id)
-  //console.log(req);
 
-  if(!isNaN( parseInt(req.params.id, 10))) {
-    var id = req.params.id;
+  // Permission/Policy check
+  if(!policies.isAdmin(req.user)) {
+    res.status(403).send(); // Forbidden
+    return;
+  }
+
+  const id = parseInt(req.params.id, 10)
+  if(!isNaN(id)) {
     console.log("news ID: " + id);
+
     // Delete
     var pr = models.News.destroy({
       where: {
@@ -280,8 +364,8 @@ router.delete('/:id', authentication, (req, res) => {
         msg = `${id} was successfully deleted from the database!`;
         success = true;
       } else {
-        status = 204;
-        msg = `${id} was not deleted from the database!`;
+        status = 409; // Conflict -- Already deleted or not found
+        msg = `${id} was NOT deleted from the database!`;
         success = false;
       }
 
@@ -293,18 +377,13 @@ router.delete('/:id', authentication, (req, res) => {
     });
 
     pr.finally(() => {
-      console.log("s: " + status + msg)
+      console.log("Status: " + status + ", " + msg)
       res.status(status).json({ message: msg, success: success });
     })
 
   } else {
-    status = 400; // Invalid request
-    msg = `Error: Invalid param (news ID)`;
-    success = false;
-    res.status(status).json({ message: msg, success: success });
+    res.status(400).json({ message: "Bad request", success: false });
   }
-  console.log(res)
-
 
 });
 

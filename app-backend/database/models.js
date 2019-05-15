@@ -578,7 +578,7 @@ MobileAppQuestionairChoice.belongsTo(MobileAppQuestionair, {
 
 */
 const secluded = {
-  user: ['token', 'password', 'updated_at', 'deleted_at', 'is_finished_survey']
+  user: ['token', 'password', 'updated_at', 'deleted_at', 'is_finished_survey', 'is_single_sign_on']
 }
 
 
@@ -592,10 +592,6 @@ const secluded = {
 //   foreignKey: 'service_name',
 //   sourceKey: 'id'
 // });
-
-// Do not use this approach anymore. Run > node create_database.js instead!
-//sequelize.sync({force:true}); // param: {force:true} to drop and re-create
-
 
 module.exports = {
   sequelize,
