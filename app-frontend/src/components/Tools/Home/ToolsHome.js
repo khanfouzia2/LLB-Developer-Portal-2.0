@@ -35,8 +35,16 @@ class ToolsHome extends Component {
               </ul>
               
               <div className="tab-content">
-                <div className="tab-pane active" id="mobileApp" role="tabpanel" aria-labelledby="mobileApp-tab"><MobileApp /></div>
-                <div className="tab-pane" id="publicDisplayApp" role="tabpanel" aria-labelledby="publicDisplayApp-tab"><PublicDisplayApp /></div>
+                <div className="tab-pane active" id="mobileApp" role="tabpanel" aria-labelledby="mobileApp-tab">
+                  <div className="guideliness-container">
+                    <MobileApp />
+                  </div>
+                </div>
+                <div className="tab-pane" id="publicDisplayApp" role="tabpanel" aria-labelledby="publicDisplayApp-tab">
+                  <div className="guideliness-container">
+                    <PublicDisplayApp />
+                  </div>
+                </div>
               </div>
 
             </div>
