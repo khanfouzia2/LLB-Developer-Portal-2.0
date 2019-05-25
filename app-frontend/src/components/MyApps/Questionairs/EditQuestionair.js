@@ -64,17 +64,20 @@ class EditQuestionair extends Component {
   }
   renderOptionSection = () => {
     const { type, questionOptions } = this.props.questionObject;
+    const  isEditable  = this.props.isEditable
+
     let optionList = questionOptions.map((option, index) => {
       return (
         <div className="row" key={option.id}>
           <div className="col-md-10">
             <div className="form-group">
-              <input name="content" className="form-control" placeholder="Option" onChange={this.handleOptionInputChange(option)}
+              <input disabled={!isEditable} name="content" className="form-control" 
+                     placeholder="Option" onChange={this.handleOptionInputChange(option)}
                 type="text" defaultValue={option.content} />
             </div>
           </div>
           <div className="col-md-2">
-            <button className="btn btn-default"
+            <button className="btn btn-default" disabled={!isEditable}
               onClick={this.handleDeleteOptionClicked(option)}>
               <i className="fas fa-times fa-lg"></i>
             </button>
@@ -92,7 +95,7 @@ class EditQuestionair extends Component {
               {optionList}
             </div>
           </div>
-          <button className="btn btn-primary" onClick={this.onAddOptionClick}>
+          <button className="btn btn-primary" onClick={this.onAddOptionClick} disabled={!isEditable}>
             Add new option
           </button>
         </div>
@@ -103,17 +106,18 @@ class EditQuestionair extends Component {
 
   render() {
     const { question, type } = this.props.questionObject;
+    const  isEditable  = this.props.isEditable
     return (
       <div>
         <div className="row">
           <div className="col-md-8">
             <div className="form-group">
-              <input className="form-control" placeholder="Question"
+              <input className="form-control" placeholder="Question" disabled={!isEditable}
                 name="question" onChange={this.handleOnChange} type="text" defaultValue={question} />
             </div>
           </div>
           <div className="col-md-3">
-            <select className="custom-select" onChange={this.handleOnChange}
+            <select className="custom-select" onChange={this.handleOnChange} disabled={!isEditable}
               name="type" defaultValue={type}>
               <option value="text">Text</option>
               <option value="singleChoice">Single Choice</option>

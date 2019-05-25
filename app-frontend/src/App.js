@@ -52,6 +52,7 @@ class App extends Component {
         <Route exact path="/tools/inspirationGuidelines" component={InspirationGuidelines} />
         <Route exact path="/givefeedback" component={FeedbackForm}/>
         <Route exact path="/myapps" component={MyApps}/>
+        <Route exact path="/myapps/:id" component={EditAppWrapper}/>
         <Route exact path="/myapps/create" component={EditAppWrapper}/>
         <Switch>
           <Route exact path="/forum/thread/:id/edit" component={EditThread} />

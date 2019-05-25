@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import AuthContext from '../../context/auth-context';
-import { RadioGroup, RadioButton } from 'react-radio-buttons';
 import './EditAppForm.css'
 import { PostUserMobileApp } from '../../services/MobileAppApi';
 import Alert from '../Misc/Alert';
 import QuestionairList from './Questionairs/QuestionairList'
 import GeneralAppInfoForm from './AppGeneralInfo/AppGeneralInfoForm';
+import { Redirect } from 'react-router-dom'
 
 class EditAppWrapper extends Component {
   static contextType = AuthContext;
@@ -24,12 +24,19 @@ class EditAppWrapper extends Component {
       alertStyle: "",
       alertContent: "",
       questionairList: [],
-      isEdit:false
+      isEdit:false,
+      redirectURL: "",
+      isError: false,
     }
     this.handleStateChange = this.handleStateChange.bind(this);
     this.renderFormContent = this.renderFormContent.bind(this);
     this.handButtonClicked = this.handButtonClicked.bind(this);
     this.formValidation = this.formValidation.bind(this);
+  }
+  componentDidMount = () => {
+    if(this.props.location.state != null) {
+      this.setState({...this.props.location.state});
+    };
   }
 
   formValidation = () => {
@@ -48,7 +55,6 @@ class EditAppWrapper extends Component {
 
   handButtonClicked = async (e) => {
     e.preventDefault();
-    //console.log(this.state)
 
     let isFormValid = this.formValidation();
     if (!isFormValid) return;
@@ -60,6 +66,8 @@ class EditAppWrapper extends Component {
                                              uploadFileName, selectedFile, questionairList);
       if (result.status === 201) {
         this.setState({ isShowAlert: true, alertContent: "Application created successful!", alertStyle: "success" });
+        this.setState({redirect:true, redirectURL:"/myapps"});            
+
       }
       if (result.status === 200) {
         this.setState({ isShowAlert: true, alertContent: "Application update successful!", alertStyle: "success" });
@@ -76,8 +84,10 @@ class EditAppWrapper extends Component {
 
   renderFormContent = () => {
     const { isAuth } = this.context;
-    const { alertContent, alertStyle, isShowAlert, questionairList} = this.state;
-
+    const { alertContent, alertStyle, isShowAlert,redirect, redirectURL ,questionairList} = this.state;
+    if(redirect) {
+      return <Redirect to={redirectURL}/>;
+    }
     if (!isAuth) { return (<></>); }
     else {
       return (

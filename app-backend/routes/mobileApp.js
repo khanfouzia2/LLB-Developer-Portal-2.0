@@ -5,7 +5,7 @@ const authentication = require('../services/authentication.js');
 const multer = require('multer')
 const unzip = require('unzip');
 const fs = require('fs');
-
+const { LoadFullMobileAppsByUserId} = require('../utils/mobileAppUtil')
 let transaction;
 
 var storage = multer.diskStorage({
@@ -22,13 +22,7 @@ var upload = multer({ storage: storage }).single('file')
 
 router.get('/', authentication, async function (req, res) {
   try {
-    let mobileApps = await MobileApp.findAll(
-      {
-        where:
-        {
-          user_id: req.user.id,
-        }
-      });
+    let mobileApps = await LoadFullMobileAppsByUserId(req.user.id);
     return res.status(200).send({ mobileApps: mobileApps });
   }
   catch (e) {

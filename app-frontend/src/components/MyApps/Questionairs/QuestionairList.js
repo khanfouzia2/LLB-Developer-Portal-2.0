@@ -17,7 +17,7 @@ class QuestionairList extends Component {
     onQuestionairListChange(
       {
         questionairList: [...questionairList,
-        { id: uuidv1(), question: "", type: "text", questionOptions: [] }]
+        { id: uuidv1(), question: "", type: "text", questionOptions: [], isEditable: true }]
       }
     );
   }
@@ -46,7 +46,7 @@ class QuestionairList extends Component {
   render() {
     const questionList = this.props.questionairList.map(x =>
       <EditQuestionair key={x.id} handleOnItemChange={this.HandleSingleQuestionChange}
-        questionObject={x} handleOnItemDelete={this.HandleRemoveQuestion}>
+        questionObject={x} handleOnItemDelete={this.HandleRemoveQuestion} isEditable={x.isEditable}>
       </EditQuestionair>);
     return (
       <>

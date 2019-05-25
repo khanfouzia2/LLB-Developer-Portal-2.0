@@ -381,6 +381,11 @@ const MobileAppQuestionair = sequelize.define('mobile_app_questionair',
       allowNull: false,
       defaultValue: 'text',
     },
+    status: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     // must be done like this if we want DEFAULT NOW()
     created_at: {
       type: Sequelize.DATE,
@@ -550,7 +555,8 @@ MobileApp.belongsTo(User, {
 
 MobileApp.hasMany(MobileAppQuestionair, {
   foreignKey: 'app_id',
-  sourceKey: 'id'
+  sourceKey: 'id',
+  //as: 'questionairList',
 });
 MobileAppQuestionair.belongsTo(MobileApp, {
   foreignKey: 'app_id',
@@ -559,6 +565,7 @@ MobileAppQuestionair.belongsTo(MobileApp, {
 
 MobileAppQuestionair.hasMany(MobileAppQuestionairChoice, {
   foreignKey: 'question_id',
+  //as: 'questionOptions',
   sourceKey: 'id'
 });
 

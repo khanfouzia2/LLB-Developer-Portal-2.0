@@ -22,6 +22,7 @@ class MobileApps extends Component {
         userMobileApps: result.data.mobileApps
       })
     }
+    console.log(this.state.userMobileApps)
   }
 
   renderAppList = () => {
@@ -43,10 +44,25 @@ class MobileApps extends Component {
           <td>{x.description}</td>
           <td>{x.title_type}</td>
           <td>{x.permissions.toString()}</td>
+          <td>{`${x.questionairList.length} question(s)`}</td>
           <td>{x.zip_file_name}</td>
           <td>{x.status}</td>
           <td>{x.updated_at}</td>
-          <td><button className="btn btn-secondary">Edit</button></td>
+          <td>
+            <Link className="link" to={{
+                pathname: `/myapps/${x.id}`,
+                state: { 
+                  applicationName: x.application_name,
+                  applicationDescription: x.description,
+                  titleType: x.title_type,
+                  uploadFileName: x.zip_file_name,
+                  permissions: x.permissions,
+                  questionairList: x.questionairList
+                }
+            }}>
+              <button className="btn btn-secondary">Edit</button>
+            </Link>
+          </td>
         </tr>
       ));
       return (
@@ -59,6 +75,7 @@ class MobileApps extends Component {
                 <th scope="col">Application Description</th>
                 <th scope="col">Title Type</th>
                 <th scope="col">Permission</th>
+                <th scope="col">Questions</th>
                 <th scope="col">Zip File Name</th>
                 <th scope="col">Status</th>
                 <th scope="col">Last Update</th>
