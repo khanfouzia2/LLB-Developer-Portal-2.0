@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import AuthContext from '../../context/auth-context';
 import './EditAppForm.css'
-import { PostUserMobileApp } from '../../services/MobileAppApi';
+import { PostUserMobileApp, PutUserMobileApp } from '../../services/MobileAppApi';
 import Alert from '../Misc/Alert';
 import QuestionairList from './Questionairs/QuestionairList'
 import GeneralAppInfoForm from './AppGeneralInfo/AppGeneralInfoForm';
@@ -14,6 +14,7 @@ class EditAppWrapper extends Component {
     super(props);
     this.renderFormContent = this.renderFormContent.bind(this);
     this.state = {
+      applicationId: 0,
       applicationName: "",
       applicationDescription: "",
       titleType: "small",
@@ -37,6 +38,7 @@ class EditAppWrapper extends Component {
     if(this.props.location.state != null) {
       this.setState({...this.props.location.state});
     };
+    console.log(this.state.applicationId)
   }
 
   formValidation = () => {
@@ -60,10 +62,13 @@ class EditAppWrapper extends Component {
     if (!isFormValid) return;
     try {
       const status = (e.target.name === "publishButton") ? "testing" : "pending";
-      const { applicationName, applicationDescription, titleType, permissions, selectedFile, uploadFileName, questionairList } = this.state
-      const result = await PostUserMobileApp(applicationName, applicationDescription, 
+      const { applicationName, applicationDescription, titleType, permissions, selectedFile, uploadFileName, questionairList, applicationId } = this.state
+      const result = (applicationId > 0) ? await PutUserMobileApp(applicationName, applicationDescription, 
                                              titleType, permissions, status, 
-                                             uploadFileName, selectedFile, questionairList);
+                                             uploadFileName, selectedFile, questionairList, applicationId)
+                                          : await PostUserMobileApp(applicationName, applicationDescription, 
+                                            titleType, permissions, status, 
+                                            uploadFileName, selectedFile, questionairList)
       if (result.status === 201) {
         this.setState({ isShowAlert: true, alertContent: "Application created successful!", alertStyle: "success" });
         this.setState({redirect:true, redirectURL:"/myapps"});            

@@ -6,32 +6,65 @@ LoadFullMobileAppsByUserId = async (userId) => {
   const MobileApps = await MobileApp.findAll({
     raw: true,
     where: {
-      user_id : userId
+      user_id: userId
     }
   })
   const FullInfoMobileApp = await Promise.all(MobileApps.map(async app => {
-     let questions = await MobileAppQuestionair.findAll({
-      raw: true, 
-      where : {
-         app_id : app.id
-       }
-     })
-     let questionsWithOption = await Promise.all(questions.map(async question => {
-         let options = await MobileAppQuestionairChoice.findAll({
-          raw: true,
-          where: {
-            question_id : question.id
-          }
-        });
-        question.isEditable = false;
-        question.questionOptions = options
-        return question;
-     }));
-     app.questionairList = questionsWithOption;
-     return app;
+    let questions = await MobileAppQuestionair.findAll({
+      raw: true,
+      where: {
+        app_id: app.id,
+        isObsolete:false
+      }
+    })
+    let questionsWithOption = await Promise.all(questions.map(async question => {
+      let options = await MobileAppQuestionairChoice.findAll({
+        raw: true,
+        where: {
+          question_id: question.id
+        }
+      });
+      question.isEditable = false;
+      question.questionOptions = options
+      return question;
+    }));
+    app.questionairList = questionsWithOption;
+    return app;
   }));
   return FullInfoMobileApp;
 }
+
+LoadFullSingleMobileAppsByUserId = async (mobileAppId) => {
+  const mobileApp = await MobileApp.findOne({
+    raw: true,
+    where: {
+      id: mobileAppId
+    }
+  })
+  let questions = await MobileAppQuestionair.findAll({
+    raw: true,
+    where: {
+      app_id: mobileApp.id,
+      isObsolete:false
+    }
+  })
+  let questionsWithOption = await Promise.all(questions.map(async question => {
+    let options = await MobileAppQuestionairChoice.findAll({
+      raw: true,
+      where: {
+        question_id: question.id
+      }
+    });
+    question.isEditable = false;
+    question.questionOptions = options
+    return question;
+  }));
+  mobileApp.questionairList = questionsWithOption;
+  return mobileApp;
+}
+
+
+
 
 /*
 Eager loading doesn't really work --- leave here for some reference in the future
@@ -70,4 +103,5 @@ Eager loading doesn't really work --- leave here for some reference in the futur
 // }
 module.exports = {
   LoadFullMobileAppsByUserId,
+  LoadFullSingleMobileAppsByUserId
 }

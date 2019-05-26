@@ -5,10 +5,12 @@ const authentication = require('../services/authentication.js');
 const multer = require('multer')
 const unzip = require('unzip');
 const fs = require('fs');
-const { LoadFullMobileAppsByUserId} = require('../utils/mobileAppUtil')
+const { LoadFullMobileAppsByUserId, LoadFullSingleMobileAppsByUserId} = require('../utils/mobileAppUtil')
+const rimraf = require("rimraf");
+
 let transaction;
 
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, `apps`)
   },
@@ -17,7 +19,7 @@ var storage = multer.diskStorage({
   }
 })
 
-var upload = multer({ storage: storage }).single('file')
+const upload = multer({ storage: storage }).single('file')
 
 
 router.get('/', authentication, async function (req, res) {
@@ -30,6 +32,94 @@ router.get('/', authentication, async function (req, res) {
     res.status(500).send();
   }
 });
+
+router.put('/:id', authentication, function (req, res) {
+  upload(req, res, async (err) => {
+    try {
+      if (err instanceof multer.MulterError) {
+        throw new Error(err);
+      }
+      else if (err) {
+        throw new Error(err);
+      }
+
+      transaction = await sequelize.transaction();
+      const appId = req.params.id;
+      const { questionairList, ...appInfo } = req.body;
+
+      //First let's find mobile App record
+      let foundedMobileApp = await LoadFullSingleMobileAppsByUserId(appId);
+
+      if(foundedMobileApp != null) {
+        if (req.file != null) {
+          //Now we unzip the file to correct folder and delete the uploaded .zip file (IF user reupload the file again)
+          UnZipAndDeleteZipFile(req.file, foundedMobileApp.id);
+        }
+        //Update general info here
+        let MobileAppModel = await MobileApp.findOne({where: {id: appId}});
+        MobileAppModel = Object.assign(MobileAppModel, {
+                                       ...appInfo, 
+                                       user_id: req.user.id,
+                                       permissions: JSON.parse(appInfo.permissions)})
+
+        MobileAppModel.save()
+
+        //Process Question list
+        let frontendQuestionairList = JSON.parse(questionairList);
+        let dbQuestionairList = foundedMobileApp.questionairList;
+        let newQuestionairList = frontendQuestionairList.filter(x => {
+          return !(dbQuestionairList.includes(x));
+        });
+
+        let removedQuestionairList = dbQuestionairList.filter( x => {
+          return !(frontendQuestionairList.includes(x));
+        });
+
+        //here to handle obsolete the removed question
+        for (question of removedQuestionairList) {
+          let questionModel = await MobileAppQuestionair.findOne({where:{id: question.id}});
+          questionModel.isObsolete = true;
+          let obsoletedQuestion = await questionModel.save({transaction});
+        }
+
+        //here to create new question List and its of options
+        for (question of newQuestionairList) {
+          const { id, questionOptions, ...questionInfoToUpdate } = question;
+          //Now handle create questionair list
+          let createdQuestion = await MobileAppQuestionair.create({
+            ...questionInfoToUpdate,
+            app_id: foundedMobileApp.id,
+          }, { transaction });
+  
+          //Now handle create options of the question
+          for (option of questionOptions) {
+            const { id, ...optionInfoToUpdate } = option;
+            let createdOptions = await MobileAppQuestionairChoice.create({
+              ...optionInfoToUpdate,
+              question_id: createdQuestion.id
+            }, {transaction});
+          }
+        }
+  
+        await transaction.commit();
+        return res.status(200).send();
+      }
+      throw "Cannot find an app to update"
+    }
+    catch (e) {
+      console.log(`Error while trying to create an app. error = ${e}`);
+      if (req.file != null) {
+        if (fs.existsSync(req.file.path)) {
+          console.log("file upload but insert fail so just gonna remove the file now");
+          fs.unlinkSync(req.file.path);
+        }
+      }
+      await transaction.rollback();
+      return res.status(500).send();
+    }
+  })
+})
+
 
 router.post('/', authentication, function (req, res) {
   upload(req, res, async (err) => {
@@ -94,6 +184,10 @@ router.post('/', authentication, function (req, res) {
   })
 })
 
+
+
+
+
 //Helper method
 const UnZipAndDeleteZipFile = (zipFile, appId) => {
   const appFolder = `./apps/${appId}`
@@ -103,6 +197,9 @@ const UnZipAndDeleteZipFile = (zipFile, appId) => {
     fs.mkdirSync(appFolder);
     console.log("folders created")
   }
+
+  rimraf.sync(appFolder);
+
   fs.createReadStream(zipFile.path).pipe(unzip.Extract({ path: appFolder }));
   fs.unlinkSync(zipFile.path);
 }

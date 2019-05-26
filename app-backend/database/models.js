@@ -381,7 +381,7 @@ const MobileAppQuestionair = sequelize.define('mobile_app_questionair',
       allowNull: false,
       defaultValue: 'text',
     },
-    status: {
+    isObsolete: {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false,

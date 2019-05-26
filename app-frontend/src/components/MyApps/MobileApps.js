@@ -50,14 +50,15 @@ class MobileApps extends Component {
           <td>{x.updated_at}</td>
           <td>
             <Link className="link" to={{
-                pathname: `/myapps/${x.id}`,
+                pathname: `/myapps/${x.id}/`,
                 state: { 
                   applicationName: x.application_name,
                   applicationDescription: x.description,
                   titleType: x.title_type,
                   uploadFileName: x.zip_file_name,
                   permissions: x.permissions,
-                  questionairList: x.questionairList
+                  questionairList: x.questionairList,
+                  applicationId: x.id
                 }
             }}>
               <button className="btn btn-secondary">Edit</button>

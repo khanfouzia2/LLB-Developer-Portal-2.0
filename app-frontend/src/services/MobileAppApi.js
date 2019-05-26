@@ -22,5 +22,20 @@ const PostUserMobileApp = (name, description, titleType, permissions, status, fi
     });
 }
 
-
-export { GetUserMobileApps, PostUserMobileApp };
+const PutUserMobileApp = (name, description, titleType, permissions, status, fileName , fileData, questionairList, appId) => {
+  const data = new FormData()
+  data.append('application_name', name);
+  data.append('description', description);
+  data.append('title_type', titleType);
+  data.append('permissions', JSON.stringify(permissions));
+  data.append('status', status);
+  data.append('zip_file_name', fileName);
+  data.append('questionairList', JSON.stringify(questionairList));
+  data.append('file', fileData);
+  return axios.put(`${USER_MOBILE_APPS}/${appId}`,
+    data,
+    {
+      withCredentials: true
+    });
+}
+export { GetUserMobileApps, PostUserMobileApp, PutUserMobileApp } ;
