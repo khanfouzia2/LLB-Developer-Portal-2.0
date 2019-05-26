@@ -435,6 +435,37 @@ const MobileAppQuestionair = sequelize.define('mobile_app_questionair',
     ],
   }
 );
+
+
+const MobileAppQuestionairAnswer = sequelize.define('questionair_answer',
+  {
+    answer: {
+      type: Sequelize.STRING(500),
+      allowNull: false,
+    },
+    // must be done like this if we want DEFAULT NOW()
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal('NOW()')
+    }
+  },
+  // options:
+  {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+    deleted_at: 'deleted_at',
+    paranoid: true,
+    indexes: [
+      {
+        unique: false,
+        fields: ['answer']
+      }
+    ],
+  }
+);
+
+
 // const Service = sequelize.define('service',
 //   {
 //     name: {
@@ -573,6 +604,17 @@ MobileAppQuestionairChoice.belongsTo(MobileAppQuestionair, {
   foreignKey: 'question_id',
   sourceKey: 'id'
 })
+
+MobileAppQuestionair.hasMany(MobileAppQuestionairAnswer, {
+  foreignKey: 'question_id',
+  //as: 'questionOptions',
+  sourceKey: 'id'
+});
+
+MobileAppQuestionairAnswer.belongsTo(MobileAppQuestionair, {
+  foreignKey: 'question_id',
+  sourceKey: 'id'
+})
 /*
   Default 'exclude' fields. Sensitive information that usually should not be send to the front-end
   Example usage:
@@ -613,5 +655,6 @@ module.exports = {
   secluded,
   MobileApp,
   MobileAppQuestionair,
-  MobileAppQuestionairChoice
+  MobileAppQuestionairChoice,
+  MobileAppQuestionairAnswer
 }
