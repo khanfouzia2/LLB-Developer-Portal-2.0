@@ -19,6 +19,7 @@ const googleAuthRoute = require('./routes/googleAuth.js')
 const authentication = require('./services/authentication.js');
 const mobileAppRoute = require('./routes/mobileApp.js');
 const feedbackRoute = require('./routes/feedback.js');
+const mobileAppQuestion = require('./routes/mobileAppQuestionPublicAPI.js')
 const port = process.env.PORT || 8080;
 
 const app = express();
@@ -36,16 +37,11 @@ app.use('/auth', googleAuthRoute)
 app.use('/forum', forumRoute)
 app.use('/mobileapps', mobileAppRoute);
 app.use('/feedback', feedbackRoute);
+app.use('/api/v1', mobileAppQuestion);
+
 app.use('/', routeName);
 
-app.listen(port, () => {
-    //Folder for upload files related to mobileApp
-    // if (!fs.existsSync('./apps')){
-    //     console.log("apps folder not found")
-    //     fs.mkdirSync('./apps');
-    //     console.log("apps folder created")
-    // }
-    
+app.listen(port, () => {    
     console.log(`Express app started on port ${port}`);
 });
 
