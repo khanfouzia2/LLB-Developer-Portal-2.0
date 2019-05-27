@@ -192,7 +192,10 @@ class EditThread extends React.Component {
           modal: {
             isShown: true,
             title: "Updated succesfully!",
-            content: null
+            content: null,
+            onCloseFunction: () => {
+              this.setState({modal:{isShown:false}});
+            },
           }
         })
       } else if(resp.status) {
