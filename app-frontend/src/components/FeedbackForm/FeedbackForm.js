@@ -11,9 +11,9 @@ class FeedbackForm extends Component {
 
     constructor(props) {
         super(props);
-    
+
         this.state = {
-          title: "",    
+          title: "",
           description: "",
           alert: {
             content: "",
@@ -31,18 +31,18 @@ class FeedbackForm extends Component {
       return(null);
     }
     return (
-     
+
       <React.Fragment>
 
       <div className="App-custom-nav">
           <h2>Give feedback</h2>
         </div>
-      <div className="App-custom-page-content">          
+      <div className="App-custom-page-content">
         <div className="col-md-8 offset-md-2">
           <div className="card">
             <div className="card-body">
               <h1 className="text-center">Feedback</h1>
-              <p className="text-center">Your feedback matters</p>              
+              <p className="text-center">Your feedback matters</p>
               <div className="container mt-5">
                 <div className="row">
                   <div className="col-12">
@@ -56,26 +56,26 @@ class FeedbackForm extends Component {
                   <div className="col-md-9">
                     <input type="text" value={this.state.title} className="form-control" onChange={(e)=>this.handleInputChange(e)} name="title" placeholder="Title" maxlength={FEEDBACK_TITLE_MAXLEN}/>
                     <span className="metatext float-right">{this.state.title.length} / {FEEDBACK_TITLE_MAXLEN} </span>
-                  </div>                    
+                  </div>
                 </div>
                 <div className="form-group row">
                   <div className="col-md-12">
                     <textarea value={this.state.description} id="message" name="description" className="form-control" onChange={(e)=>this.handleInputChange(e)}  placeholder="Your feedback" rows="7">
-                    </textarea>                   
-                  </div>                  
-                </div>                  
+                    </textarea>
+                  </div>
+                </div>
                 <div className="row">
                   <div className="col-md-9">
                   </div>
                   <div className="col-md-3">
-                    <button type="submit" onClick={(e)=>this.handleOnClickSend(e)} className="btn btn-primary float-right">Send</button>  
+                    <button type="submit" onClick={(e)=>this.handleOnClickSend(e)} className="btn btn-primary float-right">Send</button>
                   </div>
-                </div>                   
+                </div>
               </div>
             </div>{/* Card end */}
-          </div>  
-        </div>            
-      </div>  
+          </div>
+        </div>
+      </div>
     </React.Fragment>
     );
   }
@@ -83,10 +83,10 @@ class FeedbackForm extends Component {
   handleOnClickSend(e) {
 
     console.log("User clicked send!")
-    
+
     // Disable btn for a moment
     e.target.disabled = true;
-    setInterval((btn) => { btn.disabled=false }, 5000, e.target);
+    setInterval((btn) => { btn.disabled=false }, 7000, e.target);
 
     const title = this.state.title;
     const description = this.state.description;
@@ -108,9 +108,9 @@ class FeedbackForm extends Component {
     var pr = fetch(req, options);
     pr.then(res => {
       console.log(res)
-      
-       if(res.ok) {
-         return res.json() 
+
+       if(res.status == 201 || res.status == 200) {
+         return res.json()
        } else {
         this.setState({ alert: { content: "Invalid content!", isShown: true, style: "warning"}});
         throw new Error() //exit from callback
@@ -133,8 +133,8 @@ class FeedbackForm extends Component {
         title: "",
         description: ""
       });
-      
-      
+
+
     }, (err)=>{ console.log(alert)(err) }).catch(err => {
       this.setState({ alert: { content: "Something went wrong!", isShown: true, style: "warning" }});
       console.log(err)

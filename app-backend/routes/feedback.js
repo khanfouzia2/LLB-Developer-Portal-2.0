@@ -105,19 +105,25 @@ router.post('/', authentication, (req, res) => {
     console.log( "AUTH: " + req.user.email )
     console.log( req );
 
-    if( !req.body.title || !req.body.description || title.length == 0 || desc.length == 0) {
+    if( !req.body.title || !req.body.description) {
       res.status(415).json({message: 'Content not valid!'}); return;
     }
 
-    var title = req.body.title.trim();
-    var desc = req.body.description.trim();
+    const title = req.body.title.trim();
+    const desc = req.body.description.trim();
+
+    if( title.lenght == 0 || desc.length == 0) {
+      res.status(415).json({message: 'Content not valid!'}); return;
+    }
+
+    const user_id = req.user.id;
 
     // Insert to DB
     var pr = models.BugFeedback.create({
         title: title,
         description: desc,
         type: 'FEEDBACK',
-        author_id: author_id,
+        author_id: user_id,
     });
 
     pr.then(data => {
