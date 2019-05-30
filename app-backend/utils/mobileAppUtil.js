@@ -34,7 +34,7 @@ LoadFullMobileAppsByUserId = async (userId) => {
   return FullInfoMobileApp;
 }
 
-LoadFullSingleMobileAppsByUserId = async (mobileAppId) => {
+LoadFullSingleMobileAppsByAppId = async (mobileAppId) => {
   const mobileApp = await MobileApp.findOne({
     raw: true,
     where: {
@@ -103,5 +103,5 @@ Eager loading doesn't really work --- leave here for some reference in the futur
 // }
 module.exports = {
   LoadFullMobileAppsByUserId,
-  LoadFullSingleMobileAppsByUserId
+  LoadFullSingleMobileAppsByAppId
 }

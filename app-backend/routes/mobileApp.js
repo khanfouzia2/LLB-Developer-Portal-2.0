@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { MobileApp, MobileAppQuestionair, MobileAppQuestionairChoice, sequelize } = require('../database/models.js');
+const { MobileApp, MobileAppQuestionair, MobileAppQuestionairChoice, MobileAppQuestionairAnswer, sequelize } = require('../database/models.js');
 const authentication = require('../services/authentication.js');
 const multer = require('multer')
 const unzip = require('unzip');
 const fs = require('fs');
-const { LoadFullMobileAppsByUserId, LoadFullSingleMobileAppsByUserId} = require('../utils/mobileAppUtil')
+const { LoadFullMobileAppsByUserId, LoadFullSingleMobileAppsByAppId, } = require('../utils/mobileAppUtil')
 const rimraf = require("rimraf");
 
 let transaction;
@@ -48,7 +48,7 @@ router.put('/:id', authentication, function (req, res) {
       const { questionairList, ...appInfo } = req.body;
 
       //First let's find mobile App record
-      let foundedMobileApp = await LoadFullSingleMobileAppsByUserId(appId);
+      let foundedMobileApp = await LoadFullSingleMobileAppsByAppId(appId);
 
       if(foundedMobileApp != null) {
         if (req.file != null) {
@@ -67,12 +67,15 @@ router.put('/:id', authentication, function (req, res) {
         //Process Question list
         let frontendQuestionairList = JSON.parse(questionairList);
         let dbQuestionairList = foundedMobileApp.questionairList;
+
         let newQuestionairList = frontendQuestionairList.filter(x => {
-          return !(dbQuestionairList.includes(x));
+          let found = dbQuestionairList.filter(y => y.id == x.id);
+          return (found.length == 0);
         });
 
         let removedQuestionairList = dbQuestionairList.filter( x => {
-          return !(frontendQuestionairList.includes(x));
+          let found = frontendQuestionairList.filter(y => y.id == x.id);
+          return found.length == 0;
         });
 
         //here to handle obsolete the removed question
@@ -185,7 +188,19 @@ router.post('/', authentication, function (req, res) {
 })
 
 
-
+router.get('/export_answer/:appid', authentication, async function(req, res) {
+  const appId = req.params.appid;
+  let foundedMobileApp = await LoadFullSingleMobileAppsByAppId(appId);
+  if(foundedMobileApp.user_id != req.user.id) {
+    return res.status(401).send();
+  }
+  let questionsWithAnswer = await Promise.all(foundedMobileApp.questionairList.map (async question => {
+      let answers = await MobileAppQuestionairAnswer.findAll({where: {question_id: question.id}});
+      question.answers = answers;
+      return question;
+  }));
+  return res.status(200).send(questionsWithAnswer);
+})
 
 
 //Helper method

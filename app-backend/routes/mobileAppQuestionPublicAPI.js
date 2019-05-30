@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { MobileApp, MobileAppQuestionair, MobileAppQuestionairChoice, MobileAppQuestionairAnswer, sequelize } = require('../database/models.js');
-const { LoadFullMobileAppsByUserId, LoadFullSingleMobileAppsByUserId } = require('../utils/mobileAppUtil')
+const { LoadFullMobileAppsByUserId, LoadFullSingleMobileAppsByAppId } = require('../utils/mobileAppUtil')
 
 router.post('/q/:id', async function (req, res) {
   try {
     const appId = req.params.id;
-    let foundedMobileApp = await LoadFullSingleMobileAppsByUserId(appId);
+    let foundedMobileApp = await LoadFullSingleMobileAppsByAppId(appId);
     const { questionairList } = foundedMobileApp;
     const data = questionairList.map(question => {
       let obj = {

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import AuthContext from '../../context/auth-context';
-import { GetUserMobileApps } from '../../services/MobileAppApi';
+import { GetUserMobileApps, GetMobileAppAnswer } from '../../services/MobileAppApi';
 import './MobileApps.css'
 import { Link } from "react-router-dom"
+import { ExportToCsv } from 'export-to-csv';
 
 class MobileApps extends Component {
   static contextType = AuthContext;
@@ -14,6 +15,7 @@ class MobileApps extends Component {
     }
     this.renderContains = this.renderContains.bind(this);
     this.renderAppList = this.renderAppList.bind(this);
+    this.answerExport = this.answerExport.bind(this);
   }
   componentDidMount = async () => {
     const result = await GetUserMobileApps();
@@ -24,7 +26,29 @@ class MobileApps extends Component {
     }
     console.log(this.state.userMobileApps)
   }
-
+  answerExport = async (id) => {
+    const questions = await GetMobileAppAnswer(id);
+    let csvAnswers = questions.data.map( ans => {
+      const x = ans.answers.map(x => x.answer);
+      return { question: ans.question, 
+               answers: x.join(',') }
+    });
+    
+    const options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'My App Answer',
+      useTextFile: false,
+      useBom: true,
+      useKeysAsHeaders: true,
+    };
+    const csvExporter = new ExportToCsv(options);
+ 
+    csvExporter.generateCsv(csvAnswers);
+  } 
   renderAppList = () => {
     if (this.state.userMobileApps.length === 0) {
       return (
@@ -64,6 +88,9 @@ class MobileApps extends Component {
               <button className="btn btn-secondary">Edit</button>
             </Link>
           </td>
+          <td>
+            <button className="btn btn-success" onClick={() => this.answerExport(x.id)}>Export Answer</button>
+          </td>
         </tr>
       ));
       return (
@@ -80,6 +107,7 @@ class MobileApps extends Component {
                 <th scope="col">Zip File Name</th>
                 <th scope="col">Status</th>
                 <th scope="col">Last Update</th>
+                <th scope="col"></th>
                 <th scope="col"></th>
               </tr>
             </thead>

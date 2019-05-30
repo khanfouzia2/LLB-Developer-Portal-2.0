@@ -1,9 +1,15 @@
 import axios from 'axios';
-import { USER_MOBILE_APPS, USER_MOBILE_APPS_UPLOAD_FILE } from '../rest-endpoints';
+import { USER_MOBILE_APPS, USER_MOBILE_APPS_UPLOAD_FILE, USER_MOBILE_APP_EXPORT_ANSWER } from '../rest-endpoints';
 
 const GetUserMobileApps = () => {
   return axios.get(USER_MOBILE_APPS, { withCredentials: true });
 };
+
+const GetMobileAppAnswer = (id) => {
+  const url = `${USER_MOBILE_APP_EXPORT_ANSWER}/${id}`;
+  console.log(url);
+  return axios.get(url, {withCredentials:true});
+}
 
 const PostUserMobileApp = (name, description, titleType, permissions, status, fileName , fileData, questionairList) => {
   const data = new FormData()
@@ -38,4 +44,4 @@ const PutUserMobileApp = (name, description, titleType, permissions, status, fil
       withCredentials: true
     });
 }
-export { GetUserMobileApps, PostUserMobileApp, PutUserMobileApp } ;
+export { GetUserMobileApps, PostUserMobileApp, PutUserMobileApp, GetMobileAppAnswer } ;

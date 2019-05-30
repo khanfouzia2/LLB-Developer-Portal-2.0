@@ -35,10 +35,10 @@ class EditAppForm extends Component {
 
   onFileUploadChange = (event) => {
     let file = event.target.files[0];
-    if (file.type !== 'application/zip') {
-      this.props.onInputChange({ isShowAlert: true, alertContent: "Only .zip file is supported !", alertStyle: "danger" });
-      return;
-    }
+    // if (file.type !== 'application/zip') {
+    //   this.props.onInputChange({ isShowAlert: true, alertContent: "Only .zip file is supported !", alertStyle: "danger" });
+    //   return;
+    // }
     this.props.onInputChange({
       selectedFile: event.target.files[0],
       uploadFileName: (event.target.files.length > 0) ? event.target.files[0].name : this.props.uploadFileName

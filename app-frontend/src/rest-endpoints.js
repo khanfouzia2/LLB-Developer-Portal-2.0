@@ -45,7 +45,7 @@ const THREAD_DELETE       = BASE_URL + 'forum/thread' // +/id
 // Mobile App
 const USER_MOBILE_APPS = BASE_URL + 'mobileapps'
 const USER_MOBILE_APPS_UPLOAD_FILE = BASE_URL + 'mobileapps/uploadfile'
-
+const USER_MOBILE_APP_EXPORT_ANSWER = BASE_URL + 'mobileapps/export_answer'
 
 
 /*
@@ -103,4 +103,5 @@ module.exports = {
   HTTP_NOT_FOUND,
   HTTP_UNSUPPORTED_MEDIA,
   HTTP_SERVER_ERR,
+  USER_MOBILE_APP_EXPORT_ANSWER
 }
