@@ -26,7 +26,7 @@
     "passport-google-oauth": "^2.0.0",
     "pg": "^7.8.1",
     "rimraf": "^2.6.3",
-    "sequelize": "^4.42.1",
+    "sequelize": "^5.15.1",
     "unzip": "^0.1.11"
   }
 }
